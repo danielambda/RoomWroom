@@ -1,15 +1,16 @@
 ﻿using System.Collections.Concurrent;
-using RoomWroom.CommandHandling;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 
+using RoomWroom.CommandHandling;
+
 namespace RoomWroom.Telegram;
 
-public class TelegramBot(string? token, Func<ResponseProvider> responseProviderFactoryMethod)
+public class TelegramBot(string token, Func<ResponseProvider> responseProviderFactoryMethod)
 {
-    private readonly TelegramBotClient _botClient = new(token ?? throw new ArgumentNullException(nameof(token)));
+    private readonly TelegramBotClient _botClient = new(token);
     private readonly Func<ResponseProvider> _responseProviderFactoryMethod = responseProviderFactoryMethod;
     
     private readonly ConcurrentDictionary<long, ResponseProvider> _responseProvidersByChatId = [];
@@ -38,24 +39,21 @@ public class TelegramBot(string? token, Func<ResponseProvider> responseProviderF
     {   
         if (update.Message is not { } message)
             return;
-        
-        if (message.GetTextOrCaption() is not { } messageText)
-            return;
+
+        string? messageText = message.GetTextOrCaption();
+        Image? image = await message.GetImageAsync(botClient, cancellationToken);
         
         long chatId = message.Chat.Id;
 
-        if (_responseProvidersByChatId.ContainsKey(chatId) == false)
-        {
-            //
-        }
+        ResponseProvider responseProvider = _responseProvidersByChatId.GetOrAdd(
+            chatId, _ => _responseProviderFactoryMethod.Invoke());
 
-        ResponseProvider? responseProvider = _responseProvidersByChatId.GetOrAdd(
-            chatId, l => _responseProviderFactoryMethod.Invoke());
-
-        string? response = responseProvider(messageText);
+        Task<string>? responseTask = responseProvider(messageText, image);
+        if (responseTask == null)
+            return;
         
-        if (response is not null)
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, response, cancellationToken: cancellationToken);
+        string response = await responseTask;
+        await botClient.SendTextMessageAsync(update.Message.Chat.Id, response, cancellationToken: cancellationToken);
     }
 
     private static Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
@@ -70,9 +68,5 @@ public class TelegramBot(string? token, Func<ResponseProvider> responseProviderF
 
         Console.WriteLine(errorMessage);
         return Task.CompletedTask;
-    }
-
-    public TelegramBot(string? token) : this(token, null)
-    {
     }
 }

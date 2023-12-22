@@ -8,7 +8,7 @@ public abstract class Command(string commandText, string immediateResponse)
     
     internal bool Matches(string text) => text.StartsWith(_commandText);
 
-    internal abstract ICollection<Type> GetRequiredTypes();
+    internal abstract IEnumerable<Type> GetRequiredTypes();
 }
 
 public sealed class Command<T>(
@@ -18,7 +18,7 @@ public sealed class Command<T>(
     private readonly Func<T, Task<string>> _function = function;
 
     internal Task<string> InvokeTask(T t) => _function.Invoke(t);
-    internal override ICollection<Type> GetRequiredTypes() => [typeof(T)];
+    internal override IEnumerable<Type> GetRequiredTypes() => [typeof(T)];
 }
 
 public sealed class Command<T1, T2>(
@@ -28,7 +28,7 @@ public sealed class Command<T1, T2>(
     private readonly Func<T1, T2, Task<string>> _function = function;
 
     internal Task<string> InvokeTask(T1 t1, T2 t2) => _function.Invoke(t1, t2);
-    internal override ICollection<Type> GetRequiredTypes() => [typeof(T1), typeof(T2)];
+    internal override IEnumerable<Type> GetRequiredTypes() => [typeof(T1), typeof(T2)];
 }
 
 public sealed class Command<T1, T2, T3>(
@@ -38,5 +38,5 @@ public sealed class Command<T1, T2, T3>(
     private readonly Func<T1, T2, T3, Task<string>> _function = function;
 
     internal Task<string> InvokeTask(T1 t1, T2 t2, T3 t3) => _function.Invoke(t1, t2, t3);
-    internal override ICollection<Type> GetRequiredTypes() => [typeof(T1), typeof(T2), typeof(T3)];
+    internal override IEnumerable<Type> GetRequiredTypes() => [typeof(T1), typeof(T2), typeof(T3)];
 }

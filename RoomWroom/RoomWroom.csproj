@@ -12,9 +12,4 @@
       <PackageReference Include="Telegram.Bot" Version="20.0.0-alpha.1" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="CommandHandling\IResponseProvider.cs" />
-      <Compile Remove="CommandHandling\ICommandHandler.cs" />
-    </ItemGroup>
-
 </Project>
