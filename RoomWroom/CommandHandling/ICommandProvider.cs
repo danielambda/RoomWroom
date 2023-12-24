@@ -1,6 +1,6 @@
 ﻿namespace RoomWroom.CommandHandling;
 
-public interface ICommandProvider
+internal interface ICommandProvider
 {
-    public IEnumerable<Command> GetCommands();
+    IEnumerable<Command> GetCommands();
 }

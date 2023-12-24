@@ -1,14 +1,14 @@
 ﻿namespace RoomWroom.CommandHandling;
 
-public class ResponseProviderFactoryMethodProvider(CommandHandler baseCommandHandler)
+internal class ResponseProviderFactoryMethodProvider(CommandHandler baseCommandHandler)
 {
     private readonly CommandHandler _baseCommandHandler = baseCommandHandler;
 
-    public Func<ResponseProvider> ResponseProviderFactoryMethod => Method; 
-    
-    private ResponseProvider Method()
+    public Func<long, IResponseProvider> ResponseProviderFactoryMethod => Method;
+
+    private IResponseProvider Method(long id)
     {
-        CommandHandler commandHandler = CommandHandler.CopyCommandsFrom(_baseCommandHandler);
-        return commandHandler.ResponseProvider;
+        IResponseProvider commandHandler = CommandHandler.CopyCommandsFrom(_baseCommandHandler);
+        return commandHandler;
     }
 }

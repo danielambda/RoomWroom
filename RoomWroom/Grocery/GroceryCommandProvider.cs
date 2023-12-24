@@ -3,14 +3,14 @@ using RoomWroom.CommandHandling;
 
 namespace RoomWroom.Grocery;
 
-public class GroceryCommandProvider(IReceiptQrScanner receiptQrScanner) : ICommandProvider
+internal class GroceryCommandProvider(IReceiptQrScanner receiptQrScanner) : ICommandProvider
 {
     private readonly IReceiptQrScanner _receiptQrScanner = receiptQrScanner;
 
     public IEnumerable<Command> GetCommands() => [new Command<Image>("/scan", Scan, "Send me a photo of the QR code")];
 
-    //TODO вынести эту штуку отсуда в другой класс
-    private async Task<string> Scan(Image image)
+    //TODO вынести эту штуку отсюда в другой класс
+    private async Task<Response> Scan(Image image)
     {
         BarcodeResults results = await BarcodeReader.ReadAsync(image);
   

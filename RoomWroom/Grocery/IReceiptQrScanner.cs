@@ -1,6 +1,6 @@
 ﻿namespace RoomWroom.Grocery;
 
-public interface IReceiptQrScanner
+internal interface IReceiptQrScanner
 {
-    public Task<Receipt> GetReceiptFromQrAsync(string qr);
+    Task<Receipt> GetReceiptFromQrAsync(string qr);
 }

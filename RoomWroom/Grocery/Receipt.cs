@@ -1,4 +1,6 @@
-﻿namespace RoomWroom.Grocery;
+﻿using System.Text;
+
+namespace RoomWroom.Grocery;
 
 public class Receipt(IEnumerable<GroceryItem>? items)
 {
@@ -7,12 +9,12 @@ public class Receipt(IEnumerable<GroceryItem>? items)
         if (items == null)
             return "Receipt is empty";
 
-        string result = "";
+        StringBuilder result = new("");
         float sum = 0;
 
         foreach (GroceryItem item in items)
         {
-            result += item + Environment.NewLine;
+            result.Append(item + Environment.NewLine);
             sum += item.Sum;
         }
 

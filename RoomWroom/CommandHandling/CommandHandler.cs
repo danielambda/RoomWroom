@@ -1,6 +1,6 @@
 ﻿namespace RoomWroom.CommandHandling;
 
-public class CommandHandler
+internal class CommandHandler : IResponseProvider
 {
     private readonly List<Command> _commands = [];
     private readonly List<Type> _remainingRequestedTypes = [];
@@ -10,14 +10,10 @@ public class CommandHandler
 
     private Command? _currentCommand;
 
-    public ResponseProvider ResponseProvider { get; }
-
     public CommandHandler(IEnumerable<ICommandProvider> commandProviders)
     {
         foreach (ICommandProvider commandProvider in commandProviders) 
             _commands?.AddRange(commandProvider.GetCommands());
-
-        ResponseProvider = GetResponseTask;
     }
     
     public static CommandHandler CopyCommandsFrom(CommandHandler commandHandler) => new(commandHandler._commands);
@@ -25,11 +21,9 @@ public class CommandHandler
     private CommandHandler(List<Command> commands)
     {
         _commands = [..commands];
-        
-        ResponseProvider = GetResponseTask;
     }
     
-    private Task<string>? GetResponseTask(string? text, Image? image)
+    public Task<Response>? GetResponseTask(string? text, Image? image)
     {
         if (text is not null)
         {
@@ -47,7 +41,7 @@ public class CommandHandler
         return _remainingRequestedTypes.Count == 0 ? InvokeCurrentCommandTask() : null;
     }
 
-    private Task<string>? GetResponseForCommand(string commandText)
+    private Task<Response>? GetResponseForCommand(string commandText)
     {
         _currentCommand = _commands.SingleOrDefault(command => command.Matches(commandText));
 
@@ -80,7 +74,7 @@ public class CommandHandler
         _remainingRequestedTypes.AddRange(array);
     }
 
-    private Task<string>? InvokeCurrentCommandTask()
+    private Task<Response>? InvokeCurrentCommandTask()
     {
         return _currentCommand switch
         {

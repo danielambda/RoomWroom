@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace RoomWroom.Grocery;
 
-public class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrScanner
+internal class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrScanner
 {
     private const string TAX_SERVICE_URL = "https://irkkt-mobile.nalog.ru:8888/v2";
     private const string DEVICE_OS = "IOS";
@@ -22,19 +22,6 @@ public class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrScan
     private string? _sessionId;
 
     private bool _initialized = false;
-    private async Task Init()
-    {
-        _httpClient.DefaultRequestHeaders.Add("Accept", ACCEPT);
-        _httpClient.DefaultRequestHeaders.Add("Device-OS", DEVICE_OS);
-        _httpClient.DefaultRequestHeaders.Add("Device-Id", DEVICE_ID);
-        _httpClient.DefaultRequestHeaders.Add("clientVersion", CLIENT_VERSION);
-        _httpClient.DefaultRequestHeaders.Add("Accept-Language", ACCEPT_LANGUAGE);
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-
-        _sessionId = await GetSessionId();
-
-        _initialized = true;
-    }
 
     public async Task<Receipt> GetReceiptFromQrAsync(string qr)
     {
@@ -51,6 +38,20 @@ public class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrScan
         Receipt receipt = new(items);
 
         return receipt;
+    }
+
+    private async Task Init()
+    {
+        _httpClient.DefaultRequestHeaders.Add("Accept", ACCEPT);
+        _httpClient.DefaultRequestHeaders.Add("Device-OS", DEVICE_OS);
+        _httpClient.DefaultRequestHeaders.Add("Device-Id", DEVICE_ID);
+        _httpClient.DefaultRequestHeaders.Add("clientVersion", CLIENT_VERSION);
+        _httpClient.DefaultRequestHeaders.Add("Accept-Language", ACCEPT_LANGUAGE);
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+
+        _sessionId = await GetSessionId();
+
+        _initialized = true;
     }
 
     private static IEnumerable<GroceryItem>? ParseGroceryItemsFromJson(JsonDocument jsonDocument)
