@@ -12,15 +12,25 @@ public static class TelegramBotClientExtensions
         IEnumerable<MessageData> messagesData, long chatId, int? messageThreadId = null, ParseMode? parseMode = null,
         IEnumerable<MessageEntity>? entities = null, bool? disableWebPagePreview = null,
         bool? disableNotification = null, bool? protectContent = null, int? replyToMessageId = null, 
-        bool? allowSendingWithoutReply = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        bool? allowSendingWithoutReply = null, bool? allAreReplying = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         MessageEntity[]? entitiesArray = entities?.ToArray();
 
-        foreach ((string text, IReplyMarkup? replyMarkup) in messagesData)
+        foreach ((string? text, IReplyMarkup? replyMarkup) in messagesData)
         {
+            if (text is null)
+                continue;
+            
             yield return await botClient.SendTextMessageAsync(
                 chatId, text, messageThreadId, parseMode, entitiesArray, disableWebPagePreview, disableNotification,
                 protectContent, replyToMessageId, allowSendingWithoutReply, replyMarkup, cancellationToken);
+
+            if (allAreReplying == true)
+                continue;
+            
+            replyToMessageId = null;
+            allowSendingWithoutReply = null;
         }
     }
 }

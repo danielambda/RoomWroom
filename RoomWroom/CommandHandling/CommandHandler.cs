@@ -5,24 +5,21 @@ internal class CommandHandler : IResponseProvider
     private readonly List<Command> _commands = [];
     private readonly List<Type> _remainingRequestedTypes = [];
 
-    private readonly List<Image> _receivedImages = [];
-    private readonly List<string> _receivedTexts = [];
+    private readonly Queue<Image> _receivedImages = [];
+    private readonly Queue<string> _receivedTexts = [];
 
     private Command? _currentCommand;
 
     public CommandHandler(IEnumerable<ICommandProvider> commandProviders)
     {
         foreach (ICommandProvider commandProvider in commandProviders) 
-            _commands?.AddRange(commandProvider.GetCommands());
+            _commands.AddRange(commandProvider.GetCommands());
     }
     
     public static CommandHandler CopyCommandsFrom(CommandHandler commandHandler) => new(commandHandler._commands);
 
-    private CommandHandler(List<Command> commands)
-    {
-        _commands = [..commands];
-    }
-    
+    private CommandHandler(List<Command> commands) => _commands = [..commands];
+
     public Task<Response>? GetResponseTask(string? text, Image? image)
     {
         if (text is not null)
@@ -57,13 +54,13 @@ internal class CommandHandler : IResponseProvider
     private void HandleReceivedImage(Image image)
     {
         if (_remainingRequestedTypes.Remove(typeof(Image)))
-            _receivedImages.Add(image);
+            _receivedImages.Enqueue(image);
     }
 
     private void HandleReceivedText(string text)
     {
         if (_remainingRequestedTypes.Remove(typeof(string)))
-            _receivedTexts.Add(text);
+            _receivedTexts.Enqueue(text);
     }
 
     private void UpdateRequestedTypes(IEnumerable<Type> types)
@@ -79,27 +76,27 @@ internal class CommandHandler : IResponseProvider
         return _currentCommand switch
         {
             Command<Image> command
-                => command.InvokeTask(_receivedImages.First()),
+                => command.InvokeTask(_receivedImages.Dequeue()),
             Command<string> command
-                => command.InvokeTask(_receivedTexts.First()),
+                => command.InvokeTask(_receivedTexts.Dequeue()),
             Command<Image, string> command
-                => command.InvokeTask(_receivedImages.First(), _receivedTexts.First()),
+                => command.InvokeTask(_receivedImages.Dequeue(), _receivedTexts.Dequeue()),
             Command<string, Image> command
-                => command.InvokeTask(_receivedTexts.First(), _receivedImages.First()),
+                => command.InvokeTask(_receivedTexts.Dequeue(), _receivedImages.Dequeue()),
             Command<Image, Image> command
-                => command.InvokeTask(_receivedImages[0], _receivedImages[1]),
+                => command.InvokeTask(_receivedImages.Dequeue(), _receivedImages.Dequeue()),
             Command<string, string> command
-                => command.InvokeTask(_receivedTexts[0], _receivedTexts[1]),
+                => command.InvokeTask(_receivedTexts.Dequeue(), _receivedTexts.Dequeue()),
             Command<Image, Image, Image> command
-                => command.InvokeTask(_receivedImages[0], _receivedImages[1], _receivedImages[2]),
+                => command.InvokeTask(_receivedImages.Dequeue(), _receivedImages.Dequeue(), _receivedImages.Dequeue()),
             Command<Image, Image, string> command
-                => command.InvokeTask(_receivedImages[0], _receivedImages[1], _receivedTexts.First()),
+                => command.InvokeTask(_receivedImages.Dequeue(), _receivedImages.Dequeue(), _receivedTexts.Dequeue()),
             Command<Image, string, Image> command
-                => command.InvokeTask(_receivedImages[0], _receivedTexts.First(), _receivedImages[1]),
+                => command.InvokeTask(_receivedImages.Dequeue(), _receivedTexts.Dequeue(), _receivedImages.Dequeue()),
             Command<Image, string, string> command
-                => command.InvokeTask(_receivedImages.First(), _receivedTexts[0], _receivedTexts[1]),
+                => command.InvokeTask(_receivedImages.Dequeue(), _receivedTexts.Dequeue(), _receivedTexts.Dequeue()),
             Command<string, string, string> command
-                => command.InvokeTask(_receivedTexts[0], _receivedTexts[1], _receivedTexts[2]),
+                => command.InvokeTask(_receivedTexts.Dequeue(), _receivedTexts.Dequeue(), _receivedTexts.Dequeue()),
             _ => null
         };
     }

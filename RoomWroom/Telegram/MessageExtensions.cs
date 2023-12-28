@@ -1,5 +1,7 @@
-﻿using Telegram.Bot;
+﻿using RoomWroom.CommandHandling;
+using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace RoomWroom.Telegram;
 
@@ -31,4 +33,14 @@ public static class MessageExtensions
 
         return await Image.FromStreamAsync(fileStream);
     }
+
+    public static ResponseUnit ToResponseUnit(this Message message) 
+        => new(message.Text, message.ReplyMarkup?.InlineKeyboard.ToResponseCallbackButtons());
+
+    public static IEnumerable<IEnumerable<ResponseCallbackButton>> ToResponseCallbackButtons(
+        this IEnumerable<IEnumerable<InlineKeyboardButton>> buttons)
+        => buttons.Select(row 
+            => row.Select(button 
+                => new ResponseCallbackButton(button.Text, button.CallbackData ?? 
+                                                           throw new ArgumentNullException(nameof(buttons)))));
 }

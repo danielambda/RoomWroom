@@ -1,9 +1,15 @@
 ﻿namespace RoomWroom.CommandHandling
 {
-    public record ResponseUnit(string Text, IEnumerable<ResponseCallbackButton>? ResponseCallbackButtons)
+    public record ResponseUnit(string? Text, IEnumerable<IEnumerable<ResponseCallbackButton>>? ResponseCallbackButtons = null)
     {
-        public static implicit operator ResponseUnit(string text) => new(text, null);
+        public ResponseUnit(string text, IEnumerable<ResponseCallbackButton> responseCallbackButtons)
+            : this(text, [responseCallbackButtons]) { }
         
-        public override string ToString() => Text;
+        public ResponseUnit(string text, ResponseCallbackButton responseCallbackButton)
+            : this(text, [[responseCallbackButton]]) { }
+
+        public static implicit operator ResponseUnit(string text) => new(text);
+        
+        public override string? ToString() => Text;
     }
 }

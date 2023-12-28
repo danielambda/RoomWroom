@@ -2,5 +2,5 @@
 
 internal interface IReceiptQrScanner
 {
-    Task<Receipt> GetReceiptFromQrAsync(string qr);
+    Task<Receipt?> GetReceiptFromQrAsync(string qr);
 }

@@ -3,20 +3,30 @@ using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 using RoomWroom.CommandHandling;
 
 namespace RoomWroom.Telegram;
 
 public class TelegramBot(
-    string token, Func<long, IResponseProvider> responseProviderFactoryMethod, bool needsToReply = true)
+    string token,
+    Func<long, IResponseProvider> responseProviderFactoryMethod,
+    Func<long, ICallbackResponseProvider> callbackResponseProviderFactoryMethod,
+    bool needsToReply = true)
 {
+    private const ParseMode PARSE_MODE = ParseMode.Html;
+    
     private readonly bool _needsToReply = needsToReply;
 
     private readonly TelegramBotClient _botClient = new(token);
    
-    private readonly Func<long, IResponseProvider> _responseProviderFactoryMethod = responseProviderFactoryMethod;    
+    private readonly Func<long, IResponseProvider> _responseProviderFactoryMethod = responseProviderFactoryMethod;
+    private readonly Func<long, ICallbackResponseProvider> _callbackResponseProviderFactoryMethod =
+        callbackResponseProviderFactoryMethod;
+    
     private readonly ConcurrentDictionary<long, IResponseProvider> _responseProvidersByChatId = [];
+    private readonly ConcurrentDictionary<long, ICallbackResponseProvider> _callbackResponseProvidersByChatId = [];
 
     public async void Run()
     {
@@ -36,6 +46,7 @@ public class TelegramBot(
         Console.Read();
 
         await cancellationTokenSource.CancelAsync();
+        Console.WriteLine("Canceled");
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -64,27 +75,77 @@ public class TelegramBot(
         Response response = await responseTask;
         IEnumerable<MessageData> messagesData = response.GetMessagesData();
 
-        await foreach (Message _ in 
-                       botClient.SendTextMessagesAsync(
+        await foreach (Message _ in botClient.SendTextMessagesAsync(
                            messagesData: messagesData,
                            chatId: chatId,
+                           parseMode: PARSE_MODE,
                            messageThreadId: message.MessageThreadId,
                            replyToMessageId: _needsToReply ? message.MessageId : null,
                            cancellationToken: cancellationToken));
     }
 
-    private static async Task HandleCallbackQueryAsync(ITelegramBotClient botClient, CallbackQuery callbackQuery,
+    private async Task HandleCallbackQueryAsync(ITelegramBotClient botClient, CallbackQuery callbackQuery,
         CancellationToken cancellationToken)
     {
+        if (callbackQuery.Data is not { } callback)
+            return;
+        
         if (callbackQuery.Message is not { } message)
             return;
 
-        if (callbackQuery.Data == "GroceryItemMarkAsShared")
+        long chatId = message.Chat.Id;
+
+        ICallbackResponseProvider callbackResponseProvider =
+            _callbackResponseProvidersByChatId.GetOrAdd(chatId, _callbackResponseProviderFactoryMethod);
+        
+        (Task<Response>, CallbackActionType)? result = 
+            callbackResponseProvider.GetCallbackResponseTask(callback, message.ToResponseUnit());
+        
+        if (result is null)
+            return;
+
+        (Task<Response> responseTask, CallbackActionType callbackActionType) = result.Value;
+        
+        Response response = await responseTask;
+        IEnumerable<MessageData> messagesData = response.GetMessagesData();
+
+        switch (callbackActionType)
         {
-            await botClient.SendTextMessageAsync(
-                message.Chat.Id,
-                message.Text ?? "nothing there",
-                cancellationToken: cancellationToken);
+            case CallbackActionType.NewMessage:
+                await foreach (Message _ in botClient.SendTextMessagesAsync(
+                                   messagesData: messagesData,
+                                   chatId: chatId,
+                                   parseMode: PARSE_MODE,
+                                   messageThreadId: message.MessageThreadId,
+                                   replyToMessageId: _needsToReply ? message.MessageId : null,
+                                   cancellationToken: cancellationToken));
+                break;
+            case CallbackActionType.ClearButtonsAndNewMessage:
+                messagesData = messagesData.Select(messageData => messageData with { InlineKeyboardMarkup = null });
+                await foreach (Message _ in botClient.SendTextMessagesAsync(
+                                   messagesData: messagesData,
+                                   chatId: chatId,
+                                   parseMode: PARSE_MODE,
+                                   messageThreadId: message.MessageThreadId,
+                                   replyToMessageId: _needsToReply ? message.MessageId : null,
+                                   cancellationToken: cancellationToken));
+                break;
+            case CallbackActionType.EditCurrentMessage:
+                MessageData messageData = messagesData.First(); 
+                
+                if (messageData.Text is null)
+                    return;
+                
+                await botClient.EditMessageTextAsync(
+                    chatId: chatId,
+                    messageId: message.MessageId,
+                    text: messageData.Text,
+                    parseMode: PARSE_MODE,
+                    replyMarkup: messageData.InlineKeyboardMarkup,
+                    cancellationToken: cancellationToken);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 

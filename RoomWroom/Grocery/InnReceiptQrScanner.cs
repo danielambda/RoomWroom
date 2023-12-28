@@ -23,7 +23,7 @@ internal class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrSc
 
     private bool _initialized = false;
 
-    public async Task<Receipt> GetReceiptFromQrAsync(string qr)
+    public async Task<Receipt?> GetReceiptFromQrAsync(string qr)
     {
         if (!_initialized)
             await Init();
@@ -35,9 +35,8 @@ internal class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrSc
 
         JsonDocument jsonDocument = await GetJsonFromTickedId(ticketId);
         IEnumerable<GroceryItem>? items = ParseGroceryItemsFromJson(jsonDocument);
-        Receipt receipt = new(items);
-
-        return receipt;
+        
+        return items is null ? null : new Receipt(items);
     }
 
     private async Task Init()
@@ -54,14 +53,15 @@ internal class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrSc
         _initialized = true;
     }
 
+    private static readonly JsonSerializerOptions ParseOptions = new(JsonSerializerDefaults.Web);
+    
     private static IEnumerable<GroceryItem>? ParseGroceryItemsFromJson(JsonDocument jsonDocument)
     {
         JsonElement jsonItems = jsonDocument.RootElement.GetProperty("ticket").GetProperty("document")
             .GetProperty("receipt").GetProperty("items");
 
-        JsonSerializerOptions options = new(JsonSerializerDefaults.Web);
-        List<GroceryItem>? items = jsonItems.Deserialize<List<GroceryItem>?>(options);
-        return items;
+        IEnumerable<GroceryItem>? items = jsonItems.Deserialize<List<GroceryItem>?>(ParseOptions);
+        return items?.Select(item => item with { Name = item.Name.Trim() });
     }
 
     private async Task<JsonDocument> GetJsonFromTickedId(string ticketId)

@@ -1,35 +1,34 @@
 ﻿using RoomWroom.CommandHandling;
+using RoomWroom.Database.Grocery;
 using RoomWroom.Telegram;
 using RoomWroom.Grocery;
 
-string? inn = Environment.GetEnvironmentVariable("INN", EnvironmentVariableTarget.User);
-if (inn is null)
-{
-    Console.WriteLine("Environment variable INN is null");
-    return;
-}
-
-string? password = Environment.GetEnvironmentVariable("INN_PASSWORD", EnvironmentVariableTarget.User);
-if (password is null)
-{
-    Console.WriteLine("Environment variable INN_PASSWORD is null");
-    return;
-}
-
-string? accessToken = Environment.GetEnvironmentVariable("ROOMWROOM_TG_BOT_TOKEN", EnvironmentVariableTarget.User);
-if (accessToken is null)
-{
-    Console.WriteLine("Environment variable ROOMWROOM_TG_BOT_TOKEN is null");
-    return;
-}
+string inn = TryGetEnvironmentVariable("INN");
+string password = TryGetEnvironmentVariable("INN_PASSWORD");
+string accessToken = TryGetEnvironmentVariable("ROOMWROOM_TG_BOT_TOKEN");
 
 IReceiptQrScanner receiptQrScanner = new InnReceiptQrScanner(inn, password);
-ICommandProvider groceryCommandProvider = new GroceryCommandProvider(receiptQrScanner);
+IReceiptsRepository receiptsRepository = new FileReceiptsRepository();
+ICommandProvider groceryCommandProvider = new GroceryCommandProvider(receiptQrScanner, receiptsRepository);
+
+ICallbackActionsProvider groceryCallbackActionsProvider = new GroceryCallbackActionsProvider();
 
 CommandHandler baseCommandHandler = new([groceryCommandProvider]);
-ResponseProviderFactoryMethodProvider responseProviderFactoryMethodProvider = new(baseCommandHandler);
+CallbackHandler baseCallbackHandler = new([groceryCallbackActionsProvider]);
 
-TelegramBot bot = new(accessToken, responseProviderFactoryMethodProvider.ResponseProviderFactoryMethod);
+ResponseProviderFactoryMethodProvider responseProviderFactoryMethodProvider = new(baseCommandHandler);
+CallbackResponseProviderFactoryMethodProvider callbackResponseProviderFactoryMethodProvider = new(baseCallbackHandler);
+
+TelegramBot bot = new(accessToken,
+    responseProviderFactoryMethodProvider.ResponseProviderFactoryMethod,
+    callbackResponseProviderFactoryMethodProvider.CallbackResponseProviderFactoryMethod);
 bot.Run();
 
 Console.ReadLine();
+return;
+
+static string TryGetEnvironmentVariable(string key)
+{
+    string? value = Environment.GetEnvironmentVariable(key, EnvironmentVariableTarget.User);
+    return value ?? throw new ArgumentException($"Environment variable {key} is null");
+}
