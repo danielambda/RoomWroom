@@ -7,10 +7,10 @@ string inn = TryGetEnvironmentVariable("INN");
 string password = TryGetEnvironmentVariable("INN_PASSWORD");
 string accessToken = TryGetEnvironmentVariable("ROOMWROOM_TG_BOT_TOKEN");
 
-IReceiptQrScanner receiptQrScanner = new InnReceiptQrScanner(inn, password);
+IReceiptFromQrProvider receiptQrScanner = new InnReceiptFromQrProvider(inn, password);
+
 IReceiptsRepository receiptsRepository = new FileReceiptsRepository();
 ICommandProvider groceryCommandProvider = new GroceryCommandProvider(receiptQrScanner, receiptsRepository);
-
 ICallbackActionsProvider groceryCallbackActionsProvider = new GroceryCallbackActionsProvider();
 
 CommandHandler baseCommandHandler = new([groceryCommandProvider]);
@@ -22,9 +22,9 @@ CallbackResponseProviderFactoryMethodProvider callbackResponseProviderFactoryMet
 TelegramBot bot = new(accessToken,
     responseProviderFactoryMethodProvider.ResponseProviderFactoryMethod,
     callbackResponseProviderFactoryMethodProvider.CallbackResponseProviderFactoryMethod);
-bot.Run();
 
-Console.ReadLine();
+await bot.Run();
+
 return;
 
 static string TryGetEnvironmentVariable(string key)

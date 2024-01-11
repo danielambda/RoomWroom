@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace RoomWroom.Grocery;
 
-internal class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrScanner
+internal class InnReceiptFromQrProvider(string? inn, string? password) : IReceiptFromQrProvider
 {
     private const string TAX_SERVICE_URL = "https://irkkt-mobile.nalog.ru:8888/v2";
     private const string DEVICE_OS = "IOS";
@@ -23,7 +23,7 @@ internal class InnReceiptQrScanner(string? inn, string? password) : IReceiptQrSc
 
     private bool _initialized = false;
 
-    public async Task<Receipt?> GetReceiptFromQrAsync(string qr)
+    public async Task<Receipt?> GetAsync(string qr)
     {
         if (!_initialized)
             await Init();

@@ -1,9 +1,9 @@
 ﻿namespace RoomWroom.Grocery;
 
-public interface IReceiptsRepository
+internal interface IReceiptsRepository
 {
-    public Receipt? Get(string qrText);
-
+    Receipt? Get(string qrText);
+    
     public void Add(string qrText, Receipt receipt);
 
     public string? GetTranslatedName(string name);

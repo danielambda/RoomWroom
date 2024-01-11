@@ -49,6 +49,8 @@ public class FileReceiptsRepository : IReceiptsRepository
         return translatedNames ?? [];
     }
 
+    public Task<Receipt?> GetAsync(string qrText) => Task.FromResult(Get(qrText));
+
     public Receipt? Get(string qrText) => _receipts.GetValueOrDefault(qrText);
 
     public void Add(string qrText, Receipt receipt)

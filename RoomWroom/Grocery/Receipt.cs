@@ -1,11 +1,13 @@
-﻿namespace RoomWroom.Grocery;
+﻿using System.Text;
+
+namespace RoomWroom.Grocery;
 
 public class Receipt(IEnumerable<GroceryItem> items)
 {
-    public IEnumerable<GroceryItem> Items { get; } = items.OrderBy(item => item.TranslatedName ?? item.Name)
-                                                          .CombineSame()
-                                                          .Where(item => item is { Quantity: > 0, Sum: > 0 })
-                                                          .ToArray();
+    public GroceryItem[] Items { get; } = items.OrderBy(item => item.TranslatedName ?? item.Name)
+                                               .CombineSame()
+                                               .Where(item => item is { Quantity: > 0, Sum: > 0 })
+                                               .ToArray();
 
     public void TranslateNames(Func<string, string?> translationMethod)
     {
@@ -21,7 +23,7 @@ public class Receipt(IEnumerable<GroceryItem> items)
         if (Items is null)
             throw new NullReferenceException(nameof(Items));
 
-        System.Text.StringBuilder result = new();
+        StringBuilder result = new();
         int sum = 0;
         int currentIndex = 1;
         

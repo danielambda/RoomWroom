@@ -8,7 +8,7 @@ internal class CallbackAction(string callbackText, Func<ResponseUnit, Task<Respo
     
     private readonly CallbackActionType _type = type;
     
-    internal bool Matches(string text) => text.Equals(_callbackText);
+    internal bool Matches(string text) => text.StartsWith(_callbackText);
 
     internal (Task<Response>, CallbackActionType) InvokeTask(ResponseUnit response) 
         => (_function.Invoke(response), _type);

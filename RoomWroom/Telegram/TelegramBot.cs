@@ -28,7 +28,7 @@ public class TelegramBot(
     private readonly ConcurrentDictionary<long, IResponseProvider> _responseProvidersByChatId = [];
     private readonly ConcurrentDictionary<long, ICallbackResponseProvider> _callbackResponseProvidersByChatId = [];
 
-    public async void Run()
+    public async Task Run()
     {
         using CancellationTokenSource cancellationTokenSource = new();
 
@@ -51,6 +51,8 @@ public class TelegramBot(
 
     private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
+        await botClient.SendTextMessageAsync(update.Message.Chat.Id, " ", cancellationToken: cancellationToken);
+        
         if (update.Message is { } message)
             await HandleMessageAsync(botClient, message, cancellationToken);
 

@@ -21,19 +21,18 @@ internal class GroceryCallbackActionsProvider : ICallbackActionsProvider
         return "This thing is not implemented yet";
     }
 
-    private static async Task<Response> SelectShared(ResponseUnit responseUnit)
+    private static Task<Response> SelectShared(ResponseUnit responseUnit)
     {
-        return new Response(responseUnit with
-        {
-            ResponseCallbackButtons =
-            [
-                [
-                    new("1", "1"), new("2", "2"), new("3", "3"), new("4", "4"), new("5", "5"), new("6", "6"),
-                    new(">", "6")
-                ],
-                [new("Cancel", "c"), new("Confirm", "c")]
-            ]
-        });
+        IEnumerable<List<ResponseCallbackButton>> newResponseCallbackButtons =
+        [
+            [],
+            [new("Cancel", "c"), new("Confirm", "c")]
+        ];
+
+        
+
+        Response response = new(responseUnit with { ResponseCallbackButtons = newResponseCallbackButtons });
+        return Task.FromResult(response);
     }
 
     private static async Task<Response> EditNames(ResponseUnit responseUnit)
