@@ -1,0 +1,19 @@
+@host = http://localhost:5000
+
+GET {{host}}/shop/receipt
+Accept: application/json
+Content-Type: application/json
+
+{
+     "id" : "5b4669fa-5618-410c-a193-d0bfa88a15b1"
+}
+
+###
+
+POST {{host}}/shop/receipt
+Accept: application/json
+Content-Type: application/json
+
+{
+  "qr" : "t=20231213T1600&s=1353.13&fn=7282440500182193&i=23045&fp=112595028&n=1"
+}
