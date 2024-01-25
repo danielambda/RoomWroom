@@ -8,9 +8,9 @@ public class Receipt : AggregateRoot<ReceiptId>
 
     public IReadOnlyList<ReceiptItem> Items => _items.AsReadOnly();
     
-    public string? Qr { get; }
+    public string? Qr { get; private set; }
 
-    private Receipt(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr) : base(id)
+    private Receipt(ReceiptId id, string? qr, IEnumerable<ReceiptItem> items) : base(id)
     {
         _items = items
             .OrderBy(item => item.Name)
@@ -19,13 +19,18 @@ public class Receipt : AggregateRoot<ReceiptId>
             .ToList();
         
         Qr = qr;
-    }   
+    }
 
-    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr = null) => 
-        new(ReceiptId.CreateUnique(), items, qr);
+    private Receipt() { }
+
+    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr) => 
+        new(ReceiptId.CreateUnique(), qr, items);
+
+    public static Receipt Create(ReceiptId id, string? qr, IEnumerable<ReceiptItem> items) =>
+        new(id, qr, items);
 }
 
-file static class GroceryItemExtensions
+file static class ReceiptItemExtensions
 {
     public static IEnumerable<ReceiptItem> CombineSame(this IOrderedEnumerable<ReceiptItem> items)
     {
@@ -35,8 +40,8 @@ file static class GroceryItemExtensions
         {
             if (currentItem.Price == previousItem?.Price && currentItem.Name == previousItem.Name)
             {
-                float quantitySum = previousItem.Quantity + currentItem.Quantity;
-                previousItem = new ReceiptItem(currentItem.Name, currentItem.Price, quantitySum);
+                decimal quantitySum = previousItem.Quantity + currentItem.Quantity;
+                previousItem = new(currentItem.Name, currentItem.Price, quantitySum);
                 
                 continue;
             }

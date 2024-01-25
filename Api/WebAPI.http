@@ -1,19 +1,18 @@
 @host = http://localhost:5000
 
-GET {{host}}/shop/receipt
+@id = 8394d0a3-90a9-45f9-a04d-c42a89d4e3eb
+
+GET {{host}}/receipt/{{id}}
 Accept: application/json
 Content-Type: application/json
-
-{
-     "id" : "5b4669fa-5618-410c-a193-d0bfa88a15b1"
-}
 
 ###
 
-POST {{host}}/shop/receipt
+POST {{host}}/receipt/qr
 Accept: application/json
 Content-Type: application/json
 
 {
-  "qr" : "t=20231213T1600&s=1353.13&fn=7282440500182193&i=23045&fp=112595028&n=1"
+  "qr" : "t=20200924T1837&s=349.93&fn=9282440300682838&i=46534&fp=1273019065&n=1"
 }
+

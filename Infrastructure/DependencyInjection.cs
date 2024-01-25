@@ -1,7 +1,6 @@
-﻿using System.Reflection;
-using Application.Shopping.Interfaces;
-using Infrastructure.Shopping;
-using Infrastructure.Shopping.Repositories;
+﻿using Application.Receipts.Interfaces;
+using Infrastructure.Receipts;
+using Infrastructure.Receipts.Perception;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -11,20 +10,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services
-            .AddMappings(Assembly.GetExecutingAssembly())
-            .AddSingleton<IReceiptFromQrCreator, InnReceiptFromQrCreator>()
-            .AddSingleton<IReceiptRepository, MemoryReceiptRepository>();
-
-        return services;
-    }
-
-    private static IServiceCollection AddMappings(this IServiceCollection services, Assembly assembly)
-    {
-        TypeAdapterConfig config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(assembly);
-
-        services.AddSingleton(config);
-        services.AddScoped<IMapper, ServiceMapper>();
+            .AddScoped<IReceiptFromQrCreator, InnReceiptFromQrCreator>()
+            .AddScoped<IReceiptRepository, FileReceiptRepository>();
 
         return services;
     }

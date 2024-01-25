@@ -1,6 +1,8 @@
 ﻿namespace Domain.Common.Models;
 
-public class AggregateRoot<TId> : Entity<TId> where TId : notnull
+public class AggregateRoot<TId> : EntityBase<TId> where TId : notnull
 {
     protected AggregateRoot(TId id) : base(id) { }
+    
+    protected AggregateRoot() {}
 }

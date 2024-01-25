@@ -1,6 +1,6 @@
 ﻿namespace Domain.RoomAggregate.ValueObjects;
 
-public class RoomId : ValueObject
+public class RoomId : ValueObjectBase, IId<RoomId, Guid>
 {
     public Guid Value { get; }
 
@@ -9,6 +9,10 @@ public class RoomId : ValueObject
     public static RoomId Create(Guid value) => new(value);
     
     public static RoomId CreateUnique() => new(Guid.NewGuid());
+    
+    public static implicit operator string?(RoomId id) => id.Value.ToString();
+
+    public static implicit operator RoomId(string str) => new(Guid.Parse(str));
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

@@ -2,15 +2,15 @@
 
 namespace Domain.ReceiptAggregate.ValueObjects;
 
-public class ReceiptItem : ValueObject
+public sealed class ReceiptItem : ValueObjectBase
 {
-    public string Name { get; }
-    public Money Price { get; }
-    public float Quantity { get; }
-    public Money Sum { get; }
-    public ShopItemId? AssociatedShopItemId { get; }
+    public string Name { get; private set; } = default!;
+    public Money Price { get; private set; } = default!;
+    public decimal Quantity { get; private set; } = default!;
+    public Money Sum { get; private set; } = default!;
+    public ShopItemId? AssociatedShopItemId { get; private set; } = default!;
 
-    public ReceiptItem(string name, Money price, float quantity, ShopItemId? associatedShopItemId = null)
+    public ReceiptItem(string name, Money price, decimal quantity, ShopItemId? associatedShopItemId = null)
     {
         Name = name;
         Price = price;
@@ -19,9 +19,13 @@ public class ReceiptItem : ValueObject
 
         Sum = Price * Quantity;
     }
-    
+
+    private ReceiptItem()
+    {
+    }
+
     public override string ToString() => $"{Name}.{Environment.NewLine} {Price} x {Quantity} = {Sum}";
-    
+
     protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return Name;

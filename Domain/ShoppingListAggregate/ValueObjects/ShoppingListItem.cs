@@ -2,7 +2,7 @@
 
 namespace Domain.ShoppingListAggregate.ValueObjects;
 
-public class ShoppingListItem : ValueObject
+public class ShoppingListItem : ValueObjectBase
 {
     public ShopItemId ShopItemId { get; }
     public float Quantity { get; }

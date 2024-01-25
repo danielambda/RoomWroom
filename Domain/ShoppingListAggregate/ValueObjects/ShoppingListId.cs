@@ -1,6 +1,6 @@
 ﻿namespace Domain.ShoppingListAggregate.ValueObjects;
 
-public class ShoppingListId : ValueObject
+public class ShoppingListId : ValueObjectBase, IId<ShoppingListId, Guid>
 {
     public Guid Value { get; }
 
@@ -9,6 +9,10 @@ public class ShoppingListId : ValueObject
     public static ShoppingListId Create(Guid value) => new(value);
     
     public static ShoppingListId CreateUnique() => new(Guid.NewGuid());
+    
+    public static implicit operator string?(ShoppingListId id) => id.Value.ToString();
+
+    public static implicit operator ShoppingListId(string str) => new(Guid.Parse(str));
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

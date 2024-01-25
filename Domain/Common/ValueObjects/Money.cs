@@ -1,6 +1,8 @@
-﻿namespace Domain.Common.ValueObjects;
+﻿using Domain.Common.Exceptions;
 
-public class Money : ValueObject
+namespace Domain.Common.ValueObjects;
+
+public class Money : ValueObjectBase
 {
     public decimal Amount { get; }
     public Currency Currency { get; }
@@ -13,8 +15,8 @@ public class Money : ValueObject
     
     public override string ToString() => $"{Amount} {Currency}";
 
-    public static Money operator *(Money left, float right) => new(left.Amount * (decimal)right, left.Currency);
-    public static Money operator *(float left, Money right) => new(right.Amount * (decimal)left, right.Currency);
+    public static Money operator *(Money left, decimal right) => new(left.Amount * right, left.Currency);
+    public static Money operator *(decimal left, Money right) => new(right.Amount * left, right.Currency);
 
     public static Money operator +(Money left, Money right)
     {
