@@ -11,7 +11,7 @@ public class GetReceiptHandler(
     
     public async Task<ErrorOr<Receipt>> Handle(GetReceiptQuery request, CancellationToken cancellationToken)
     {
-        Receipt? receipt = await _receiptRepository.GetAsync(request.Id, cancellationToken);
+        Receipt? receipt = await _receiptRepository.GetAsync(request.Id!, cancellationToken);
 
         if (receipt is null)
             return Error.NotFound($"{nameof(Receipt)} {request.Id}");

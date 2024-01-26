@@ -1,12 +1,18 @@
-﻿using Application.Receipts.Queries;
+﻿using Application.Common.Interfaces;
 using Domain.ShopItemAggregate;
 
 namespace Application.ShopItems.Queries;
 
-public class GetShopItemHandler : IRequestHandler<GetShopItemQuery, ErrorOr<ShopItem>>
+public class GetShopItemHandler(IShopItemRepository repository) : IRequestHandler<GetShopItemQuery, ErrorOr<ShopItem>>
 {
-    public Task<ErrorOr<ShopItem>> Handle(GetShopItemQuery request, CancellationToken cancellationToken)
+    private readonly IShopItemRepository _repository = repository;
+    
+    public async Task<ErrorOr<ShopItem>> Handle(GetShopItemQuery request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        ShopItem? shopItem = await _repository.GetAsync(request.Id!, cancellationToken);
+        if (shopItem is null)
+            return Error.NotFound();
+
+        return shopItem;
     }
 }

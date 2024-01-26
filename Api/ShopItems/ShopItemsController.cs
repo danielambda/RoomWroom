@@ -10,9 +10,9 @@ namespace Api.ShopItems;
 public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(GetShopItemRequest request, string id)
+    public async Task<IActionResult> Get(string id)
     {
-        GetShopItemQuery query = (request, id).ToQuery();
+        GetShopItemQuery query = new(id);
 
         ErrorOr<ShopItem> result = await _mediator.Send(query);
 

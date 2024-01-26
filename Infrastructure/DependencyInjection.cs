@@ -1,6 +1,8 @@
-﻿using Application.Receipts.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Receipts.Interfaces;
 using Infrastructure.Receipts;
 using Infrastructure.Receipts.Perception;
+using Infrastructure.ShopItems.Perception;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -11,7 +13,8 @@ public static class DependencyInjection
     {
         services
             .AddScoped<IReceiptFromQrCreator, InnReceiptFromQrCreator>()
-            .AddScoped<IReceiptRepository, FileReceiptRepository>();
+            .AddScoped<IReceiptRepository, FileReceiptRepository>()
+            .AddScoped<IShopItemRepository, FileShopItemRepository>();
 
         return services;
     }

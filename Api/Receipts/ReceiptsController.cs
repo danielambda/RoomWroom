@@ -22,10 +22,10 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(GetReceiptRequest request, string id)
+    public async Task<IActionResult> Get(string id)
     {
-        GetReceiptQuery query = (request, id).ToQuery();
-
+        GetReceiptQuery query = new(id);
+        
         ErrorOr<Receipt> result = await _mediator.Send(query);
 
         return result.Match(
