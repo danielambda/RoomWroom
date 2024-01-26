@@ -2,7 +2,7 @@
 
 public record ReceiptResponse(
     string Id,
-    string Qr,
+    string? Qr,
     List<ReceiptItemResponse> Items);
 
 public record ReceiptItemResponse(
