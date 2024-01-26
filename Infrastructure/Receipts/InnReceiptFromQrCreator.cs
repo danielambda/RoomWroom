@@ -179,16 +179,17 @@ file class ReceiptItemJsonConverter : JsonConverter<ReceiptItem>
     {
         var jsonReceiptItem = JsonSerializer.Deserialize<JsonReceiptItem?>(ref reader, options);
 
-        return jsonReceiptItem is null 
-            ? null 
+        return jsonReceiptItem is null
+            ? null
             : new ReceiptItem(
                 jsonReceiptItem.Name,
                 new Money(jsonReceiptItem.Price / 100m, Currency.Rub),
                 jsonReceiptItem.Quantity);
     }
 
-    public override void Write(Utf8JsonWriter writer, ReceiptItem value, JsonSerializerOptions options) => 
-        throw new NotImplementedException();
+    public override void Write(Utf8JsonWriter writer, ReceiptItem value, JsonSerializerOptions options)
+    {
+    }
 }
 
 file sealed record JsonReceiptItem(string Name, int Price, decimal Quantity);
