@@ -1,3 +1,3 @@
 ﻿namespace Contracts.Receipts;
 
-public record GetReceiptRequest(string Id);
+public record GetReceiptRequest;

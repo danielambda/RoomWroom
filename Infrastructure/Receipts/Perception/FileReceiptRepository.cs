@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Concurrent;
+using System.Text.Json;
 using Application.Receipts.Interfaces;
 using Domain.Common.Enums;
 using Domain.Common.ValueObjects;
@@ -11,23 +12,23 @@ public class FileReceiptRepository : IReceiptRepository
 {
     private const string RECEIPTS_FILE = "Receipts.json";
     
-    private static readonly Dictionary<string, Receipt> Receipts = InitReceipts();
+    private static readonly ConcurrentDictionary<string, Receipt> Receipts = InitReceipts();
 
-    public Task<Receipt?> GetAsync(string id, CancellationToken cancellationToken) => 
-        Task.FromResult(Receipts.GetValueOrDefault(id));
+    public Task<Receipt?> GetAsync(ReceiptId id, CancellationToken cancellationToken) => 
+        Task.FromResult(Receipts.GetValueOrDefault(id!));
 
-    public Task<Receipt?> GetFromQrAsync(string qr, CancellationToken cancellationToken = default) => 
-        Task.FromResult(Receipts.Values.SingleOrDefault(receipt => receipt.Qr == qr));
+    public Task<bool> CheckExistence(string qr, CancellationToken cancellationToken = default) =>
+        Task.FromResult(Receipts.Values.Any(receipt => receipt.Qr == qr));
 
     public Task AddAsync(Receipt receipt, CancellationToken cancellationToken)
     {
-        Receipts.TryAdd(receipt.Id.Value.ToString(), receipt);
+        Receipts.TryAdd(receipt.Id!, receipt);
         UpdateReceiptsFile();
 
         return Task.CompletedTask;
     }
 
-    private static Dictionary<string, Receipt> InitReceipts()
+    private static ConcurrentDictionary<string, Receipt> InitReceipts()
     {
         using FileStream stream = new(RECEIPTS_FILE, FileMode.OpenOrCreate, FileAccess.Read);
         Span<byte> buffer = stackalloc byte[(int)stream.Length];
@@ -39,7 +40,7 @@ public class FileReceiptRepository : IReceiptRepository
         Utf8JsonReader jsonReader = new(buffer);
         JsonElement jsonElement = JsonElement.ParseValue(ref jsonReader);
 
-        Dictionary<string, Receipt>? receipts = jsonElement.Deserialize();
+        ConcurrentDictionary<string, Receipt>? receipts = jsonElement.Deserialize();
         
         return receipts ?? [];
     }
@@ -56,7 +57,7 @@ public class FileReceiptRepository : IReceiptRepository
 
 file static class SerializationExtensions
 {
-    public static Dictionary<string, Receipt>? Deserialize(this JsonElement jsonElement)
+    public static ConcurrentDictionary<string, Receipt>? Deserialize(this JsonElement jsonElement)
     {
         var receiptDtos = jsonElement.Deserialize<Dictionary<string, ReceiptDto>>();
         if (receiptDtos is null)
@@ -66,7 +67,7 @@ file static class SerializationExtensions
         foreach ((string? key, (string? id, string? qr, List<ReceiptItemDto>? receiptItemDtos)) in receiptDtos)
         {
             receipts.Add(key, Receipt.Create(
-                id,
+                id!,
                 qr,
                 receiptItemDtos.ConvertAll(item =>
                 {
@@ -79,16 +80,16 @@ file static class SerializationExtensions
                 })));
         }
 
-        return receipts;
+        return new(receipts);
     }
 
-    public static string Serialize(this Dictionary<string, Receipt> receipts)
+    public static string Serialize(this ConcurrentDictionary<string, Receipt> receipts)
     {
         Dictionary<string, ReceiptDto> receiptDtos = [];
         foreach ((string? key, Receipt? receipt) in receipts)
         {
             receiptDtos.Add(key, new(
-                receipt.Id,
+                receipt.Id!,
                 receipt.Qr,
                 receipt.Items.Select(item => new ReceiptItemDto(
                     item.Name,

@@ -3,8 +3,10 @@
 namespace Api.Common.Models;
 
 [ApiController]
-public abstract class ApiControllerBase : ControllerBase
+public abstract class ApiControllerBase(ISender mediator) : ControllerBase
 {
+    protected readonly ISender _mediator = mediator;
+    
     protected IActionResult Problem(IEnumerable<Error> errors)
     {
         Error firstError = errors.First();
