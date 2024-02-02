@@ -4,6 +4,8 @@ namespace Application.Rooms.Commands;
 
 public record CreateRoomCommand(
     string Name,
+    decimal BudgetAmount,
+    string BudgetCurrency,
     IEnumerable<string> UserIds,
     IEnumerable<OwnedShopItemCommand> OwnedShopItems)
     : IRequest<ErrorOr<Room>>;

@@ -1,4 +1,6 @@
 ﻿using Application.Rooms.Interfaces;
+using Domain.Common.Enums;
+using Domain.Common.ValueObjects;
 using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate.ValueObjects;
@@ -13,6 +15,7 @@ public class CreateRoomHandler(IRoomRepository repository) : IRequestHandler<Cre
     {
         var room = Room.CreateNew(
             command.Name,
+            new Money(command.BudgetAmount, Enum.Parse<Currency>(command.BudgetCurrency)),
             command.UserIds.Select(id =>
                 UserId.Create(Guid.Parse(id))),
             command.OwnedShopItems.Select(item =>

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
 using Application.Rooms.Interfaces;
+using Domain.Common.Enums;
+using Domain.Common.ValueObjects;
 using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate.ValueObjects;
@@ -64,18 +66,18 @@ file static class SerializationExtensions
 {
     public static ConcurrentDictionary<string, Room>? Deserialize(this JsonElement jsonElement)
     {
-        if(jsonElement.Deserialize<Dictionary<string, RoomDto>>() is not { } roomDtos)
+        if (jsonElement.Deserialize<Dictionary<string, RoomDto>>() is not { } roomDtos)
             return null;
-        
-        return new(roomDtos.Select(pair =>
-            new KeyValuePair<string, Room>(
-                pair.Key,
-                Room.Create(
-                    pair.Value.Id!,
-                    pair.Value.Name,
-                    pair.Value.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
-                    pair.Value.OwnedShopItemDtos.Select(item =>
-                        OwnedShopItem.Create(item.ShopItemId!, item.Quantity))))));
+
+        return new(roomDtos.Select(pair => new KeyValuePair<string, Room>(
+            pair.Key,
+            Room.Create(
+                pair.Value.Id!,
+                pair.Value.Name,
+                new Money(pair.Value.BudgetAmount, Enum.Parse<Currency>(pair.Value.BudgetCurrency)),
+                pair.Value.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
+                pair.Value.OwnedShopItemDtos.Select(item =>
+                    OwnedShopItem.Create(item.ShopItemId!, item.Quantity))))));
     }
 
     public static string Serialize(this ConcurrentDictionary<string, Room> rooms) =>
@@ -85,6 +87,8 @@ file static class SerializationExtensions
                 new RoomDto(
                     pair.Value.Id!,
                     pair.Value.Name,
+                    pair.Value.Budget.Amount,
+                    pair.Value.Budget.Currency.ToString(),
                     pair.Value.UserIds.Select(id => id.Value.ToString()),
                     pair.Value.OwnedShopItems.Select(item =>
                         new OwnedShopItemDto(item.ShopItemId!, item.Quantity)))))
@@ -93,6 +97,8 @@ file static class SerializationExtensions
     private record RoomDto(
         string Id,
         string Name,
+        decimal BudgetAmount,
+        string BudgetCurrency,
         IEnumerable<string> UserIds,
         IEnumerable<OwnedShopItemDto> OwnedShopItemDtos);
     
