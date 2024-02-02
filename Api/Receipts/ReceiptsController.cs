@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Receipts;
 
-[Route("receipt")]
+[Route("receipts")]
 public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpPost("qr")]
@@ -17,7 +17,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
         ErrorOr<Receipt> result = await _mediator.Send(command);
 
         return result.Match(
-            receiptResult => OkCreated(receiptResult.ToResponse()),
+            receipt => OkCreated(receipt.ToResponse()),
             errors => Problem(errors));
     }
 
@@ -27,7 +27,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
         GetReceiptQuery query = new(id);
         
         ErrorOr<Receipt> result = await _mediator.Send(query);
-
+        
         return result.Match(
             receipt => Ok(receipt.ToResponse()),
             errors => Problem(errors));

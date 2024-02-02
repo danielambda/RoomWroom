@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.ShopItems;
 
-[Route("shop")]
+[Route("shop-items")]
 public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpGet("{id}")]

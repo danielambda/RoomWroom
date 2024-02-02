@@ -12,7 +12,7 @@ public class MemoryReceiptRepository : IReceiptRepository
     public Task<Receipt?> GetAsync(ReceiptId id, CancellationToken cancellationToken = default) => 
         Task.FromResult(_receipts.GetValueOrDefault(id!));
 
-    public Task<bool> CheckExistence(string qr, CancellationToken cancellationToken = default) =>
+    public Task<bool> CheckExistenceByQr(string qr, CancellationToken cancellationToken = default) =>
         Task.FromResult(_receipts.Values.Any(receipt => receipt.Qr == qr));
 
     public Task AddAsync(Receipt receipt, CancellationToken cancellationToken = default)

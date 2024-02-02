@@ -10,9 +10,9 @@ public class RoomId : ValueObjectBase, IId<RoomId, Guid>
     
     public static RoomId CreateUnique() => new(Guid.NewGuid());
     
-    public static implicit operator string?(RoomId id) => id.Value.ToString();
+    public static implicit operator string?(RoomId? id) => id?.Value.ToString();
 
-    public static implicit operator RoomId(string str) => new(Guid.Parse(str));
+    public static implicit operator RoomId?(string? str) => str is null ? null : new(Guid.Parse(str));
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

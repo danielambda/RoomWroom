@@ -15,7 +15,7 @@ public abstract class ValueObjectBase : IEquatable<ValueObjectBase>
         if (obj == null || obj.GetType() != GetType())
             return false;
 
-        ValueObjectBase other = (ValueObjectBase)obj;
+        var other = (ValueObjectBase)obj;
         return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
     }
 

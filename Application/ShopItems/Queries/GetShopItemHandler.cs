@@ -9,7 +9,7 @@ public class GetShopItemHandler(IShopItemRepository repository) : IRequestHandle
     
     public async Task<ErrorOr<ShopItem>> Handle(GetShopItemQuery request, CancellationToken cancellationToken)
     {
-        ShopItem? shopItem = await _repository.GetAsync(request.Id!, cancellationToken);
+        ShopItem? shopItem = await _repository.GetAsync(request.ShopItemId!, cancellationToken);
         if (shopItem is null)
             return Error.NotFound();
 

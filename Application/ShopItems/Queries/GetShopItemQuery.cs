@@ -2,4 +2,4 @@
 
 namespace Application.ShopItems.Queries;
 
-public record GetShopItemQuery(string Id) : IRequest<ErrorOr<ShopItem>>;
+public record GetShopItemQuery(string ShopItemId) : IRequest<ErrorOr<ShopItem>>;
