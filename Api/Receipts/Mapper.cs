@@ -2,6 +2,7 @@
 using Contracts.Receipts;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
+using Domain.ShopItemAggregate.ValueObjects;
 
 namespace Api.Receipts;
 
@@ -21,5 +22,15 @@ public static class Mapper
             receiptItem.Price.Currency.ToString(),
             receiptItem.Quantity,
             receiptItem.AssociatedShopItemId);
+
+    public static AssociateShopItemIdByIndexCommand ToCommand(
+        this (string ReceiptId, AssociateShopItemIdByIndexRequest Request) tuple) =>
+        new(tuple.Request.AssociatedShopItemId!, tuple.Request.Index, tuple.ReceiptId!);
+
+    public static AssociateShopItemIdsByIndicesCommand ToCommand(
+        this (string ReceiptId, AssociateShopItemIdsByIndicesRequest Request) tuple) =>
+        new(tuple.Request.AssociatedShopItemIds.Select(id => 
+                id is null ? null : ShopItemId.Create(Guid.Parse(id))),
+            tuple.ReceiptId!);
 }
 

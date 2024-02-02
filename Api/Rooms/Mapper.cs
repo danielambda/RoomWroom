@@ -23,4 +23,7 @@ public static class Mapper
     
     public static AddShopItemToRoomCommand ToCommand(this (string RoomId, AddShopItemToRoomRequest Request) tuple) => 
         new(tuple.Request.ShopItemId!, tuple.Request.Quantity, tuple.RoomId!);
+
+    public static AddReceiptToRoomCommand ToCommand(this (string RoomId, AddReceiptToRoomRequest Request) tuple) =>
+        new(tuple.Request.ReceiptId!, tuple.Request.ExcludedItemsIds, tuple.RoomId!);
 }

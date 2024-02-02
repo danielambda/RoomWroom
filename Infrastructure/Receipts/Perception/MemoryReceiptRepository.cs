@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using Application.Common.Interfaces.Perception;
 using Application.Receipts.Interfaces;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;

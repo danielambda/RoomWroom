@@ -1,4 +1,5 @@
 ﻿using Application.Rooms.Commands;
+using Application.Rooms.Queries;
 using Contracts.Rooms;
 using Domain.RoomAggregate;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        GetRoomCommand command = new(id);
+        GetRoomQuery command = new(id);
 
         ErrorOr<Room> result = await _mediator.Send(command);
         
@@ -36,6 +37,16 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     public async Task<IActionResult> AddShopItemToRoom(string roomId, AddShopItemToRoomRequest request)
     {
         AddShopItemToRoomCommand command = (roomId, request).ToCommand();
+
+        await _mediator.Send(command);
+
+        return Ok();
+    }
+
+    [HttpPost("{roomId}/receipt")]
+    public async Task<IActionResult> AddReceiptToRoom(string roomId, AddReceiptToRoomRequest request)
+    {
+        AddReceiptToRoomCommand command = (roomId, request).ToCommand();
 
         await _mediator.Send(command);
 

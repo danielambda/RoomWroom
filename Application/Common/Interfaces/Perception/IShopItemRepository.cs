@@ -1,7 +1,7 @@
 ﻿using Domain.ShopItemAggregate;
 using Domain.ShopItemAggregate.ValueObjects;
 
-namespace Application.Common.Interfaces;
+namespace Application.Common.Interfaces.Perception;
 
 public interface IShopItemRepository
 {

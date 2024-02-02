@@ -32,4 +32,30 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
             receipt => Ok(receipt.ToResponse()),
             errors => Problem(errors));
     }
+
+    [HttpPost("{id}/associate-shop-item")]
+    public async Task<IActionResult> AssociateShopItemIdByIndex(string id, AssociateShopItemIdByIndexRequest request)
+    {
+        AssociateShopItemIdByIndexCommand command = (id, request).ToCommand();
+
+        ErrorOr<Success> result = await _mediator.Send(command);
+
+        return result.Match(
+            success => Ok(),
+            errors => Problem(errors));
+    }
+    
+    [HttpPost("{id}/associate-shop-items")]
+    public async Task<IActionResult> AssociateShopItemIdsByIndices(
+        string id, AssociateShopItemIdsByIndicesRequest request)
+    {
+        AssociateShopItemIdsByIndicesCommand command = (id, request).ToCommand();
+
+        ErrorOr<Success> result = await _mediator.Send(command);
+
+        return result.Match(
+            success => Ok(),
+            errors => Problem(errors));
+    }
+
 }

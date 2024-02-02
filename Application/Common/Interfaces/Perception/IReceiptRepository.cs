@@ -1,7 +1,7 @@
 ﻿using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
 
-namespace Application.Receipts.Interfaces;
+namespace Application.Common.Interfaces.Perception;
 
 public interface IReceiptRepository
 {

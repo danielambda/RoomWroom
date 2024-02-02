@@ -7,13 +7,10 @@ public class Room : AggregateRoot<RoomId>
 {
     public string Name { get; private set; } = default!;
     public Money Budget { get; private set; } = default!;
-    public IEnumerable<UserId> UserIds { get; private set; } = default!;
-    public IEnumerable<OwnedShopItem> OwnedShopItems
-    {
-        get => _ownedShopItems;
-        private set => _ownedShopItems = value.ToList();
-    }
+    public IReadOnlyList<UserId> UserIds => _userIds.AsReadOnly();
+    public IReadOnlyList<OwnedShopItem> OwnedShopItems => _ownedShopItems.AsReadOnly();
 
+    private List<UserId> _userIds = default!;
     
     private List<OwnedShopItem> _ownedShopItems = default!;
 
@@ -23,8 +20,9 @@ public class Room : AggregateRoot<RoomId>
     {
         Name = name;
         Budget = budget;
-        UserIds = userIds;
-        OwnedShopItems = ownedShopItems;
+        
+        _userIds = userIds.ToList();
+        _ownedShopItems = ownedShopItems.ToList();
     }
 
     private Room() { }
@@ -39,4 +37,5 @@ public class Room : AggregateRoot<RoomId>
         new(RoomId.CreateUnique(), name, budget, userIds, ownedShopItems);
 
     public void AddOwnedShopItem(OwnedShopItem shopItem) => _ownedShopItems.Add(shopItem);
+    public void AddOwnedShopItems(IEnumerable<OwnedShopItem> shopItems) => _ownedShopItems.AddRange(shopItems);
 }

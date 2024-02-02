@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
+using Application.Common.Interfaces.Perception;
 using Application.Receipts.Interfaces;
 using Domain.Common.Enums;
 using Domain.Common.ValueObjects;

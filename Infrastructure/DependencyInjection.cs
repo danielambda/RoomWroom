@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Perception;
 using Application.Receipts.Interfaces;
 using Application.Rooms.Interfaces;
 using Infrastructure.Receipts;

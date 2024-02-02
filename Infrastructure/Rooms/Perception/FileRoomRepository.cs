@@ -27,6 +27,15 @@ public class FileRoomRepository : IRoomRepository
         return Task.CompletedTask;
     }
 
+    public Task AddShopItemsToRoomAsync(IEnumerable<OwnedShopItem> shopItems, RoomId roomId,
+        CancellationToken cancellationToken = default)
+    {
+        Rooms[roomId!].AddOwnedShopItems(shopItems);
+        UpdateShopItemsFile();
+
+        return Task.CompletedTask;
+    }
+
     public Task AddAsync(Room room, CancellationToken cancellationToken = default)
     {
         Rooms.TryAdd(room.Id!, room);

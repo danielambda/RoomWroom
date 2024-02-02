@@ -1,4 +1,5 @@
-﻿using Domain.RoomAggregate;
+﻿using Domain.ReceiptAggregate.ValueObjects;
+using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 
 namespace Application.Rooms.Interfaces;
@@ -11,4 +12,7 @@ public interface IRoomRepository
     
     public Task AddShopItemToRoomAsync(
         OwnedShopItem shopItem, RoomId roomId, CancellationToken cancellationToken = default);
+    
+    public Task AddShopItemsToRoomAsync(
+        IEnumerable<OwnedShopItem> shopItems, RoomId roomId, CancellationToken cancellationToken = default);
 }

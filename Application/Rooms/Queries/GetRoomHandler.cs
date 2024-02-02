@@ -1,13 +1,13 @@
 ﻿using Application.Rooms.Interfaces;
 using Domain.RoomAggregate;
 
-namespace Application.Rooms.Commands;
+namespace Application.Rooms.Queries;
 
-public class GetRoomHandler(IRoomRepository repository) : IRequestHandler<GetRoomCommand, ErrorOr<Room>>
+public class GetRoomHandler(IRoomRepository repository) : IRequestHandler<GetRoomQuery, ErrorOr<Room>>
 {
     private readonly IRoomRepository _repository = repository;
 
-    public async Task<ErrorOr<Room>> Handle(GetRoomCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Room>> Handle(GetRoomQuery request, CancellationToken cancellationToken)
     {
         Room? room = await _repository.GetAsync(request.RoomId!, cancellationToken);
 

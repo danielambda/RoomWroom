@@ -1,4 +1,5 @@
 ﻿using Domain.ReceiptAggregate.ValueObjects;
+using Domain.ShopItemAggregate.ValueObjects;
 
 namespace Domain.ReceiptAggregate;
 
@@ -28,6 +29,21 @@ public class Receipt : AggregateRoot<ReceiptId>
 
     public static Receipt Create(ReceiptId id, string? qr, IEnumerable<ReceiptItem> items) =>
         new(id, qr, items);
+
+    public void AssociateShopItemIdAtIndex(ShopItemId shopItemId, int index) =>
+        _items[index].AssociateWith(shopItemId);
+
+    public void AssociateShopItemIdsByIndices(IEnumerable<ShopItemId?> associatedShopItemIds)
+    {
+        var currentIndex = 0;
+        foreach (ShopItemId? associatedShopItemId in associatedShopItemIds)
+        {
+            if (associatedShopItemId != null) 
+                _items[currentIndex].AssociateWith(associatedShopItemId);
+            
+            currentIndex++;
+        }
+    }
 }
 
 file static class ReceiptItemExtensions

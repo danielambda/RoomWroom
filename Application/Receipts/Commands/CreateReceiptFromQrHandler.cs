@@ -1,4 +1,5 @@
-﻿using Application.Receipts.Interfaces;
+﻿using Application.Common.Interfaces.Perception;
+using Application.Receipts.Interfaces;
 using Domain.ReceiptAggregate;
 
 namespace Application.Receipts.Commands;
