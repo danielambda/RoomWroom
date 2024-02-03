@@ -1,4 +1,4 @@
-﻿using Application.Rooms.Interfaces;
+﻿using Application.Common.Interfaces.Perception;
 using Domain.RoomAggregate;
 
 namespace Application.Rooms.Queries;

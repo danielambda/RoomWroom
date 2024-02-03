@@ -9,18 +9,6 @@ namespace Api.ShopItems;
 [Route("shop-items")]
 public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
 {
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id)
-    {
-        GetShopItemQuery query = new(id);
-
-        ErrorOr<ShopItem> result = await _mediator.Send(query);
-
-        return result.Match(
-            shopItem => Ok(shopItem.ToResponse()),
-            errors => Problem(errors));
-    }
-
     [HttpPost]
     public async Task<IActionResult> Create(CreateShopItemRequest request)
     {
@@ -30,6 +18,30 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
 
         return result.Match(
             shopItem => OkCreated(shopItem.ToResponse()),
+            errors => Problem(errors));
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(string id)
+    {
+        GetShopItemQuery query = new(id!);
+
+        ErrorOr<ShopItem> result = await _mediator.Send(query);
+
+        return result.Match(
+            shopItem => Ok(shopItem.ToResponse()),
+            errors => Problem(errors));
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        DeleteShopItemCommand command = new(id!);
+        
+        ErrorOr<Success> result = await _mediator.Send(command);
+
+        return result.Match(
+            _ => Ok(),
             errors => Problem(errors));
     }
 }

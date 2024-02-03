@@ -3,5 +3,6 @@ using Domain.ShopItemAggregate.ValueObjects;
 
 namespace Application.Receipts.Commands;
 
-public record AssociateShopItemIdByIndexCommand(ShopItemId AssociatedShopItemId, int Index, ReceiptId ReceiptId)
+public record AssociateShopItemIdByIndexCommand(
+    ShopItemId AssociatedShopItemId, int Index, bool SaveAssociation, ReceiptId ReceiptId)
     : IRequest<ErrorOr<Success>>;

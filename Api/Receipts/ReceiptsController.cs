@@ -34,17 +34,18 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     }
 
     [HttpPost("{id}/associate-shop-item")]
-    public async Task<IActionResult> AssociateShopItemIdByIndex(string id, AssociateShopItemIdByIndexRequest request)
+    public async Task<IActionResult> AssociateShopItemIdByIndex(
+        string id, AssociateShopItemIdByIndexRequest request)
     {
         AssociateShopItemIdByIndexCommand command = (id, request).ToCommand();
 
         ErrorOr<Success> result = await _mediator.Send(command);
 
         return result.Match(
-            success => Ok(),
+            _ => Ok(),
             errors => Problem(errors));
     }
-    
+
     [HttpPost("{id}/associate-shop-items")]
     public async Task<IActionResult> AssociateShopItemIdsByIndices(
         string id, AssociateShopItemIdsByIndicesRequest request)
@@ -54,8 +55,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
         ErrorOr<Success> result = await _mediator.Send(command);
 
         return result.Match(
-            success => Ok(),
+            _ => Ok(),
             errors => Problem(errors));
     }
-
 }

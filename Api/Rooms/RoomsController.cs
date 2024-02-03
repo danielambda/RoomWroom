@@ -38,9 +38,11 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     {
         AddShopItemToRoomCommand command = (roomId, request).ToCommand();
 
-        await _mediator.Send(command);
+        ErrorOr<Success> result = await _mediator.Send(command);
 
-        return Ok();
+        return result.Match(
+            _ => Ok(),
+            errors => Problem(errors));
     }
 
     [HttpPost("{roomId}/receipt")]
@@ -48,8 +50,10 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     {
         AddReceiptToRoomCommand command = (roomId, request).ToCommand();
 
-        await _mediator.Send(command);
+        ErrorOr<Success> result = await _mediator.Send(command);
 
-        return Ok();
+        return result.Match(
+            _ => Ok(),
+            errors => Problem(errors));
     }
 }

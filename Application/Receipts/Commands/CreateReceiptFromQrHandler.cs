@@ -19,7 +19,7 @@ public class CreateReceiptFromQrHandler(
         
         bool receiptAlreadyExists = await _receiptRepository.CheckExistenceByQr(qr, cancellationToken: cancellationToken);
         if (receiptAlreadyExists)
-            return Error.Conflict(description: $"{nameof(Receipt)} with qr {qr} already exists");
+            return Error.Conflict(description: $"{nameof(Receipt)} with qr {qr} already exists"); //TODO опять же тут тоже
         
         Receipt? receipt = await _receiptFromQrCreatorProvider.CreateAsync(qr, cancellationToken);
         if (receipt is null)

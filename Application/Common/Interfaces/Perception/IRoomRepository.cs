@@ -1,8 +1,7 @@
-﻿using Domain.ReceiptAggregate.ValueObjects;
-using Domain.RoomAggregate;
+﻿using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 
-namespace Application.Rooms.Interfaces;
+namespace Application.Common.Interfaces.Perception;
 
 public interface IRoomRepository
 {

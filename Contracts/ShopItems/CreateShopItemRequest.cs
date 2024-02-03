@@ -1,3 +1,3 @@
 ﻿namespace Contracts.ShopItems;
 
-public record CreateShopItemRequest(string Name);
+public record CreateShopItemRequest(string Name, decimal Quantity, string Units);

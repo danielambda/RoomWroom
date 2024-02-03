@@ -25,7 +25,7 @@ public static class Mapper
 
     public static AssociateShopItemIdByIndexCommand ToCommand(
         this (string ReceiptId, AssociateShopItemIdByIndexRequest Request) tuple) =>
-        new(tuple.Request.AssociatedShopItemId!, tuple.Request.Index, tuple.ReceiptId!);
+        new(tuple.Request.AssociatedShopItemId!, tuple.Request.Index, tuple.Request.SaveAssociation, tuple.ReceiptId!);
 
     public static AssociateShopItemIdsByIndicesCommand ToCommand(
         this (string ReceiptId, AssociateShopItemIdsByIndicesRequest Request) tuple) =>

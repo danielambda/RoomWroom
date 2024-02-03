@@ -1,7 +1,5 @@
-﻿using Application.Common.Interfaces;
-using Application.Common.Interfaces.Perception;
+﻿using Application.Common.Interfaces.Perception;
 using Application.Receipts.Interfaces;
-using Application.Rooms.Interfaces;
 using Infrastructure.Receipts;
 using Infrastructure.Receipts.Perception;
 using Infrastructure.Rooms.Perception;
@@ -18,7 +16,8 @@ public static class DependencyInjection
             .AddScoped<IReceiptFromQrCreator, InnReceiptFromQrCreator>()
             .AddScoped<IReceiptRepository, FileReceiptRepository>()
             .AddScoped<IShopItemRepository, FileShopItemRepository>()
-            .AddScoped<IRoomRepository, FileRoomRepository>();
+            .AddScoped<IRoomRepository, FileRoomRepository>()
+            .AddScoped<IShopItemAssociationsRepository, FileShopItemAssociationRepository>();
 
         return services;
     }

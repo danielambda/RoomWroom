@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
-using Application.Common.Interfaces;
 using Application.Common.Interfaces.Perception;
+using Domain.Common.Enums;
 using Domain.ShopItemAggregate;
 using Domain.ShopItemAggregate.ValueObjects;
 
@@ -31,6 +31,16 @@ public class FileShopItemRepository : IShopItemRepository
         UpdateShopItemsFile();
         
         return Task.CompletedTask;
+    }
+
+    public Task<bool> DeleteAsync(ShopItemId id, CancellationToken cancellationToken = default)
+    {
+        bool removed = ShopItems.Remove(id!, out _);
+        
+        if (removed)
+            UpdateShopItemsFile();
+
+        return Task.FromResult(removed);
     }
 
     private static ConcurrentDictionary<string, ShopItem> InitShopItems()
@@ -72,7 +82,9 @@ file static class SerializationExtensions
                 pair.Key,
                 ShopItem.Create(
                     pair.Value.Id!,
-                    pair.Value.Name))));
+                    pair.Value.Name,
+                    pair.Value.Quantity,
+                    Enum.Parse<Units>(pair.Value.Units)))));
     }
 
     public static string Serialize(this ConcurrentDictionary<string, ShopItem> shopItems) =>
@@ -81,8 +93,10 @@ file static class SerializationExtensions
                 pair.Key,
                 new ShopItemDto(
                     pair.Value.Id!,
-                    pair.Value.Name)))
+                    pair.Value.Name,
+                    pair.Value.Quantity,
+                    pair.Value.Units.ToString())))
             .ToDictionary());
 
-    private record ShopItemDto(string Id, string Name);
+    private record ShopItemDto(string Id, string Name, decimal Quantity, string Units);
 }

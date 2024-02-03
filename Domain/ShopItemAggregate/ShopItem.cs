@@ -2,19 +2,25 @@
 
 namespace Domain.ShopItemAggregate;
 
-public class ShopItem : AggregateRoot<ShopItemId>
+public sealed class ShopItem : AggregateRoot<ShopItemId>
 {
-    public string Name { get; private set; } = null!;
+    public string Name { get; private set; } = default!;
+    public decimal Quantity { get; private set; } = default!;
+    public Units Units { get; private set; } = default!;
 
-    private ShopItem(ShopItemId id, string name) : base(id)
+    private ShopItem(ShopItemId id, string name, decimal quantity, Units units) : base(id)
     {
         Name = name;
+        Quantity = quantity;
+        Units = units;
     }
 
     private ShopItem()
     {
     }
 
-    public static ShopItem CreateNew(string name) => new(ShopItemId.CreateUnique(), name);
-    public static ShopItem Create(ShopItemId id, string name) => new(id, name);
+    public static ShopItem CreateNew(string name, decimal quantity, Units units) =>
+        new(ShopItemId.CreateUnique(), name, quantity, units);
+    public static ShopItem Create(ShopItemId id, string name, decimal quantity, Units units) 
+        => new(id, name, quantity, units);
 }
