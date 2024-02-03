@@ -11,7 +11,7 @@ public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
     
     private static readonly ConcurrentDictionary<string, ShopItemAssociation> Associations = InitAssociations();
 
-    public Task<ShopItemAssociation?> GetAsync(string originalName, CancellationToken cancellationToken) => 
+    public Task<ShopItemAssociation?> GetAsync(string originalName, CancellationToken cancellationToken = default) => 
         Task.FromResult(Associations.GetValueOrDefault(originalName));
 
     public Task AddOrUpdateAsync(ShopItemAssociation association, CancellationToken cancellationToken = default)
@@ -67,9 +67,30 @@ public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
 
 file static class SerializationExtensions
 {
-    public static ConcurrentDictionary<string, ShopItemAssociation>? Deserialize(this JsonElement jsonElement) => 
-        jsonElement.Deserialize<ConcurrentDictionary<string, ShopItemAssociation>>();
+    public static ConcurrentDictionary<string, ShopItemAssociation>? Deserialize(this JsonElement jsonElement)
+    {
+        var dtos = jsonElement.Deserialize<Dictionary<string, ShopItemAssociationDto>?>();
 
-    public static string Serialize(this ConcurrentDictionary<string, ShopItemAssociation> associations) => 
-        JsonSerializer.Serialize(associations);
+        if (dtos is null)
+            return null;
+
+        return new(dtos.Select(pair =>
+            new KeyValuePair<string, ShopItemAssociation>(pair.Key, new(
+                pair.Value.OriginalName,
+                pair.Value.ShopItemId!)))
+            .ToDictionary());
+    }
+
+    public static string Serialize(this ConcurrentDictionary<string, ShopItemAssociation> associations)
+    {
+        Dictionary<string, ShopItemAssociationDto> dtos = associations.Select(pair =>
+            new KeyValuePair<string, ShopItemAssociationDto>(pair.Key, new(
+                pair.Value.OriginalName,
+                pair.Value.ShopItemId!)))
+            .ToDictionary();
+        
+        return JsonSerializer.Serialize(dtos);
+    }
+
+    private record ShopItemAssociationDto(string OriginalName, string ShopItemId);
 }

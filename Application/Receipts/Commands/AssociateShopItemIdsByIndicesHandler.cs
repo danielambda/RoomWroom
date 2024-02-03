@@ -40,8 +40,7 @@ public class AssociateShopItemIdsByIndicesHandler(
             if (associatedId != null)
             {
                 string originalName = receipt.Items[currentIndex].Name;
-                currentIndex++;
-                
+
                 yield return new ShopItemAssociation(originalName, associatedId);
             }
 

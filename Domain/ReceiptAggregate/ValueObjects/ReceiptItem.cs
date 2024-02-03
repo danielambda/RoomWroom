@@ -24,7 +24,7 @@ public sealed class ReceiptItem : ValueObjectBase
     {
     }
 
-    public void AssociateWith(ShopItemId shopItemId) => AssociatedShopItemId = shopItemId;
+    internal void AssociateWith(ShopItemId shopItemId) => AssociatedShopItemId = shopItemId;
     
     public override string ToString() => $"{Name}.{Environment.NewLine} {Price} x {Quantity} = {Sum}";
 

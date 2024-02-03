@@ -44,6 +44,19 @@ public class Receipt : AggregateRoot<ReceiptId>
             currentIndex++;
         }
     }
+
+    public async Task AssociateShopItemIdsAsync(
+        Func<string, CancellationToken, Task<ShopItemAssociation?>> associationFunc,
+        CancellationToken cancellationToken = default)
+    {
+        foreach (ReceiptItem receiptItem in _items)
+        {
+            ShopItemAssociation? association = await associationFunc(receiptItem.Name, cancellationToken);
+            
+            if (association is not null)
+                receiptItem.AssociateWith(association.ShopItemId);
+        }
+    }
 }
 
 file static class ReceiptItemExtensions
