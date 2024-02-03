@@ -31,6 +31,7 @@ public static class Mapper
         this (string ReceiptId, AssociateShopItemIdsByIndicesRequest Request) tuple) =>
         new(tuple.Request.AssociatedShopItemIds.Select(id => 
                 id is null ? null : ShopItemId.Create(Guid.Parse(id))),
+            tuple.Request.SaveAssociations,
             tuple.ReceiptId!);
 }
 

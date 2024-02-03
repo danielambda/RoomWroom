@@ -36,10 +36,10 @@ public class Receipt : AggregateRoot<ReceiptId>
     public void AssociateShopItemIdsByIndices(IEnumerable<ShopItemId?> associatedShopItemIds)
     {
         var currentIndex = 0;
-        foreach (ShopItemId? associatedShopItemId in associatedShopItemIds)
+        foreach (ShopItemId? associatedId in associatedShopItemIds)
         {
-            if (associatedShopItemId != null) 
-                _items[currentIndex].AssociateWith(associatedShopItemId);
+            if (associatedId != null) 
+                _items[currentIndex].AssociateWith(associatedId);
             
             currentIndex++;
         }
