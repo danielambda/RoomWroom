@@ -36,7 +36,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     [HttpPost("{roomId}/shop-item")]
     public async Task<IActionResult> AddShopItemToRoom(string roomId, AddShopItemToRoomRequest request)
     {
-        AddShopItemToRoomCommand command = (roomId, request).ToCommand();
+        AddShopItemToRoomCommand command = request.ToCommand(roomId);
 
         ErrorOr<Success> result = await _mediator.Send(command);
 
@@ -48,10 +48,22 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     [HttpPost("{roomId}/receipt")]
     public async Task<IActionResult> AddReceiptToRoom(string roomId, AddReceiptToRoomRequest request)
     {
-        AddReceiptToRoomCommand command = (roomId, request).ToCommand();
+        AddReceiptToRoomCommand command = request.ToCommand(roomId);
 
         ErrorOr<Success> result = await _mediator.Send(command);
 
+        return result.Match(
+            _ => Ok(),
+            errors => Problem(errors));
+    }
+
+    [HttpPost("{roomId}/user")]
+    public async Task<IActionResult> AddUserToRoom(string roomId, AddUserToRoomRequest request)
+    {
+        AddUserToRoomCommand command = request.ToCommand(roomId);
+
+        ErrorOr<Success> result = await _mediator.Send(command);
+        
         return result.Match(
             _ => Ok(),
             errors => Problem(errors));

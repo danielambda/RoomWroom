@@ -13,15 +13,15 @@ public class FileRoomRepository : IRoomRepository
 {
     private const string SHOP_ITEMS_FILE = "Rooms.json";
     
-    private static readonly ConcurrentDictionary<string, Room> Rooms = InitRooms();
+    private static readonly ConcurrentDictionary<RoomId, Room> Rooms = InitRooms();
     
     public Task<Room?> GetAsync(RoomId id, CancellationToken cancellationToken = default)=> 
-        Task.FromResult(Rooms.GetValueOrDefault(id!));
+        Task.FromResult(Rooms.GetValueOrDefault(id));
 
     public Task AddShopItemToRoomAsync(OwnedShopItem shopItem, RoomId roomId,
         CancellationToken cancellationToken = default)
     {
-        Rooms[roomId!].AddOwnedShopItem(shopItem);
+        Rooms[roomId].AddOwnedShopItem(shopItem);
         UpdateShopItemsFile();
 
         return Task.CompletedTask;
@@ -30,7 +30,7 @@ public class FileRoomRepository : IRoomRepository
     public Task AddShopItemsToRoomAsync(IEnumerable<OwnedShopItem> shopItems, RoomId roomId,
         CancellationToken cancellationToken = default)
     {
-        Rooms[roomId!].AddOwnedShopItems(shopItems);
+        Rooms[roomId].AddOwnedShopItems(shopItems);
         UpdateShopItemsFile();
 
         return Task.CompletedTask;
@@ -38,13 +38,37 @@ public class FileRoomRepository : IRoomRepository
 
     public Task AddAsync(Room room, CancellationToken cancellationToken = default)
     {
-        Rooms.TryAdd(room.Id!, room);
+        Rooms.TryAdd(room.Id, room);
         UpdateShopItemsFile();
         
         return Task.CompletedTask;
     }
+    
+    public Task<bool> TryAddUserToRoomAsync(UserId userId, RoomId roomId, CancellationToken cancellationToken = default)
+    {
+        if (Rooms.TryGetValue(roomId, out Room? room) is false)
+            return Task.FromResult(false);
 
-    private static ConcurrentDictionary<string, Room> InitRooms()
+        room.AddUser(userId);
+        UpdateShopItemsFile();
+        
+        return Task.FromResult(true);
+    }
+    
+    public Task<bool> TryRemoveUserFromRoomAsync(UserId userId, RoomId roomId, CancellationToken cancellationToken = default)
+    {
+        if (Rooms.TryGetValue(roomId, out Room? room) is false)
+            return Task.FromResult(false);
+
+        if (room.RemoveUser(userId) is false) 
+            return Task.FromResult(false);
+        
+        UpdateShopItemsFile();
+        return Task.FromResult(true);
+
+    }
+    
+    private static ConcurrentDictionary<RoomId, Room> InitRooms()
     {
         using FileStream stream = new(SHOP_ITEMS_FILE, FileMode.OpenOrCreate, FileAccess.Read);
         Span<byte> buffer = stackalloc byte[(int)stream.Length];
@@ -56,7 +80,7 @@ public class FileRoomRepository : IRoomRepository
         Utf8JsonReader jsonReader = new(buffer);
         JsonElement jsonElement = JsonElement.ParseValue(ref jsonReader);
 
-        ConcurrentDictionary<string, Room>? shopItems = jsonElement.Deserialize();
+        ConcurrentDictionary<RoomId, Room>? shopItems = jsonElement.Deserialize();
         
         return shopItems ?? [];
     }
@@ -73,13 +97,13 @@ public class FileRoomRepository : IRoomRepository
 
 file static class SerializationExtensions
 {
-    public static ConcurrentDictionary<string, Room>? Deserialize(this JsonElement jsonElement)
+    public static ConcurrentDictionary<RoomId, Room>? Deserialize(this JsonElement jsonElement)
     {
         if (jsonElement.Deserialize<Dictionary<string, RoomDto>>() is not { } roomDtos)
             return null;
 
-        return new(roomDtos.Select(pair => new KeyValuePair<string, Room>(
-            pair.Key,
+        return new(roomDtos.Select(pair => new KeyValuePair<RoomId, Room>(
+            pair.Key!,
             Room.Create(
                 pair.Value.Id!,
                 pair.Value.Name,
@@ -89,10 +113,10 @@ file static class SerializationExtensions
                     OwnedShopItem.Create(item.ShopItemId!, item.Quantity))))));
     }
 
-    public static string Serialize(this ConcurrentDictionary<string, Room> rooms) =>
+    public static string Serialize(this ConcurrentDictionary<RoomId, Room> rooms) =>
         JsonSerializer.Serialize(rooms.Select(pair =>
             new KeyValuePair<string, RoomDto>(
-                pair.Key,
+                pair.Key!,
                 new RoomDto(
                     pair.Value.Id!,
                     pair.Value.Name,

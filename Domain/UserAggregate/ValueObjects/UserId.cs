@@ -10,9 +10,9 @@ public class UserId : ValueObjectBase, IId<UserId, Guid>
     
     public static UserId CreateUnique() => new(Guid.NewGuid());
 
-    public static implicit operator string?(UserId id) => id.Value.ToString();
+    public static implicit operator string?(UserId? id) => id?.Value.ToString();
 
-    public static implicit operator UserId(string str) => new(Guid.Parse(str));
+    public static implicit operator UserId?(string? str) => str is null ? null : new(Guid.Parse(str));
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {

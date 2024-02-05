@@ -2,8 +2,9 @@
 
 public record ReceiptResponse(
     string Id,
+    List<ReceiptItemResponse> Items,
     string? Qr,
-    List<ReceiptItemResponse> Items);
+    string CreatorId);
 
 public record ReceiptItemResponse(
     string Name,

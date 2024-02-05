@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
 using Application.Common.Interfaces.Perception;
-using Application.Receipts.Interfaces;
 using Domain.Common.Enums;
 using Domain.Common.ValueObjects;
 using Domain.ReceiptAggregate;
@@ -18,7 +17,7 @@ public class FileReceiptRepository : IReceiptRepository
     public Task<Receipt?> GetAsync(ReceiptId id, CancellationToken cancellationToken) => 
         Task.FromResult(Receipts.GetValueOrDefault(id!));
 
-    public Task<bool> CheckExistenceByQr(string qr, CancellationToken cancellationToken = default) =>
+    public Task<bool> CheckExistenceByQr(string? qr, CancellationToken cancellationToken = default) =>
         Task.FromResult(Receipts.Values.Any(receipt => receipt.Qr == qr));
 
     public Task AddAsync(Receipt receipt, CancellationToken cancellationToken)
@@ -65,11 +64,11 @@ file static class SerializationExtensions
             return null;
         
         Dictionary<string, Receipt> receipts = [];
-        foreach ((string? key, (string? id, string? qr, List<ReceiptItemDto>? receiptItemDtos)) in receiptDtos)
+        foreach ((string? key, (string? id, string? qr, string? creatorId, List<ReceiptItemDto>? receiptItemDtos)) 
+                 in receiptDtos)
         {
             receipts.Add(key, Receipt.Create(
                 id!,
-                qr,
                 receiptItemDtos.ConvertAll(item =>
                 {
                     Enum.TryParse(item.PriceCurrency, true, out Currency currency);
@@ -78,7 +77,10 @@ file static class SerializationExtensions
                         new Money(item.PriceAmount, currency),
                         item.Quantity,
                         item.AssociatedShopItemId);
-                })));
+                }),
+                qr,
+                creatorId!
+            ));
         }
 
         return new(receipts);
@@ -92,6 +94,7 @@ file static class SerializationExtensions
             receiptDtos.Add(key, new(
                 receipt.Id!,
                 receipt.Qr,
+                receipt.CreatorId!,
                 receipt.Items.Select(item => new ReceiptItemDto(
                     item.Name,
                     item.Price.Amount, 
@@ -103,7 +106,7 @@ file static class SerializationExtensions
         return JsonSerializer.Serialize(receiptDtos);
     }
 
-    private record ReceiptDto(string Id, string? Qr, List<ReceiptItemDto> Items);
+    private record ReceiptDto(string Id, string? Qr, string CreatorId, List<ReceiptItemDto> Items);
 
     private record ReceiptItemDto(
         string Name,

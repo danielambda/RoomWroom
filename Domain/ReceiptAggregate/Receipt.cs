@@ -1,5 +1,6 @@
 ﻿using Domain.ReceiptAggregate.ValueObjects;
 using Domain.ShopItemAggregate.ValueObjects;
+using Domain.UserAggregate.ValueObjects;
 
 namespace Domain.ReceiptAggregate;
 
@@ -10,8 +11,9 @@ public class Receipt : AggregateRoot<ReceiptId>
     public IReadOnlyList<ReceiptItem> Items => _items.AsReadOnly();
     
     public string? Qr { get; private set; }
+    public UserId CreatorId { get; private set; }
 
-    private Receipt(ReceiptId id, string? qr, IEnumerable<ReceiptItem> items) : base(id)
+    private Receipt(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) : base(id)
     {
         _items = items
             .OrderBy(item => item.Name)
@@ -20,15 +22,16 @@ public class Receipt : AggregateRoot<ReceiptId>
             .ToList();
         
         Qr = qr;
+        CreatorId = creatorId;
     }
 
     private Receipt() { }
 
-    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr) => 
-        new(ReceiptId.CreateUnique(), qr, items);
+    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) => 
+        new(ReceiptId.CreateUnique(), items, qr, creatorId);
 
-    public static Receipt Create(ReceiptId id, string? qr, IEnumerable<ReceiptItem> items) =>
-        new(id, qr, items);
+    public static Receipt Create(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) =>
+        new(id, items, qr, creatorId);
 
     public void AssociateShopItemIdAtIndex(ShopItemId shopItemId, int index) =>
         _items[index].AssociateWith(shopItemId);

@@ -9,6 +9,18 @@ namespace Api.Receipts;
 [Route("receipts")]
 public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
 {
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateReceiptRequest request)
+    {
+        CreateReceiptCommand command = request.ToCommand();
+
+        ErrorOr<Receipt> result = await _mediator.Send(command);
+        
+        return result.Match(
+            receipt => OkCreated(receipt.ToResponse()),
+            errors => Problem(errors));
+    }
+    
     [HttpPost("qr")]
     public async Task<IActionResult> CreateFromQr(CreateReceiptFromQrRequest request)
     {
@@ -37,7 +49,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     public async Task<IActionResult> AssociateShopItemIdByIndex(
         string id, AssociateShopItemIdByIndexRequest request)
     {
-        AssociateShopItemIdByIndexCommand command = (id, request).ToCommand();
+        AssociateShopItemIdByIndexCommand command = request.ToCommand(id);
 
         ErrorOr<Success> result = await _mediator.Send(command);
 
@@ -50,7 +62,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     public async Task<IActionResult> AssociateShopItemIdsByIndices(
         string id, AssociateShopItemIdsByIndicesRequest request)
     {
-        AssociateShopItemIdsByIndicesCommand command = (id, request).ToCommand();
+        AssociateShopItemIdsByIndicesCommand command = request.ToCommand(id);
 
         ErrorOr<Success> result = await _mediator.Send(command);
 

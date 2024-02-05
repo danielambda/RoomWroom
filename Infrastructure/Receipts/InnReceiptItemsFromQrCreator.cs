@@ -5,12 +5,11 @@ using System.Text.Json.Serialization;
 using Application.Receipts.Interfaces;
 using Domain.Common.Enums;
 using Domain.Common.ValueObjects;
-using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
 
 namespace Infrastructure.Receipts;
 
-public class InnReceiptFromQrCreator : IReceiptFromQrCreator
+public class InnReceiptItemsFromQrCreator : IReceiptItemsFromQrCreator
 {
     private const string TAX_SERVICE_URL = "https://irkkt-mobile.nalog.ru:8888/v2";
     private const string DEVICE_OS = "IOS";
@@ -37,7 +36,7 @@ public class InnReceiptFromQrCreator : IReceiptFromQrCreator
 
     private static bool IsRefreshable => false;
 
-    public async Task<Receipt?> CreateAsync(string qr, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ReceiptItem>?> CreateAsync(string qr, CancellationToken cancellationToken = default)
     {
         if (!_initialized)
             await Init(cancellationToken);
@@ -48,7 +47,7 @@ public class InnReceiptFromQrCreator : IReceiptFromQrCreator
         JsonDocument jsonDocument = await GetJsonFromTickedId(ticketId);
         IEnumerable<ReceiptItem>? items = ParseReceiptItemsFromJson(jsonDocument);
 
-        return items is null ? null : Receipt.CreateNew(items, qr);
+        return items;
     }
 
     private static async Task Init(CancellationToken cancellationToken = default)

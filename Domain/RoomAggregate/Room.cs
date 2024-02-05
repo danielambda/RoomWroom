@@ -38,4 +38,8 @@ public class Room : AggregateRoot<RoomId>
 
     public void AddOwnedShopItem(OwnedShopItem shopItem) => _ownedShopItems.Add(shopItem);
     public void AddOwnedShopItems(IEnumerable<OwnedShopItem> shopItems) => _ownedShopItems.AddRange(shopItems);
+    
+    public void AddUser(UserId userId) => _userIds.Add(userId);
+
+    public bool RemoveUser(UserId userId) => _userIds.Remove(userId);
 }

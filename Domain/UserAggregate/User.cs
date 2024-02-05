@@ -1,4 +1,5 @@
-﻿using Domain.RoomAggregate.ValueObjects;
+﻿using Domain.ReceiptAggregate.ValueObjects;
+using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate.Enums;
 using Domain.UserAggregate.ValueObjects;
 
@@ -6,14 +7,33 @@ namespace Domain.UserAggregate;
 
 public class User : AggregateRoot<UserId>
 {
-    public string Name { get; }
-    public RoomId RoomId { get; }
-    public UserRole Role { get; }
+    public string Name { get; private set; }
+    public UserRole Role { get; private set; }
+    public RoomId? RoomId { get; private set; }
+    public IReadOnlyList<ReceiptId> ScannedReceiptsIds => _scannedReceiptsIds.AsReadOnly();
+
+    private List<ReceiptId> _scannedReceiptsIds = default!;
     
-    private User(UserId id, string name, RoomId roomId, UserRole role) : base(id)
+    private User(UserId id, string name, UserRole role, RoomId? roomId, List<ReceiptId> scannedReceiptIds) : base(id)
     {
         Name = name;
         RoomId = roomId;
         Role = role;
+
+        _scannedReceiptsIds = scannedReceiptIds;
     }
+
+    private User()
+    {
+    }
+
+    public static User CreateNew(string name, UserRole role, RoomId? roomId) =>
+        new(UserId.CreateUnique(), name, role, roomId, []);
+    
+    public static User Create(UserId userId, string name, UserRole role, RoomId? roomId, List<ReceiptId> receiptIds) =>
+        new(userId, name, role, roomId, receiptIds);
+
+    public void SetRoom(RoomId roomId) => RoomId = roomId;
+
+    public void RemoveRoom() => RoomId = null;
 }

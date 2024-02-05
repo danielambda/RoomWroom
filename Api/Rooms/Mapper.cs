@@ -21,9 +21,12 @@ public static class Mapper
             room.OwnedShopItems.Select(item =>
                 new OwnedShopItemResponse(item.ShopItemId!, item.Quantity)));
     
-    public static AddShopItemToRoomCommand ToCommand(this (string RoomId, AddShopItemToRoomRequest Request) tuple) => 
-        new(tuple.Request.ShopItemId!, tuple.Request.Quantity, tuple.RoomId!);
+    public static AddShopItemToRoomCommand ToCommand(this AddShopItemToRoomRequest request, string roomId) => 
+        new(request.ShopItemId!, request.Quantity, roomId!);
 
-    public static AddReceiptToRoomCommand ToCommand(this (string RoomId, AddReceiptToRoomRequest Request) tuple) =>
-        new(tuple.Request.ReceiptId!, tuple.Request.ExcludedItemsIds, tuple.RoomId!);
+    public static AddReceiptToRoomCommand ToCommand(this AddReceiptToRoomRequest request, string roomId) =>
+        new(request.ReceiptId!, request.ExcludedItemsIds, roomId!);
+
+    public static AddUserToRoomCommand ToCommand(this AddUserToRoomRequest request, string roomId) =>
+        new(request.UserId!, roomId!);
 }
