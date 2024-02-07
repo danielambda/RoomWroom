@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 
 namespace Application.Rooms.Commands;
 
@@ -16,11 +17,11 @@ public class RemoveUserFromRoomHandler(
 
         bool userWasRemoved = await _roomRepository.TryRemoveUserFromRoomAsync(userId, roomId, cancellationToken);
         if (userWasRemoved is false)
-            return Error.Conflict(); //TODO
+            return Errors.Room.NotFound(roomId);
 
         bool roomWasRemoved = await _userRepository.TryRemoveRoomFromUser(userId, cancellationToken);
         if (roomWasRemoved is false)
-            return Error.Conflict(); //TODO
+            return Errors.User.NotFound(userId);
 
         return new Success();
     }

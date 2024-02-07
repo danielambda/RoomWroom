@@ -2,8 +2,7 @@
 
 public record CreateReceiptRequest(
     List<ReceiptItemRequest> Items,
-    string? Qr,
-    string CreatorUserId);
+    string? Qr);
 
 public record ReceiptItemRequest(
     string Name,

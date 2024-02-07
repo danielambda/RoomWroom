@@ -4,17 +4,13 @@ namespace Domain.ReceiptAggregate.ValueObjects;
 
 public class ShopItemAssociation : ValueObjectBase
 {
-    public string OriginalName { get; private set; }
-    public ShopItemId ShopItemId { get; private set; }
+    public string OriginalName { get; }
+    public ShopItemId ShopItemId { get; }
 
     public ShopItemAssociation(string originalName, ShopItemId shopItemId)
     {
         OriginalName = originalName;
         ShopItemId = shopItemId;
-    }
-
-    private ShopItemAssociation()
-    {
     }
     
     protected override IEnumerable<object?> GetEqualityComponents()

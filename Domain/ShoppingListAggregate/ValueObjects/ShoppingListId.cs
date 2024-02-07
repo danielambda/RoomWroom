@@ -10,9 +10,9 @@ public class ShoppingListId : ValueObjectBase, IId<ShoppingListId, Guid>
     
     public static ShoppingListId CreateUnique() => new(Guid.NewGuid());
     
-    public static implicit operator string?(ShoppingListId id) => id.Value.ToString();
+    public static implicit operator string?(ShoppingListId? id) => id?.Value.ToString();
 
-    public static implicit operator ShoppingListId(string str) => new(Guid.Parse(str));
+    public static implicit operator ShoppingListId?(string? str) => str is null ? null : new(Guid.Parse(str));
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

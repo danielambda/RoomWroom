@@ -4,14 +4,14 @@ using Domain.UserAggregate.ValueObjects;
 
 namespace Domain.ReceiptAggregate;
 
-public class Receipt : AggregateRoot<ReceiptId>
+public sealed class Receipt : AggregateRoot<ReceiptId>
 {
     private readonly List<ReceiptItem> _items;
 
     public IReadOnlyList<ReceiptItem> Items => _items.AsReadOnly();
     
-    public string? Qr { get; private set; }
-    public UserId CreatorId { get; private set; }
+    public string? Qr { get; }
+    public UserId CreatorId { get; }
 
     private Receipt(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) : base(id)
     {
@@ -24,8 +24,6 @@ public class Receipt : AggregateRoot<ReceiptId>
         Qr = qr;
         CreatorId = creatorId;
     }
-
-    private Receipt() { }
 
     public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) => 
         new(ReceiptId.CreateUnique(), items, qr, creatorId);

@@ -5,16 +5,22 @@ builder.Services
     .AddApplication()
     .AddInfrastructure();
 
-builder.Services
-    .AddEndpointsApiExplorer()
-    .AddSwaggerGen();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services
+        .AddEndpointsApiExplorer()
+        .AddSwaggerGen();
+}
 
 WebApplication app = builder.Build();
 
 app.UseHttpsRedirection();
 app.MapControllers();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.Run();

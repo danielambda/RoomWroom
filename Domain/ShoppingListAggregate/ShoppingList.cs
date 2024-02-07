@@ -2,7 +2,7 @@
 
 namespace Domain.ShoppingListAggregate;
 
-public class ShoppingList : AggregateRoot<ShoppingListId>
+public sealed  class ShoppingList : AggregateRoot<ShoppingListId>
 {
     private readonly List<ShoppingListItem> _list;
 

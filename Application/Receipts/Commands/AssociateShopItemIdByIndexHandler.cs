@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
 
@@ -15,16 +16,18 @@ public class AssociateShopItemIdByIndexHandler(
     public async Task<ErrorOr<Success>> Handle(AssociateShopItemIdByIndexCommand command,
         CancellationToken cancellationToken)
     {
-        Receipt? receipt = await _repository.GetAsync(command.ReceiptId, cancellationToken);
+        var (associatedShopItemId, index, saveAssociation, receiptId) = command;
+        
+        Receipt? receipt = await _repository.GetAsync(receiptId, cancellationToken);
 
         if (receipt is null)
-            return Error.NotFound(nameof(Receipt)); //TODO и тут тоже 
+            return Errors.Receipt.NotFound(receiptId); 
 
-        receipt.AssociateShopItemIdAtIndex(command.AssociatedShopItemId, command.Index);
+        receipt.AssociateShopItemIdAtIndex(associatedShopItemId, index);
 
-        ShopItemAssociation association = new(receipt.Items[command.Index].Name, command.AssociatedShopItemId);
+        ShopItemAssociation association = new(receipt.Items[index].Name, associatedShopItemId);
 
-        if (command.SaveAssociation) 
+        if (saveAssociation) 
             await _associationsRepository.AddOrUpdateAsync(association, cancellationToken);
 
         return new Success();

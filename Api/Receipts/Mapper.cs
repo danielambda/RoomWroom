@@ -10,17 +10,17 @@ namespace Api.Receipts;
 
 public static class Mapper
 {
-    public static CreateReceiptCommand ToCommand(this CreateReceiptRequest request) =>
+    public static CreateReceiptCommand ToCommand(this CreateReceiptRequest request, string userId) =>
         new(request.Items.ConvertAll(item =>
             new ReceiptItemCommand(item.Name,
                 new Money(item.MoneyAmount, Enum.Parse<Currency>(item.MoneyCurrency)),
                 item.Quantity,
                 item.AssociatedShopItemId!)),
             request.Qr,
-            request.CreatorUserId!);
+            userId!); 
 
-    public static CreateReceiptFromQrCommand ToCommand(this CreateReceiptFromQrRequest request) =>
-        new(request.Qr, request.CreatorUserId!);
+    public static CreateReceiptFromQrCommand ToCommand(this CreateReceiptFromQrRequest request, string userId) =>
+        new(request.Qr, userId!);
 
     public static ReceiptResponse ToResponse(this Receipt receipt) =>
         new(receipt.Id!,

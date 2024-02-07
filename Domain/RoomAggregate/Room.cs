@@ -3,16 +3,16 @@ using Domain.UserAggregate.ValueObjects;
 
 namespace Domain.RoomAggregate;
 
-public class Room : AggregateRoot<RoomId>
+public sealed class Room : AggregateRoot<RoomId>
 {
-    public string Name { get; private set; } = default!;
-    public Money Budget { get; private set; } = default!;
+    public string Name { get; }
+    public Money Budget { get; }
     public IReadOnlyList<UserId> UserIds => _userIds.AsReadOnly();
     public IReadOnlyList<OwnedShopItem> OwnedShopItems => _ownedShopItems.AsReadOnly();
 
-    private List<UserId> _userIds = default!;
+    private readonly List<UserId> _userIds;
     
-    private List<OwnedShopItem> _ownedShopItems = default!;
+    private readonly List<OwnedShopItem> _ownedShopItems;
 
     private Room(RoomId id, string name, Money budget,
         IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems)
@@ -24,8 +24,6 @@ public class Room : AggregateRoot<RoomId>
         _userIds = userIds.ToList();
         _ownedShopItems = ownedShopItems.ToList();
     }
-
-    private Room() { }
 
     public static Room Create(
         RoomId id, string name, Money budget,

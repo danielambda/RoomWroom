@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Receipts;
 
-[Route("receipts")]
+[Route("users/{userId}/receipts")]
 public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpPost]
-    public async Task<IActionResult> Create(CreateReceiptRequest request)
+    public async Task<IActionResult> Create(CreateReceiptRequest request, string userId)
     {
-        CreateReceiptCommand command = request.ToCommand();
+        CreateReceiptCommand command = request.ToCommand(userId);
 
         ErrorOr<Receipt> result = await _mediator.Send(command);
         
@@ -22,9 +22,9 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     }
     
     [HttpPost("qr")]
-    public async Task<IActionResult> CreateFromQr(CreateReceiptFromQrRequest request)
+    public async Task<IActionResult> CreateFromQr(CreateReceiptFromQrRequest request, string userId)
     {
-        CreateReceiptFromQrCommand command = request.ToCommand();
+        CreateReceiptFromQrCommand command = request.ToCommand(userId);
         
         ErrorOr<Receipt> result = await _mediator.Send(command);
 
@@ -34,7 +34,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id)
+    public async Task<IActionResult> Get(string id, string userId)
     {
         GetReceiptQuery query = new(id);
         
@@ -47,7 +47,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
 
     [HttpPost("{id}/associate-shop-item")]
     public async Task<IActionResult> AssociateShopItemIdByIndex(
-        string id, AssociateShopItemIdByIndexRequest request)
+        string id, AssociateShopItemIdByIndexRequest request, string userId)
     {
         AssociateShopItemIdByIndexCommand command = request.ToCommand(id);
 
@@ -60,7 +60,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
 
     [HttpPost("{id}/associate-shop-items")]
     public async Task<IActionResult> AssociateShopItemIdsByIndices(
-        string id, AssociateShopItemIdsByIndicesRequest request)
+        string id, AssociateShopItemIdsByIndicesRequest request, string userId)
     {
         AssociateShopItemIdsByIndicesCommand command = request.ToCommand(id);
 

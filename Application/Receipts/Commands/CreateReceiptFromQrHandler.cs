@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Perception;
 using Application.Receipts.Interfaces;
+using Domain.Common.Errors;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
 
@@ -22,12 +23,12 @@ public class CreateReceiptFromQrHandler(
         
         bool receiptAlreadyExists = await _receiptRepository.CheckExistenceByQr(qr, cancellationToken: cancellationToken);
         if (receiptAlreadyExists)
-            return Error.Conflict(description: $"{nameof(Receipt)} with qr {qr} already exists"); //TODO опять же тут тоже
+            return Errors.Receipt.QrDuplicate(qr);
         
         IEnumerable<ReceiptItem>? receiptItems = await _receiptFromQrCreatorProvider.CreateAsync(qr, cancellationToken);
-        
+
         if (receiptItems is null)
-            return Error.Failure(description: $"{nameof(Receipt)} {qr}");
+            return Errors.Receipt.FromQrCreationFailure(qr);
 
         var receipt = Receipt.CreateNew(receiptItems, qr, command.CreatorId);
         

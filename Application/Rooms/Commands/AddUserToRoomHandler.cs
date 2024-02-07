@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 
 namespace Application.Rooms.Commands;
 
@@ -17,7 +18,7 @@ public class AddUserToRoomHandler(
         bool userWasAdded = await _roomRepository.TryAddUserToRoomAsync(userId, roomId, cancellationToken);
 
         if (userWasAdded is false)
-            return Error.Conflict(); //TODO, когда-то придется по всем "Error." пройтись
+            return Errors.Room.NotFound(roomId);
         
         bool roomWasSet = await _userRepository.TrySetRoomForUser(roomId, userId, cancellationToken);
 
@@ -25,8 +26,7 @@ public class AddUserToRoomHandler(
             return new Success();
         
         await _roomRepository.TryRemoveUserFromRoomAsync(userId, roomId, cancellationToken);
-            
-        return Error.Conflict(); //TODO, когда-то придется по всем "Error." пройтись probably this is not found
 
+        return Errors.User.NotFound(userId);
     }
 }

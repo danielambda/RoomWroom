@@ -5,14 +5,14 @@ using Domain.UserAggregate.ValueObjects;
 
 namespace Domain.UserAggregate;
 
-public class User : AggregateRoot<UserId>
+public sealed class User : AggregateRoot<UserId>
 {
-    public string Name { get; private set; }
-    public UserRole Role { get; private set; }
+    public string Name { get; }
+    public UserRole Role { get; }
     public RoomId? RoomId { get; private set; }
     public IReadOnlyList<ReceiptId> ScannedReceiptsIds => _scannedReceiptsIds.AsReadOnly();
 
-    private List<ReceiptId> _scannedReceiptsIds = default!;
+    private readonly List<ReceiptId> _scannedReceiptsIds;
     
     private User(UserId id, string name, UserRole role, RoomId? roomId, List<ReceiptId> scannedReceiptIds) : base(id)
     {
@@ -22,11 +22,7 @@ public class User : AggregateRoot<UserId>
 
         _scannedReceiptsIds = scannedReceiptIds;
     }
-
-    private User()
-    {
-    }
-
+    
     public static User CreateNew(string name, UserRole role, RoomId? roomId) =>
         new(UserId.CreateUnique(), name, role, roomId, []);
     

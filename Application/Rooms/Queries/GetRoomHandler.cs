@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 using Domain.RoomAggregate;
 
 namespace Application.Rooms.Queries;
@@ -7,12 +8,14 @@ public class GetRoomHandler(IRoomRepository repository) : IRequestHandler<GetRoo
 {
     private readonly IRoomRepository _repository = repository;
 
-    public async Task<ErrorOr<Room>> Handle(GetRoomQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Room>> Handle(GetRoomQuery query, CancellationToken cancellationToken)
     {
-        Room? room = await _repository.GetAsync(request.RoomId!, cancellationToken);
+        var roomId = query.RoomId;
+        
+        Room? room = await _repository.GetAsync(roomId!, cancellationToken);
 
         if (room is null)
-            return Error.NotFound(nameof(Room)); //TODO заменить всё вот такое на Domain Errors
+            return Errors.Room.NotFound(roomId);
 
         return room;
     }

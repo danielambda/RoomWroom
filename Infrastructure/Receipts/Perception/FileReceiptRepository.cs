@@ -17,8 +17,8 @@ public class FileReceiptRepository : IReceiptRepository
     public Task<Receipt?> GetAsync(ReceiptId id, CancellationToken cancellationToken) => 
         Task.FromResult(Receipts.GetValueOrDefault(id!));
 
-    public Task<bool> CheckExistenceByQr(string? qr, CancellationToken cancellationToken = default) =>
-        Task.FromResult(Receipts.Values.Any(receipt => receipt.Qr == qr));
+    public Task<bool> CheckExistenceByQr(string? qr, CancellationToken cancellationToken = default) => 
+        Task.FromResult(qr is not null && Receipts.Values.Any(receipt => receipt.Qr == qr));
 
     public Task AddAsync(Receipt receipt, CancellationToken cancellationToken)
     {

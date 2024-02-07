@@ -24,7 +24,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        GetRoomQuery command = new(id);
+        GetRoomQuery command = new(id!);
 
         ErrorOr<Room> result = await _mediator.Send(command);
         

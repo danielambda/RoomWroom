@@ -4,7 +4,7 @@ namespace Domain.Common.ValueObjects;
 
 public class Money : ValueObjectBase
 {
-    public decimal Amount { get; }
+    public decimal Amount { get; private set; }
     public Currency Currency { get; }
     
     public Money(decimal amount, Currency currency)

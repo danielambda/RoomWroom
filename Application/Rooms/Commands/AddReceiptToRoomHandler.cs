@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
 using Domain.RoomAggregate.ValueObjects;
@@ -15,14 +16,16 @@ public class AddReceiptToRoomHandler(
     
     public async Task<ErrorOr<Success>> Handle(AddReceiptToRoomCommand request, CancellationToken cancellationToken)
     {
-        Receipt? receipt = await _receiptRepository.GetAsync(request.ReceiptId, cancellationToken);
+        var (receiptId, excludedItemsId, roomId) = request;
+        
+        Receipt? receipt = await _receiptRepository.GetAsync(receiptId, cancellationToken);
 
         if (receipt is null)
-            return Error.NotFound(nameof(Receipt)); //TODO тут тоже 
+            return Errors.Receipt.NotFound(receiptId);
 
-        IEnumerable<OwnedShopItem> shopItemsToAdd = GetItemsAfterExclusion(receipt.Items, request.ExcludedItemsId);
+        IEnumerable<OwnedShopItem> shopItemsToAdd = GetItemsAfterExclusion(receipt.Items, excludedItemsId);
         
-        await _repository.AddShopItemsToRoomAsync(shopItemsToAdd, request.RoomId, cancellationToken);
+        await _repository.AddShopItemsToRoomAsync(shopItemsToAdd, roomId, cancellationToken);
 
         return new Success();
     }

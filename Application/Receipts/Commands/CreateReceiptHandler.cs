@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
 
@@ -21,7 +22,7 @@ public class CreateReceiptHandler(
                 command.CreatorId);
 
         if (await _repository.CheckExistenceByQr(receipt.Qr, cancellationToken))
-            return Error.Conflict(description: $"{nameof(Receipt)} with given qr already exists"); //TODO fix this
+            return Errors.Receipt.QrDuplicate(receipt.Qr!);
 
         await _repository.AddAsync(receipt, cancellationToken);
 

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 using Domain.UserAggregate;
 
 namespace Application.Users.Queries;
@@ -16,7 +17,7 @@ public class GetUserHandler(
         var user = await _repository.GetAsync(userId, cancellationToken);
 
         if (user is null)
-            return Error.NotFound(); //TODO
+            return Errors.User.NotFound(userId);
 
         return user;
     }
