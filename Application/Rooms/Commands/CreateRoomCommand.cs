@@ -8,7 +8,7 @@ public record CreateRoomCommand(
     string BudgetCurrency,
     decimal BudgetLowerBound,
     IEnumerable<string> UserIds,
-    IEnumerable<OwnedShopItemCommand> OwnedShopItems)
-    : IRequest<ErrorOr<Room>>;
+    IEnumerable<OwnedShopItemCommand> OwnedShopItems
+) : IRequest<ErrorOr<Room>>;
 
 public record OwnedShopItemCommand(string ShopItemId, decimal Quantity);

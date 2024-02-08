@@ -8,6 +8,7 @@ public record RoomResponse(
     string BudgetCurrency,
     decimal BudgetLowerBound,
     IEnumerable<string> UserIds,
-    IEnumerable<OwnedShopItemResponse> OwnedShopItems);
+    IEnumerable<OwnedShopItemResponse> OwnedShopItems
+);
 
 public record OwnedShopItemResponse(string ShopItemId, decimal Quantity);

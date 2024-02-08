@@ -5,13 +5,14 @@ using Domain.RoomAggregate.ValueObjects;
 
 namespace Application.Rooms.Commands;
 
-public class AddShopItemToRoomHandler(IRoomRepository repository)
-    : IRequestHandler<AddShopItemToRoomCommand, ErrorOr<Success>>
+public class AddShopItemToRoomHandler(
+    IRoomRepository repository
+) : IRequestHandler<AddShopItemToRoomCommand, ErrorOr<Success>>
 {
     private readonly IRoomRepository _repository = repository;
 
-    public async Task<ErrorOr<Success>> Handle(
-        AddShopItemToRoomCommand command, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<Success>> Handle(AddShopItemToRoomCommand command,
+        CancellationToken cancellationToken = default)
     {
         var (shopItemId, quantity, money, roomId) = command;
         

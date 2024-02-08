@@ -7,8 +7,8 @@ namespace Application.Rooms.Commands;
 
 public class RemoveUserFromRoomHandler(
     IRoomRepository roomRepository, 
-    IUserRepository userRepository)
-    : IRequestHandler<RemoveUserFromRoomCommand, ErrorOr<Success>>
+    IUserRepository userRepository
+) : IRequestHandler<RemoveUserFromRoomCommand, ErrorOr<Success>>
 {
     private readonly IRoomRepository _roomRepository = roomRepository;
     private readonly IUserRepository _userRepository = userRepository;

@@ -8,5 +8,5 @@ public record AddShopItemToRoomCommand(
     ShopItemId ShopItemId,
     decimal Quantity,
     Money? Price,
-    RoomId RoomId)
-    : IRequest<ErrorOr<Success>>;
+    RoomId RoomId
+) : IRequest<ErrorOr<Success>>;

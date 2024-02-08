@@ -60,17 +60,19 @@ file static class SerializationExtensions
         if (jsonElement.Deserialize<Dictionary<string, RoomDto>>() is not { } roomDtos)
             return null;
 
-        return new(roomDtos.Select(pair => new KeyValuePair<RoomId, Room>(
-            pair.Key!,
-            Room.Create(
-                pair.Value.Id!,
-                pair.Value.Name,
-                new Money(pair.Value.BudgetAmount, Enum.Parse<Currency>(pair.Value.BudgetCurrency)),
-                pair.Value.BudgetLowerBound,
-                pair.Value.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
-                pair.Value.OwnedShopItemDtos.Select(item =>
-                    new OwnedShopItem(item.ShopItemId!, item.Quantity)
-                ))
+        return new(roomDtos.Select(pair =>
+            new KeyValuePair<RoomId, Room>(
+                pair.Key!,
+                Room.Create(
+                    pair.Value.Id!,
+                    pair.Value.Name,
+                    new Money(pair.Value.BudgetAmount, Enum.Parse<Currency>(pair.Value.BudgetCurrency)),
+                    pair.Value.BudgetLowerBound,
+                    pair.Value.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
+                    pair.Value.OwnedShopItemDtos.Select(item =>
+                        new OwnedShopItem(item.ShopItemId!, item.Quantity)
+                    )
+                )
             )
         ));
     }
@@ -87,8 +89,10 @@ file static class SerializationExtensions
                     pair.Value.BudgetLowerBound,
                     pair.Value.UserIds.Select(id => id.Value.ToString()),
                     pair.Value.OwnedShopItems.Select(item =>
-                        new OwnedShopItemDto(item.ShopItemId!, item.Quantity)))))
-            .ToDictionary()
+                        new OwnedShopItemDto(item.ShopItemId!, item.Quantity)
+                    )
+                )
+            )).ToDictionary()
         );
 
     private record RoomDto(

@@ -59,28 +59,35 @@ file static class SerializationExtensions
         if(jsonElement.Deserialize<Dictionary<string, UserDto>>() is not { } userDtos)
             return null;
 
-        return new(userDtos.Select(pair => new KeyValuePair<UserId, User>(
-            pair.Key!,
-            User.Create(
-                pair.Value.Id!,
-                pair.Value.Name,
-                Enum.Parse<UserRole>(pair.Value.Role),
-                pair.Value.RoomId!,
-                pair.Value.ScannedReceiptsIds.ConvertAll(id =>
-                    ReceiptId.Create(Guid.Parse(id))))))
-            .ToDictionary());
+        return new(userDtos.Select(pair => 
+            new KeyValuePair<UserId, User>(
+                pair.Key!,
+                User.Create(
+                    pair.Value.Id!,
+                    pair.Value.Name,
+                    Enum.Parse<UserRole>(pair.Value.Role),
+                    pair.Value.RoomId!,
+                    pair.Value.ScannedReceiptsIds.ConvertAll(id =>
+                        ReceiptId.Create(Guid.Parse(id))
+                    )
+                )
+            )
+        ).ToDictionary());
     }
 
     public static string Serialize(this ConcurrentDictionary<UserId, User> users) =>
-        JsonSerializer.Serialize(users.Select(pair => new KeyValuePair<string, UserDto>(
-            pair.Key!,
-            new UserDto(
-                pair.Value.Id!,
-                pair.Value.Name,
-                pair.Value.Role.ToString(),
-                pair.Value.RoomId!,
-                pair.Value.ScannedReceiptsIds.Select(id => id.Value.ToString()).ToList())))
-            .ToDictionary());
+        JsonSerializer.Serialize(users.Select(pair => 
+            new KeyValuePair<string, UserDto>(
+                pair.Key!,
+                new UserDto(
+                    pair.Value.Id!,
+                    pair.Value.Name,
+                    pair.Value.Role.ToString(),
+                    pair.Value.RoomId!,
+                    pair.Value.ScannedReceiptsIds.Select(id => id.Value.ToString()).ToList()
+                )
+            )).ToDictionary()
+        );
 
     private record UserDto(string Id, string Name, string Role, string RoomId, List<string> ScannedReceiptsIds);
 }

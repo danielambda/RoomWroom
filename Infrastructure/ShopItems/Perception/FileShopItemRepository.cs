@@ -84,7 +84,10 @@ file static class SerializationExtensions
                     pair.Value.Id!,
                     pair.Value.Name,
                     pair.Value.Quantity,
-                    Enum.Parse<Units>(pair.Value.Units)))));
+                    Enum.Parse<Units>(pair.Value.Units)
+                )
+            )
+        ));
     }
 
     public static string Serialize(this ConcurrentDictionary<ShopItemId, ShopItem> shopItems) =>
@@ -95,8 +98,10 @@ file static class SerializationExtensions
                     pair.Value.Id!,
                     pair.Value.Name,
                     pair.Value.Quantity,
-                    pair.Value.Units.ToString())))
-            .ToDictionary());
+                    pair.Value.Units.ToString()
+                )
+            )
+        ).ToDictionary());
 
     private record ShopItemDto(string Id, string Name, decimal Quantity, string Units);
 }

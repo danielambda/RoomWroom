@@ -183,7 +183,8 @@ file class ReceiptItemJsonConverter : JsonConverter<ReceiptItem>
             : new ReceiptItem(
                 jsonReceiptItem.Name,
                 new Money(jsonReceiptItem.Price / 100m, Currency.Rub),
-                jsonReceiptItem.Quantity);
+                jsonReceiptItem.Quantity
+            );
     }
 
     public override void Write(Utf8JsonWriter writer, ReceiptItem value, JsonSerializerOptions options)

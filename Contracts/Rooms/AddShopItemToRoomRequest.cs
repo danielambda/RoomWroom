@@ -4,4 +4,5 @@ public record AddShopItemToRoomRequest(
     string ShopItemId,
     decimal Quantity,
     decimal? PriceAmount,
-    string? PriceCurrency);
+    string? PriceCurrency
+);

@@ -7,8 +7,8 @@ namespace Application.Receipts.Commands;
 
 public class AssociateShopItemIdByIndexHandler(
     IReceiptRepository repository,
-    IShopItemAssociationsRepository associationsRepository) 
-    : IRequestHandler<AssociateShopItemIdByIndexCommand, ErrorOr<Success>>
+    IShopItemAssociationsRepository associationsRepository
+) : IRequestHandler<AssociateShopItemIdByIndexCommand, ErrorOr<Success>>
 {
     private readonly IReceiptRepository _repository = repository;
     private readonly IShopItemAssociationsRepository _associationsRepository = associationsRepository;
@@ -19,14 +19,13 @@ public class AssociateShopItemIdByIndexHandler(
         var (associatedShopItemId, index, saveAssociation, receiptId) = command;
         
         Receipt? receipt = await _repository.GetAsync(receiptId, cancellationToken);
-
         if (receipt is null)
             return Errors.Receipt.NotFound(receiptId); 
 
         receipt.AssociateShopItemIdAtIndex(associatedShopItemId, index);
 
         ShopItemAssociation association = new(receipt.Items[index].Name, associatedShopItemId);
-
+        
         if (saveAssociation) 
             await _associationsRepository.AddOrUpdateAsync(association, cancellationToken);
 

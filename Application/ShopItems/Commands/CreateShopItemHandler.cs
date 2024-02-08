@@ -4,8 +4,8 @@ using Domain.ShopItemAggregate;
 namespace Application.ShopItems.Commands;
 
 public class CreateShopItemHandler(
-    IShopItemRepository repository) 
-    : IRequestHandler<CreateShopItemCommand, ErrorOr<ShopItem>>
+    IShopItemRepository repository
+) : IRequestHandler<CreateShopItemCommand, ErrorOr<ShopItem>>
 {
     private readonly IShopItemRepository _repository = repository;
 

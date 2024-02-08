@@ -1,16 +1,14 @@
 ﻿using Application.Common.Interfaces.Perception;
 using Domain.Common.Errors;
 using Domain.RoomAggregate;
-using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate;
-using Domain.UserAggregate.Enums;
 
 namespace Application.Users.Commands;
 
 public class CreateUserHandler (
     IUserRepository repository, 
-    IRoomRepository roomRepository)
-    : IRequestHandler<CreateUserCommand, ErrorOr<User>>
+    IRoomRepository roomRepository
+) : IRequestHandler<CreateUserCommand, ErrorOr<User>>
 {
     private readonly IUserRepository _repository = repository;
     private readonly IRoomRepository _roomRepository = roomRepository;
@@ -24,7 +22,6 @@ public class CreateUserHandler (
         if (roomId is not null)
         {
             Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
-            
             if (room is null)
                 return Errors.Room.NotFound(roomId);
             

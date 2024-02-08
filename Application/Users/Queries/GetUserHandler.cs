@@ -5,8 +5,8 @@ using Domain.UserAggregate;
 namespace Application.Users.Queries;
 
 public class GetUserHandler(
-    IUserRepository repository) 
-    : IRequestHandler<GetUserQuery, ErrorOr<User>>
+    IUserRepository repository
+) : IRequestHandler<GetUserQuery, ErrorOr<User>>
 {
     private readonly IUserRepository _repository = repository;
     
@@ -14,8 +14,7 @@ public class GetUserHandler(
     {
         var userId = query.UserId;
 
-        var user = await _repository.GetAsync(userId, cancellationToken);
-
+        User? user = await _repository.GetAsync(userId, cancellationToken);
         if (user is null)
             return Errors.User.NotFound(userId);
 

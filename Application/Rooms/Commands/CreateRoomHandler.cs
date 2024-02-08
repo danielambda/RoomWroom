@@ -22,7 +22,8 @@ public class CreateRoomHandler(
             new Money(budgetAmount, Enum.Parse<Currency>(budgetCurrency)),
             budgetLowerBound,
             userIds.Select(id =>
-                UserId.Create(Guid.Parse(id))),
+                UserId.Create(Guid.Parse(id))
+            ),
             ownedShopItemCommands.Select(item =>
                 new OwnedShopItem(item.ShopItemId!, item.Quantity)
             )

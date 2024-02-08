@@ -9,8 +9,8 @@ namespace Application.Rooms.Commands;
 
 public class AddReceiptToRoomHandler(
     IRoomRepository repository,
-    IReceiptRepository receiptRepository) 
-    : IRequestHandler<AddReceiptToRoomCommand, ErrorOr<Success>>
+    IReceiptRepository receiptRepository
+) : IRequestHandler<AddReceiptToRoomCommand, ErrorOr<Success>>
 {
     private readonly IRoomRepository _repository = repository;
     private readonly IReceiptRepository _receiptRepository = receiptRepository;

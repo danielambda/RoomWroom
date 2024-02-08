@@ -7,8 +7,8 @@ namespace Application.Rooms.Commands;
 
 public class AddUserToRoomHandler(
     IUserRepository userRepository,
-    IRoomRepository roomRepository)
-    : IRequestHandler<AddUserToRoomCommand, ErrorOr<Success>>
+    IRoomRepository roomRepository
+) : IRequestHandler<AddUserToRoomCommand, ErrorOr<Success>>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IRoomRepository _roomRepository = roomRepository;

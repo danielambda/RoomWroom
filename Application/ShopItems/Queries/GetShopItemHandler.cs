@@ -1,10 +1,11 @@
-﻿using Application.Common.Interfaces;
-using Application.Common.Interfaces.Perception;
+﻿using Application.Common.Interfaces.Perception;
 using Domain.ShopItemAggregate;
 
 namespace Application.ShopItems.Queries;
 
-public class GetShopItemHandler(IShopItemRepository repository) : IRequestHandler<GetShopItemQuery, ErrorOr<ShopItem>>
+public class GetShopItemHandler(
+    IShopItemRepository repository
+) : IRequestHandler<GetShopItemQuery, ErrorOr<ShopItem>>
 {
     private readonly IShopItemRepository _repository = repository;
     

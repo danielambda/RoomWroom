@@ -1,5 +1,4 @@
-﻿using Domain.RoomAggregate.ValueObjects;
-using Domain.UserAggregate;
+﻿using Domain.UserAggregate;
 using Domain.UserAggregate.ValueObjects;
 
 namespace Application.Common.Interfaces.Perception;

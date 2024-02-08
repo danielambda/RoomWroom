@@ -17,8 +17,9 @@ public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
     public Task AddOrUpdateAsync(ShopItemAssociation association, CancellationToken cancellationToken = default)
     {
         Associations.AddOrUpdate(association.OriginalName,
-            _ =>association,
-            (_, _) =>association);
+            _ => association,
+            (_, _) => association
+        );
         
         UpdateReceiptsFile();
 
@@ -29,10 +30,13 @@ public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
         IEnumerable<ShopItemAssociation> associations, CancellationToken cancellationToken = default)
     {
         foreach (ShopItemAssociation association in associations)
+        {
             Associations.AddOrUpdate(association.OriginalName,
-                _ =>association,
-                (_, _) =>association);
-        
+                _ => association,
+                (_, _) => association
+            );
+        }
+
         UpdateReceiptsFile();
 
         return Task.CompletedTask;

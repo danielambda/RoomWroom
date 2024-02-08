@@ -4,8 +4,8 @@ using Domain.Common.Errors;
 namespace Application.ShopItems.Commands;
 
 public class DeleteShopItemHandler(
-    IShopItemRepository repository)
-    : IRequestHandler<DeleteShopItemCommand, ErrorOr<Success>>
+    IShopItemRepository repository
+) : IRequestHandler<DeleteShopItemCommand, ErrorOr<Success>>
 {
     private readonly IShopItemRepository _repository = repository;
     

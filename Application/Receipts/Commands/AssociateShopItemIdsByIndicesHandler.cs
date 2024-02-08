@@ -8,8 +8,8 @@ namespace Application.Receipts.Commands;
 
 public class AssociateShopItemIdsByIndicesHandler(
     IReceiptRepository repository,
-    IShopItemAssociationsRepository associationsRepository) 
-    : IRequestHandler<AssociateShopItemIdsByIndicesCommand, ErrorOr<Success>>
+    IShopItemAssociationsRepository associationsRepository
+) : IRequestHandler<AssociateShopItemIdsByIndicesCommand, ErrorOr<Success>>
 {
     private readonly IReceiptRepository _repository = repository;
     private readonly IShopItemAssociationsRepository _associationsRepository = associationsRepository;
@@ -21,7 +21,6 @@ public class AssociateShopItemIdsByIndicesHandler(
         associatedShopItemIds = associatedShopItemIds as ShopItemId[] ?? associatedShopItemIds.ToArray();
         
         Receipt? receipt = await _repository.GetAsync(receiptId, cancellationToken);
-
         if (receipt is null)
             return Errors.Receipt.NotFound(receiptId);
 
@@ -39,6 +38,7 @@ public class AssociateShopItemIdsByIndicesHandler(
         Receipt receipt, IEnumerable<ShopItemId?> associatedIds)
     {
         var currentIndex = 0;
+        
         foreach (ShopItemId? associatedId in associatedIds)
         {
             if (associatedId != null)

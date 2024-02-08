@@ -9,8 +9,8 @@ namespace Application.Receipts.Commands;
 public class CreateReceiptFromQrHandler(
     IReceiptItemsFromQrCreator receiptFromQrCreatorProvider,
     IReceiptRepository receiptRepository,
-    IShopItemAssociationsRepository shopItemAssociationsRepository) 
-    : IRequestHandler<CreateReceiptFromQrCommand, ErrorOr<Receipt>>
+    IShopItemAssociationsRepository shopItemAssociationsRepository
+) : IRequestHandler<CreateReceiptFromQrCommand, ErrorOr<Receipt>>
 {
     private readonly IReceiptItemsFromQrCreator _receiptFromQrCreatorProvider = receiptFromQrCreatorProvider;
     private readonly IReceiptRepository _receiptRepository = receiptRepository;
@@ -21,12 +21,11 @@ public class CreateReceiptFromQrHandler(
     {
         string qr = command.Qr;
         
-        bool receiptAlreadyExists = await _receiptRepository.CheckExistenceByQr(qr, cancellationToken: cancellationToken);
+        bool receiptAlreadyExists = await _receiptRepository.CheckExistenceByQr(qr, cancellationToken);
         if (receiptAlreadyExists)
             return Errors.Receipt.QrDuplicate(qr);
         
         IEnumerable<ReceiptItem>? receiptItems = await _receiptFromQrCreatorProvider.CreateAsync(qr, cancellationToken);
-
         if (receiptItems is null)
             return Errors.Receipt.FromQrCreationFailure(qr);
 
