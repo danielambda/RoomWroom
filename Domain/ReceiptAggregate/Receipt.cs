@@ -13,6 +13,8 @@ public sealed class Receipt : AggregateRoot<ReceiptId>
     public string? Qr { get; }
     public UserId CreatorId { get; }
 
+    public Money Sum => _items.Select(item => item.Sum).Aggregate((s1, s2) => s1 + s2);
+
     private Receipt(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) : base(id)
     {
         _items = items

@@ -9,4 +9,9 @@ public record CreateRoomRequest(
     IEnumerable<OwnedShopItemRequest> OwnedShopItems
 );
 
-public record OwnedShopItemRequest(string ShopItemId, decimal Quantity);
+public record OwnedShopItemRequest(
+    string ShopItemId,
+    decimal Quantity,
+    decimal PriceAmount,
+    string PriceCurrency
+);

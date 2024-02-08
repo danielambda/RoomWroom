@@ -14,11 +14,11 @@ public class AddReceiptToRoomHandler(
 {
     private readonly IRoomRepository _repository = repository;
     private readonly IReceiptRepository _receiptRepository = receiptRepository;
-    
+
     public async Task<ErrorOr<Success>> Handle(AddReceiptToRoomCommand request, CancellationToken cancellationToken)
     {
         var (receiptId, excludedItemsId, roomId) = request;
-        
+
         Receipt? receipt = await _receiptRepository.GetAsync(receiptId, cancellationToken);
         if (receipt is null)
             return Errors.Receipt.NotFound(receiptId);
@@ -28,8 +28,9 @@ public class AddReceiptToRoomHandler(
         Room? room = await _repository.GetAsync(roomId, cancellationToken);
         if (room is null)
             return Errors.Room.NotFound(roomId);
-        
+
         room.AddOwnedShopItems(shopItemsToAdd);
+        room.SpendMoney(receipt.Sum);
 
         return new Success();
     }
@@ -46,7 +47,7 @@ public class AddReceiptToRoomHandler(
             if (items[i].AssociatedShopItemId is not { } associatedShopItemId)
                 continue;
 
-            yield return new OwnedShopItem(associatedShopItemId, items[i].Quantity);
+            yield return new OwnedShopItem(associatedShopItemId, items[i].Quantity, items[i].Sum);
         }
     }
 }
