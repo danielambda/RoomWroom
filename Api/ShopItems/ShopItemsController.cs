@@ -14,7 +14,7 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
     {
         CreateShopItemCommand command = request.ToCommand();
 
-        ErrorOr<ShopItem> result = await _mediator.Send(command);
+        ErrorOr<ShopItem> result = await Mediator.Send(command);
 
         return result.Match(
             shopItem => OkCreated(shopItem.ToResponse()),
@@ -26,7 +26,7 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
     {
         GetShopItemQuery query = new(id!);
 
-        ErrorOr<ShopItem> result = await _mediator.Send(query);
+        ErrorOr<ShopItem> result = await Mediator.Send(query);
 
         return result.Match(
             shopItem => Ok(shopItem.ToResponse()),
@@ -38,7 +38,7 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
     {
         DeleteShopItemCommand command = new(id!);
         
-        ErrorOr<Success> result = await _mediator.Send(command);
+        ErrorOr<Success> result = await Mediator.Send(command);
 
         return result.Match(
             _ => Ok(),

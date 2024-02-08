@@ -2,7 +2,6 @@
 using System.Text.Json;
 using Application.Common.Interfaces.Perception;
 using Domain.ReceiptAggregate.ValueObjects;
-using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate;
 using Domain.UserAggregate.Enums;
 using Domain.UserAggregate.ValueObjects;
@@ -25,28 +24,6 @@ public class FileUserRepository : IUserRepository
 
     public Task<User?> GetAsync(UserId id, CancellationToken cancellationToken = default) =>
         Task.FromResult(Users.GetValueOrDefault(id));
-
-    public Task<bool> TrySetRoomForUser(RoomId roomId, UserId userId, CancellationToken cancellationToken = default)
-    {
-        if (Users.TryGetValue(userId, out User? user) is false) 
-            return Task.FromResult(false);
-        
-        user.SetRoom(roomId);
-        UpdateUsersFile();
-        
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> TryRemoveRoomFromUser(UserId userId, CancellationToken cancellationToken)
-    {
-        if (Users.TryGetValue(userId, out User? user) is false) 
-            return Task.FromResult(false);
-        
-        user.RemoveRoom();
-        UpdateUsersFile();
-        
-        return Task.FromResult(true);
-    }
     
     private static ConcurrentDictionary<UserId, User> InitUsers()
     {

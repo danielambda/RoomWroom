@@ -1,2 +1,4 @@
-﻿global using ErrorOr;
+﻿// Global using directives
+
+global using ErrorOr;
 global using MediatR;

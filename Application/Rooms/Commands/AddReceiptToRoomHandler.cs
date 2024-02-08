@@ -2,6 +2,7 @@
 using Domain.Common.Errors;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
+using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 
 namespace Application.Rooms.Commands;
@@ -19,13 +20,16 @@ public class AddReceiptToRoomHandler(
         var (receiptId, excludedItemsId, roomId) = request;
         
         Receipt? receipt = await _receiptRepository.GetAsync(receiptId, cancellationToken);
-
         if (receipt is null)
             return Errors.Receipt.NotFound(receiptId);
 
         IEnumerable<OwnedShopItem> shopItemsToAdd = GetItemsAfterExclusion(receipt.Items, excludedItemsId);
+
+        Room? room = await _repository.GetAsync(roomId, cancellationToken);
+        if (room is null)
+            return Errors.Room.NotFound(roomId);
         
-        await _repository.AddShopItemsToRoomAsync(shopItemsToAdd, roomId, cancellationToken);
+        room.AddOwnedShopItems(shopItemsToAdd);
 
         return new Success();
     }
@@ -42,7 +46,7 @@ public class AddReceiptToRoomHandler(
             if (items[i].AssociatedShopItemId is not { } associatedShopItemId)
                 continue;
 
-            yield return OwnedShopItem.Create(associatedShopItemId, items[i].Quantity);
+            yield return new OwnedShopItem(associatedShopItemId, items[i].Quantity);
         }
     }
 }

@@ -14,7 +14,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     {
         CreateRoomCommand command = request.ToCommand();
 
-        ErrorOr<Room> result = await _mediator.Send(command);
+        ErrorOr<Room> result = await Mediator.Send(command);
 
         return result.Match(
             room => OkCreated(room.ToResponse()),
@@ -26,7 +26,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     {
         GetRoomQuery command = new(id!);
 
-        ErrorOr<Room> result = await _mediator.Send(command);
+        ErrorOr<Room> result = await Mediator.Send(command);
         
         return result.Match(
             room => Ok(room.ToResponse()),
@@ -38,7 +38,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     {
         AddShopItemToRoomCommand command = request.ToCommand(roomId);
 
-        ErrorOr<Success> result = await _mediator.Send(command);
+        ErrorOr<Success> result = await Mediator.Send(command);
 
         return result.Match(
             _ => Ok(),
@@ -50,7 +50,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     {
         AddReceiptToRoomCommand command = request.ToCommand(roomId);
 
-        ErrorOr<Success> result = await _mediator.Send(command);
+        ErrorOr<Success> result = await Mediator.Send(command);
 
         return result.Match(
             _ => Ok(),
@@ -62,7 +62,7 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
     {
         AddUserToRoomCommand command = request.ToCommand(roomId);
 
-        ErrorOr<Success> result = await _mediator.Send(command);
+        ErrorOr<Success> result = await Mediator.Send(command);
         
         return result.Match(
             _ => Ok(),

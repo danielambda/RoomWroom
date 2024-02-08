@@ -5,7 +5,7 @@ namespace Api.Common.Models;
 [ApiController]
 public abstract class ApiControllerBase(ISender mediator) : ControllerBase
 {
-    protected readonly ISender _mediator = mediator;
+    protected readonly ISender Mediator = mediator;
     
     protected IActionResult Problem(IEnumerable<Error> errors)
     {

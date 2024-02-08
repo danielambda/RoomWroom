@@ -1,5 +1,9 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
+using Domain.RoomAggregate;
+using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate;
+using Domain.UserAggregate.Enums;
 
 namespace Application.Users.Commands;
 
@@ -13,10 +17,19 @@ public class CreateUserHandler (
     
     public async Task<ErrorOr<User>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
-        var user = User.CreateNew(command.Name, command.UserRole, command.RoomId);
+        var (name, userRole, roomId) = command;
+        
+        var user = User.CreateNew(name, userRole, roomId);
 
-        if (user.RoomId is not null)
-            await _roomRepository.TryAddUserToRoomAsync(user.Id, user.RoomId, cancellationToken);
+        if (roomId is not null)
+        {
+            Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
+            
+            if (room is null)
+                return Errors.Room.NotFound(roomId);
+            
+            room.AddUser(user.Id);
+        }
         
         await _repository.AddAsync(user, cancellationToken);
 

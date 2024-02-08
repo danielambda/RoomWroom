@@ -14,7 +14,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     {
         CreateReceiptCommand command = request.ToCommand(userId);
 
-        ErrorOr<Receipt> result = await _mediator.Send(command);
+        ErrorOr<Receipt> result = await Mediator.Send(command);
         
         return result.Match(
             receipt => OkCreated(receipt.ToResponse()),
@@ -26,7 +26,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     {
         CreateReceiptFromQrCommand command = request.ToCommand(userId);
         
-        ErrorOr<Receipt> result = await _mediator.Send(command);
+        ErrorOr<Receipt> result = await Mediator.Send(command);
 
         return result.Match(
             receipt => OkCreated(receipt.ToResponse()),
@@ -38,7 +38,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     {
         GetReceiptQuery query = new(id);
         
-        ErrorOr<Receipt> result = await _mediator.Send(query);
+        ErrorOr<Receipt> result = await Mediator.Send(query);
         
         return result.Match(
             receipt => Ok(receipt.ToResponse()),
@@ -51,7 +51,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     {
         AssociateShopItemIdByIndexCommand command = request.ToCommand(id);
 
-        ErrorOr<Success> result = await _mediator.Send(command);
+        ErrorOr<Success> result = await Mediator.Send(command);
 
         return result.Match(
             _ => Ok(),
@@ -64,7 +64,7 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     {
         AssociateShopItemIdsByIndicesCommand command = request.ToCommand(id);
 
-        ErrorOr<Success> result = await _mediator.Send(command);
+        ErrorOr<Success> result = await Mediator.Send(command);
 
         return result.Match(
             _ => Ok(),

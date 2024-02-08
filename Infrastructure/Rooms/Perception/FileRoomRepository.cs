@@ -17,55 +17,13 @@ public class FileRoomRepository : IRoomRepository
     
     public Task<Room?> GetAsync(RoomId id, CancellationToken cancellationToken = default)=> 
         Task.FromResult(Rooms.GetValueOrDefault(id));
-
-    public Task AddShopItemToRoomAsync(OwnedShopItem shopItem, RoomId roomId,
-        CancellationToken cancellationToken = default)
-    {
-        Rooms[roomId].AddOwnedShopItem(shopItem);
-        UpdateShopItemsFile();
-
-        return Task.CompletedTask;
-    }
-
-    public Task AddShopItemsToRoomAsync(IEnumerable<OwnedShopItem> shopItems, RoomId roomId,
-        CancellationToken cancellationToken = default)
-    {
-        Rooms[roomId].AddOwnedShopItems(shopItems);
-        UpdateShopItemsFile();
-
-        return Task.CompletedTask;
-    }
-
+    
     public Task AddAsync(Room room, CancellationToken cancellationToken = default)
     {
         Rooms.TryAdd(room.Id, room);
         UpdateShopItemsFile();
         
         return Task.CompletedTask;
-    }
-    
-    public Task<bool> TryAddUserToRoomAsync(UserId userId, RoomId roomId, CancellationToken cancellationToken = default)
-    {
-        if (Rooms.TryGetValue(roomId, out Room? room) is false)
-            return Task.FromResult(false);
-
-        room.AddUser(userId);
-        UpdateShopItemsFile();
-        
-        return Task.FromResult(true);
-    }
-    
-    public Task<bool> TryRemoveUserFromRoomAsync(UserId userId, RoomId roomId, CancellationToken cancellationToken = default)
-    {
-        if (Rooms.TryGetValue(roomId, out Room? room) is false)
-            return Task.FromResult(false);
-
-        if (room.RemoveUser(userId) is false) 
-            return Task.FromResult(false);
-        
-        UpdateShopItemsFile();
-        return Task.FromResult(true);
-
     }
     
     private static ConcurrentDictionary<RoomId, Room> InitRooms()
@@ -108,9 +66,13 @@ file static class SerializationExtensions
                 pair.Value.Id!,
                 pair.Value.Name,
                 new Money(pair.Value.BudgetAmount, Enum.Parse<Currency>(pair.Value.BudgetCurrency)),
+                pair.Value.BudgetLowerBound,
                 pair.Value.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
                 pair.Value.OwnedShopItemDtos.Select(item =>
-                    OwnedShopItem.Create(item.ShopItemId!, item.Quantity))))));
+                    new OwnedShopItem(item.ShopItemId!, item.Quantity)
+                ))
+            )
+        ));
     }
 
     public static string Serialize(this ConcurrentDictionary<RoomId, Room> rooms) =>
@@ -122,16 +84,19 @@ file static class SerializationExtensions
                     pair.Value.Name,
                     pair.Value.Budget.Amount,
                     pair.Value.Budget.Currency.ToString(),
+                    pair.Value.BudgetLowerBound,
                     pair.Value.UserIds.Select(id => id.Value.ToString()),
                     pair.Value.OwnedShopItems.Select(item =>
                         new OwnedShopItemDto(item.ShopItemId!, item.Quantity)))))
-            .ToDictionary());
+            .ToDictionary()
+        );
 
     private record RoomDto(
         string Id,
         string Name,
         decimal BudgetAmount,
         string BudgetCurrency,
+        decimal BudgetLowerBound,
         IEnumerable<string> UserIds,
         IEnumerable<OwnedShopItemDto> OwnedShopItemDtos);
     

@@ -6,6 +6,7 @@ public record RoomResponse(
     string Name,
     decimal BudgetAmount,
     string BudgetCurrency,
+    decimal BudgetLowerBound,
     IEnumerable<string> UserIds,
     IEnumerable<OwnedShopItemResponse> OwnedShopItems);
 

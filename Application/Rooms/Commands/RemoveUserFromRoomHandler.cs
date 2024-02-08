@@ -1,5 +1,7 @@
 ﻿using Application.Common.Interfaces.Perception;
 using Domain.Common.Errors;
+using Domain.RoomAggregate;
+using Domain.UserAggregate;
 
 namespace Application.Rooms.Commands;
 
@@ -15,14 +17,17 @@ public class RemoveUserFromRoomHandler(
     {
         var (userId, roomId) = request;
 
-        bool userWasRemoved = await _roomRepository.TryRemoveUserFromRoomAsync(userId, roomId, cancellationToken);
-        if (userWasRemoved is false)
+        Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
+        if (room is null)
             return Errors.Room.NotFound(roomId);
 
-        bool roomWasRemoved = await _userRepository.TryRemoveRoomFromUser(userId, cancellationToken);
-        if (roomWasRemoved is false)
+        User? user = await _userRepository.GetAsync(userId, cancellationToken);
+        if (user is null)
             return Errors.User.NotFound(userId);
 
+        room.RemoveUser(userId);
+        user.RemoveRoom();
+        
         return new Success();
     }
 }

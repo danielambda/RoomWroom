@@ -4,7 +4,7 @@ namespace Domain.Common.ValueObjects;
 
 public class Money : ValueObjectBase
 {
-    public decimal Amount { get; private set; }
+    public decimal Amount { get; }
     public Currency Currency { get; }
     
     public Money(decimal amount, Currency currency)
@@ -25,6 +25,18 @@ public class Money : ValueObjectBase
 
         return new(left.Amount + right.Amount, left.Currency);
     }
+    
+    public static Money operator -(Money left, Money right)
+    {
+        if (left.Currency != right.Currency)
+            throw new MismatchedСurrenciesExceptions();
+
+        return new(left.Amount - right.Amount, left.Currency);
+    }
+
+    public static bool operator <(Money left, decimal right) => left.Amount < right;
+
+    public static bool operator >(Money left, decimal right) => left.Amount > right;
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

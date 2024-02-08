@@ -14,7 +14,7 @@ public class UsersController(ISender mediator) : ApiControllerBase(mediator)
     {
         CreateUserCommand command = request.ToCommand();
 
-        ErrorOr<User> result = await _mediator.Send(command);
+        ErrorOr<User> result = await Mediator.Send(command);
 
         return result.Match(
             user => Ok(user.ToResponse()),
@@ -26,7 +26,7 @@ public class UsersController(ISender mediator) : ApiControllerBase(mediator)
     {
         GetUserQuery query = new(id!);
 
-        ErrorOr<User> result = await _mediator.Send(query);
+        ErrorOr<User> result = await Mediator.Send(query);
         
         return result.Match(
             user => Ok(user.ToResponse()),

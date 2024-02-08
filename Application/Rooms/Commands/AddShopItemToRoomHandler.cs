@@ -1,4 +1,6 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
+using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 
 namespace Application.Rooms.Commands;
@@ -8,12 +10,22 @@ public class AddShopItemToRoomHandler(IRoomRepository repository)
 {
     private readonly IRoomRepository _repository = repository;
 
-    public async Task<ErrorOr<Success>> Handle(AddShopItemToRoomCommand command, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<Success>> Handle(
+        AddShopItemToRoomCommand command, CancellationToken cancellationToken = default)
     {
-        var ownedShopItem = OwnedShopItem.Create(command.ShopItemId, command.Quantity);
+        var (shopItemId, quantity, money, roomId) = command;
         
-        await _repository.AddShopItemToRoomAsync(ownedShopItem, command.RoomId, cancellationToken);
+        var ownedShopItem = new OwnedShopItem(shopItemId, quantity);
+        
+        Room? room = await _repository.GetAsync(roomId, cancellationToken);
+        if (room is null)
+            return Errors.Room.NotFound(roomId);
 
+        room.AddOwnedShopItem(ownedShopItem);
+
+        if (money is not null)
+            room.SpendMoney(money);
+        
         return new Success();
     }
 }
