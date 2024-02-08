@@ -3,7 +3,7 @@ using Domain.Common.Errors;
 using Domain.RoomAggregate;
 using Domain.UserAggregate;
 
-namespace Application.Rooms.Commands;
+namespace Application.Rooms.Commands.WithUsers;
 
 public class AddUserToRoomHandler(
     IUserRepository userRepository,

@@ -1,4 +1,7 @@
 ﻿using Application.Rooms.Commands;
+using Application.Rooms.Commands.WithReceipts;
+using Application.Rooms.Commands.WithShopItems;
+using Application.Rooms.Commands.WithUsers;
 using Contracts.Rooms;
 using Domain.Common.Enums;
 using Domain.Common.ValueObjects;

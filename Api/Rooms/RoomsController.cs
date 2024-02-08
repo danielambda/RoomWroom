@@ -1,4 +1,7 @@
 ﻿using Application.Rooms.Commands;
+using Application.Rooms.Commands.WithReceipts;
+using Application.Rooms.Commands.WithShopItems;
+using Application.Rooms.Commands.WithUsers;
 using Application.Rooms.Queries;
 using Contracts.Rooms;
 using Domain.RoomAggregate;

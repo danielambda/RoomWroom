@@ -2,7 +2,7 @@
 using Domain.RoomAggregate.ValueObjects;
 using Domain.ShopItemAggregate.ValueObjects;
 
-namespace Application.Rooms.Commands;
+namespace Application.Rooms.Commands.WithShopItems;
 
 public record AddShopItemToRoomCommand(
     ShopItemId ShopItemId,
