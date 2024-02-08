@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces.Perception;
 using Domain.Common.Errors;
+using Domain.Common.ValueObjects;
 using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 
@@ -14,18 +15,15 @@ public class AddShopItemToRoomHandler(
     public async Task<ErrorOr<Success>> Handle(AddShopItemToRoomCommand command,
         CancellationToken cancellationToken = default)
     {
-        var (shopItemId, quantity, money, roomId) = command;
+        var (shopItemId, quantity, price, roomId) = command;
         
-        var ownedShopItem = new OwnedShopItem(shopItemId, quantity);
+        var ownedShopItem = new OwnedShopItem(shopItemId, quantity, price ?? Money.Zero);
         
         Room? room = await _repository.GetAsync(roomId, cancellationToken);
         if (room is null)
             return Errors.Room.NotFound(roomId);
 
         room.AddOwnedShopItem(ownedShopItem);
-
-        if (money is not null)
-            room.SpendMoney(money);
         
         return new Success();
     }

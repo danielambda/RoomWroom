@@ -1,4 +1,5 @@
-﻿using Domain.RoomAggregate;
+﻿using Domain.Common.ValueObjects;
+using Domain.RoomAggregate;
 
 namespace Application.Rooms.Commands;
 
@@ -11,4 +12,8 @@ public record CreateRoomCommand(
     IEnumerable<OwnedShopItemCommand> OwnedShopItems
 ) : IRequest<ErrorOr<Room>>;
 
-public record OwnedShopItemCommand(string ShopItemId, decimal Quantity);
+public record OwnedShopItemCommand(
+    string ShopItemId,
+    decimal Quantity,
+    Money Price
+);

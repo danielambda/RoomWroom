@@ -15,7 +15,7 @@ public class CreateRoomHandler(
 
     public async Task<ErrorOr<Room>> Handle(CreateRoomCommand command, CancellationToken cancellationToken)
     {
-        var (name, budgetAmount, budgetCurrency, budgetLowerBound, userIds, ownedShopItemCommands) = command;
+        var (name, budgetAmount, budgetCurrency, budgetLowerBound, userIds, ownedShopItems) = command;
         
         var room = Room.CreateNew(
             name,
@@ -24,8 +24,8 @@ public class CreateRoomHandler(
             userIds.Select(id =>
                 UserId.Create(Guid.Parse(id))
             ),
-            ownedShopItemCommands.Select(item =>
-                new OwnedShopItem(item.ShopItemId!, item.Quantity)
+            ownedShopItems.Select(item =>
+                new OwnedShopItem(item.ShopItemId!, item.Quantity, item.Price)
             )
         );
 

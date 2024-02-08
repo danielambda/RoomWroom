@@ -37,14 +37,27 @@ public sealed class Room : AggregateRoot<RoomId>
         IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems) =>
         new(RoomId.CreateUnique(), name, budget, budgetLoverBound, userIds, ownedShopItems);
 
-    public void AddOwnedShopItem(OwnedShopItem shopItem) => _ownedShopItems.Add(shopItem);
-    public void AddOwnedShopItems(IEnumerable<OwnedShopItem> shopItems) => _ownedShopItems.AddRange(shopItems);
-    
+    public void AddOwnedShopItem(OwnedShopItem shopItem)
+    {
+        _ownedShopItems.Add(shopItem);
+        
+        SpendMoney(shopItem.Sum);
+    }
+
+    public void AddOwnedShopItems(IEnumerable<OwnedShopItem> shopItems)
+    {
+        var ownedShopItems = shopItems as OwnedShopItem[] ?? shopItems.ToArray();
+        _ownedShopItems.AddRange(ownedShopItems);
+
+        Money sum = ownedShopItems.Select(item => item.Sum).Aggregate((s1, s2) => s1 + s2);
+        SpendMoney(sum);
+    }
+
     public void AddUser(UserId userId) => _userIds.Add(userId);
 
     public bool RemoveUser(UserId userId) => _userIds.Remove(userId);
 
-    public void SpendMoney(Money money)
+    private void SpendMoney(Money money)
     {
         Budget -= money;
 

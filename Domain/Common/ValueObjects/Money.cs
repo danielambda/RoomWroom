@@ -4,6 +4,8 @@ namespace Domain.Common.ValueObjects;
 
 public class Money : ValueObjectBase
 {
+    public static Money Zero { get; } = new(0, Currency.None);
+    
     public decimal Amount { get; }
     public Currency Currency { get; }
     

@@ -2,6 +2,7 @@
 
 public enum Currency
 {
+    None,
     Rub,
     Usd,
     Eur

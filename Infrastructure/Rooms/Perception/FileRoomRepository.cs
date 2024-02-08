@@ -70,7 +70,11 @@ file static class SerializationExtensions
                     pair.Value.BudgetLowerBound,
                     pair.Value.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
                     pair.Value.OwnedShopItemDtos.Select(item =>
-                        new OwnedShopItem(item.ShopItemId!, item.Quantity)
+                        new OwnedShopItem(
+                            item.ShopItemId!,
+                            item.Quantity,
+                            new Money(item.PriceAmount, Enum.Parse<Currency>(item.PriceCurrency))
+                        )
                     )
                 )
             )
@@ -89,7 +93,12 @@ file static class SerializationExtensions
                     pair.Value.BudgetLowerBound,
                     pair.Value.UserIds.Select(id => id.Value.ToString()),
                     pair.Value.OwnedShopItems.Select(item =>
-                        new OwnedShopItemDto(item.ShopItemId!, item.Quantity)
+                        new OwnedShopItemDto(
+                            item.ShopItemId!,
+                            item.Quantity,
+                            item.Price.Amount,
+                            item.Price.Currency.ToString()
+                        )
                     )
                 )
             )).ToDictionary()
@@ -102,7 +111,13 @@ file static class SerializationExtensions
         string BudgetCurrency,
         decimal BudgetLowerBound,
         IEnumerable<string> UserIds,
-        IEnumerable<OwnedShopItemDto> OwnedShopItemDtos);
-    
-    private record OwnedShopItemDto(string ShopItemId, decimal Quantity);
+        IEnumerable<OwnedShopItemDto> OwnedShopItemDtos
+    );
+
+    private record OwnedShopItemDto(
+        string ShopItemId,
+        decimal Quantity,
+        decimal PriceAmount,
+        string PriceCurrency
+    );
 }

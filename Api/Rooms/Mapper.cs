@@ -17,7 +17,11 @@ public static class Mapper
             request.BudgetCurrency,
             request.BudgetLowerBound,
             request.UserIds, request.OwnedShopItems.Select(item =>
-                new OwnedShopItemCommand(item.ShopItemId, item.Quantity)
+                new OwnedShopItemCommand(
+                    item.ShopItemId, 
+                    item.Quantity,
+                    new Money(item.PriceAmount, Enum.Parse<Currency>(item.PriceCurrency))
+                )
             )
         );
 
