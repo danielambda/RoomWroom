@@ -28,6 +28,13 @@ public class FileReceiptRepository : IReceiptRepository
         return Task.CompletedTask;
     }
 
+    public Task SaveChangesAsync()
+    {
+        UpdateReceiptsFile();
+        
+        return Task.CompletedTask;
+    }
+    
     private static ConcurrentDictionary<string, Receipt> InitReceipts()
     {
         using FileStream stream = new(RECEIPTS_FILE, FileMode.OpenOrCreate, FileAccess.Read);

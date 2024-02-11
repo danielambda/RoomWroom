@@ -24,6 +24,13 @@ public class FileUserRepository : IUserRepository
 
     public Task<User?> GetAsync(UserId id, CancellationToken cancellationToken = default) =>
         Task.FromResult(Users.GetValueOrDefault(id));
+
+    public Task SaveChangesAsync()
+    {
+        UpdateUsersFile();
+
+        return Task.CompletedTask;
+    }
     
     private static ConcurrentDictionary<UserId, User> InitUsers()
     {

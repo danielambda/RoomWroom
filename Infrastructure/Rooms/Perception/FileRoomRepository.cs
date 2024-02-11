@@ -25,6 +25,13 @@ public class FileRoomRepository : IRoomRepository
         
         return Task.CompletedTask;
     }
+
+    public Task SaveChangesAsync()
+    {
+        UpdateShopItemsFile();
+        
+        return Task.CompletedTask;
+    }
     
     private static ConcurrentDictionary<RoomId, Room> InitRooms()
     {

@@ -24,6 +24,7 @@ public class AddShopItemToRoomHandler(
             return Errors.Room.NotFound(roomId);
 
         room.AddOwnedShopItem(ownedShopItem);
+        await _repository.SaveChangesAsync();
         
         return new Success();
     }

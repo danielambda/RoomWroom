@@ -33,6 +33,19 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
             errors => Problem(errors));
     }
 
+    //This feature does not work due to ФНС
+    /*[HttpPost("fiscal")]
+    public async Task<IActionResult> CreateFromFiscal(CreateReceiptFromFiscalRequest request, string userId)
+    {
+        CreateReceiptFromFiscalCommand command = request.ToCommand(userId);
+
+        ErrorOr<Receipt> result = await Mediator.Send(command);
+
+        return result.Match(
+            receipt => OkCreated(receipt.ToResponse()),
+            errors => Problem(errors));
+    }*/
+
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id, string userId)
     {

@@ -23,6 +23,7 @@ public class AssociateShopItemIdByIndexHandler(
             return Errors.Receipt.NotFound(receiptId); 
 
         receipt.AssociateShopItemIdAtIndex(associatedShopItemId, index);
+        await _repository.SaveChangesAsync();
 
         ShopItemAssociation association = new(receipt.Items[index].Name, associatedShopItemId);
         

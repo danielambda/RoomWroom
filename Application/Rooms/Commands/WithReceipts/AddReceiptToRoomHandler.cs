@@ -23,13 +23,14 @@ public class AddReceiptToRoomHandler(
         if (receipt is null)
             return Errors.Receipt.NotFound(receiptId);
 
-        IEnumerable<OwnedShopItem> shopItemsToAdd = GetItemsAfterExclusion(receipt.Items, excludedItemsId);
+        OwnedShopItem[] shopItemsToAdd = GetItemsAfterExclusion(receipt.Items, excludedItemsId).ToArray();
 
         Room? room = await _repository.GetAsync(roomId, cancellationToken);
         if (room is null)
             return Errors.Room.NotFound(roomId);
 
         room.AddOwnedShopItems(shopItemsToAdd);
+        await _repository.SaveChangesAsync();
 
         return new Success();
     }

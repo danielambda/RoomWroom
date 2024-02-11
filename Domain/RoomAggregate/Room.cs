@@ -55,7 +55,7 @@ public sealed class Room : AggregateRoot<RoomId>
 
     public void AddUser(UserId userId) => _userIds.Add(userId);
 
-    public bool RemoveUser(UserId userId) => _userIds.Remove(userId);
+    public void RemoveUser(UserId userId) => _userIds.Remove(userId);
 
     private void SpendMoney(Money money)
     {

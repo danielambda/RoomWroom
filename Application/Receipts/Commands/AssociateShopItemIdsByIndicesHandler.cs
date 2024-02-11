@@ -25,6 +25,7 @@ public class AssociateShopItemIdsByIndicesHandler(
             return Errors.Receipt.NotFound(receiptId);
 
         receipt.AssociateShopItemIdsByIndices(associatedShopItemIds);
+        await _repository.SaveChangesAsync();
 
         IEnumerable<ShopItemAssociation> associations = GenerateAssociations(receipt, associatedShopItemIds);
         

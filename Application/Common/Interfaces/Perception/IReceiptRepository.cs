@@ -10,4 +10,6 @@ public interface IReceiptRepository
     Task<bool> CheckExistenceByQr(string? qr, CancellationToken cancellationToken = default);
 
     Task AddAsync(Receipt receipt, CancellationToken cancellationToken = default);
+    
+    Task SaveChangesAsync();
 }

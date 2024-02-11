@@ -1,5 +1,7 @@
-﻿using Application.Common.Interfaces.Perception;
+﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Perception;
 using Application.Receipts.Interfaces;
+using Infrastructure.Common;
 using Infrastructure.Receipts;
 using Infrastructure.Receipts.Perception;
 using Infrastructure.Rooms.Perception;
@@ -20,6 +22,8 @@ public static class DependencyInjection
             .AddScoped<IRoomRepository, FileRoomRepository>()
             .AddScoped<IShopItemAssociationsRepository, FileShopItemAssociationRepository>()
             .AddScoped<IUserRepository, FileUserRepository>();
+
+        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
         return services;
     }
