@@ -9,7 +9,7 @@ public class GetAllShopItemsHandler(
 {
     private readonly IShopItemRepository _repository = repository;
     
-    public async Task<IQueryable<ShopItem>> Handle(GetAllShopItemsQuery request, CancellationToken cancellationToken)
+    public async Task<IQueryable<ShopItem>> Handle(GetAllShopItemsQuery query, CancellationToken cancellationToken)
     {
         return await _repository.GetAllAsync(cancellationToken);
     }

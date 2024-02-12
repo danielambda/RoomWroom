@@ -1,5 +1,6 @@
 ﻿using Domain.ReceiptAggregate;
+using Domain.ReceiptAggregate.ValueObjects;
 
 namespace Application.Receipts.Queries;
 
-public record GetReceiptQuery(string Id) : IRequest<ErrorOr<Receipt>>;
+public record GetReceiptQuery(ReceiptId Id) : IRequest<ErrorOr<Receipt>>;

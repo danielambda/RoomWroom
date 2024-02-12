@@ -6,6 +6,7 @@ using Contracts.Rooms;
 using Domain.Common.Enums;
 using Domain.Common.ValueObjects;
 using Domain.RoomAggregate;
+using Domain.UserAggregate.ValueObjects;
 
 namespace Api.Rooms;
 
@@ -19,9 +20,10 @@ public static class Mapper
             ),
             request.BudgetLowerBound,
             request.MoneyRoundingRequired,
-            request.UserIds, request.OwnedShopItems.Select(item =>
+            request.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
+            request.OwnedShopItems.Select(item =>
                 new OwnedShopItemCommand(
-                    item.ShopItemId, 
+                    item.ShopItemId!, 
                     item.Quantity,
                     new Money(item.PriceAmount, Enum.Parse<Currency>(item.PriceCurrency))
                 )

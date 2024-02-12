@@ -9,9 +9,9 @@ public class DeleteShopItemHandler(
 {
     private readonly IShopItemRepository _repository = repository;
     
-    public async Task<ErrorOr<Success>> Handle(DeleteShopItemCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Success>> Handle(DeleteShopItemCommand command, CancellationToken cancellationToken)
     {
-        var shopItemId = request.ShopItemId;
+        var shopItemId = command.ShopItemId;
         
         bool deleted = await _repository.DeleteAsync(shopItemId, cancellationToken);
 

@@ -1,7 +1,6 @@
 ﻿using Application.Common.Interfaces.Perception;
 using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
-using Domain.UserAggregate.ValueObjects;
 
 namespace Application.Rooms.Commands;
 
@@ -20,11 +19,9 @@ public class CreateRoomHandler(
             budget,
             budgetLowerBound,
             moneyRoundingRequired,
-            userIds.Select(id =>
-                UserId.Create(Guid.Parse(id))
-            ),
+            userIds,
             ownedShopItems.Select(item =>
-                new OwnedShopItem(item.ShopItemId!, item.Quantity, item.Price)
+                new OwnedShopItem(item.ShopItemId, item.Quantity, item.Price)
             )
         );
 

@@ -15,9 +15,9 @@ public class AddReceiptToRoomHandler(
     private readonly IRoomRepository _repository = repository;
     private readonly IReceiptRepository _receiptRepository = receiptRepository;
 
-    public async Task<ErrorOr<Success>> Handle(AddReceiptToRoomCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Success>> Handle(AddReceiptToRoomCommand command, CancellationToken cancellationToken)
     {
-        var (receiptId, excludedItemsId, roomId) = request;
+        var (receiptId, excludedItemsId, roomId) = command;
 
         Receipt? receipt = await _receiptRepository.GetAsync(receiptId, cancellationToken);
         if (receipt is null)

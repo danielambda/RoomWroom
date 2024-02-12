@@ -9,11 +9,13 @@ public class GetReceiptHandler(
 {
     private readonly IReceiptRepository _receiptRepository = receiptRepository;
     
-    public async Task<ErrorOr<Receipt>> Handle(GetReceiptQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Receipt>> Handle(GetReceiptQuery query, CancellationToken cancellationToken)
     {
-        Receipt? receipt = await _receiptRepository.GetAsync(request.Id!, cancellationToken);
+        var receiptId = query.Id;
+        
+        Receipt? receipt = await _receiptRepository.GetAsync(receiptId, cancellationToken);
         if (receipt is null)
-            return Error.NotFound($"{nameof(Receipt)} {request.Id}");
+            return Error.NotFound($"{nameof(Receipt)} {receiptId}");
 
         return receipt;
     }

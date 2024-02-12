@@ -9,9 +9,11 @@ public class GetShopItemHandler(
 {
     private readonly IShopItemRepository _repository = repository;
     
-    public async Task<ErrorOr<ShopItem>> Handle(GetShopItemQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<ShopItem>> Handle(GetShopItemQuery query, CancellationToken cancellationToken)
     {
-        ShopItem? shopItem = await _repository.GetAsync(request.ShopItemId!, cancellationToken);
+        var shopItemId = query.ShopItemId;
+        
+        ShopItem? shopItem = await _repository.GetAsync(shopItemId, cancellationToken);
         if (shopItem is null)
             return Error.NotFound();
 

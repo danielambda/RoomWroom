@@ -13,9 +13,9 @@ public class RemoveUserFromRoomHandler(
     private readonly IRoomRepository _roomRepository = roomRepository;
     private readonly IUserRepository _userRepository = userRepository;
     
-    public async Task<ErrorOr<Success>> Handle(RemoveUserFromRoomCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Success>> Handle(RemoveUserFromRoomCommand command, CancellationToken cancellationToken)
     {
-        var (userId, roomId) = request;
+        var (userId, roomId) = command;
 
         Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
         if (room is null)

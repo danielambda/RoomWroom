@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Enums;
 using Domain.ShopItemAggregate;
 
 namespace Application.ShopItems.Commands;
@@ -11,7 +12,9 @@ public class CreateShopItemHandler(
 
     public async Task<ErrorOr<ShopItem>> Handle(CreateShopItemCommand command, CancellationToken cancellationToken)
     {
-        var shopItem = ShopItem.CreateNew(command.Name, command.Quantity, command.Units);
+        var (name, quantity, units) = command;
+        
+        var shopItem = ShopItem.CreateNew(name, quantity, units);
 
         await _repository.AddAsync(shopItem, cancellationToken);
 
