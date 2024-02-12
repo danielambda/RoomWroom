@@ -5,9 +5,9 @@ namespace Application.Rooms.Commands;
 
 public record CreateRoomCommand(
     string Name,
-    decimal BudgetAmount,
-    string BudgetCurrency,
+    Money Budget,
     decimal BudgetLowerBound,
+    bool MoneyRoundingRequired,
     IEnumerable<string> UserIds,
     IEnumerable<OwnedShopItemCommand> OwnedShopItems
 ) : IRequest<ErrorOr<Room>>;

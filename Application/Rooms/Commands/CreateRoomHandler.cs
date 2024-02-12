@@ -1,6 +1,4 @@
 ﻿using Application.Common.Interfaces.Perception;
-using Domain.Common.Enums;
-using Domain.Common.ValueObjects;
 using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate.ValueObjects;
@@ -15,12 +13,13 @@ public class CreateRoomHandler(
 
     public async Task<ErrorOr<Room>> Handle(CreateRoomCommand command, CancellationToken cancellationToken)
     {
-        var (name, budgetAmount, budgetCurrency, budgetLowerBound, userIds, ownedShopItems) = command;
+        var (name, budget, budgetLowerBound, moneyRoundingRequired, userIds, ownedShopItems) = command;
         
         var room = Room.CreateNew(
             name,
-            new Money(budgetAmount, Enum.Parse<Currency>(budgetCurrency)),
+            budget,
             budgetLowerBound,
+            moneyRoundingRequired,
             userIds.Select(id =>
                 UserId.Create(Guid.Parse(id))
             ),

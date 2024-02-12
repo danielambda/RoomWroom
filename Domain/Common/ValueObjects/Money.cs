@@ -14,8 +14,8 @@ public class Money : ValueObjectBase
         Amount = amount;
         Currency = currency;
     }
-    
-    public override string ToString() => $"{Amount} {Currency}";
+
+    public Money ToRounded() => new(Math.Ceiling(Amount), Currency);
 
     public static Money operator *(Money left, decimal right) => new(left.Amount * right, left.Currency);
     public static Money operator *(decimal left, Money right) => new(right.Amount * left, right.Currency);
@@ -27,7 +27,6 @@ public class Money : ValueObjectBase
 
         return new(left.Amount + right.Amount, left.Currency);
     }
-    
     public static Money operator -(Money left, Money right)
     {
         if (left.Currency != right.Currency)
@@ -35,9 +34,8 @@ public class Money : ValueObjectBase
 
         return new(left.Amount - right.Amount, left.Currency);
     }
-
+    
     public static bool operator <(Money left, decimal right) => left.Amount < right;
-
     public static bool operator >(Money left, decimal right) => left.Amount > right;
 
     protected override IEnumerable<object> GetEqualityComponents()
@@ -45,4 +43,6 @@ public class Money : ValueObjectBase
         yield return Amount;
         yield return Currency;
     }
+    
+    public override string ToString() => $"{Amount} {Currency}";
 }

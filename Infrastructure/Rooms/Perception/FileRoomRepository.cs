@@ -75,6 +75,7 @@ file static class SerializationExtensions
                     pair.Value.Name,
                     new Money(pair.Value.BudgetAmount, Enum.Parse<Currency>(pair.Value.BudgetCurrency)),
                     pair.Value.BudgetLowerBound,
+                    pair.Value.MoneyRoundingRequired,
                     pair.Value.UserIds.Select(id => UserId.Create(Guid.Parse(id))),
                     pair.Value.OwnedShopItemDtos.Select(item =>
                         new OwnedShopItem(
@@ -98,6 +99,7 @@ file static class SerializationExtensions
                     pair.Value.Budget.Amount,
                     pair.Value.Budget.Currency.ToString(),
                     pair.Value.BudgetLowerBound,
+                    pair.Value.MoneyRoundingRequired,
                     pair.Value.UserIds.Select(id => id.Value.ToString()),
                     pair.Value.OwnedShopItems.Select(item =>
                         new OwnedShopItemDto(
@@ -117,6 +119,7 @@ file static class SerializationExtensions
         decimal BudgetAmount,
         string BudgetCurrency,
         decimal BudgetLowerBound,
+        bool MoneyRoundingRequired,
         IEnumerable<string> UserIds,
         IEnumerable<OwnedShopItemDto> OwnedShopItemDtos
     );

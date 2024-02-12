@@ -13,9 +13,12 @@ public static class Mapper
 {
     public static CreateRoomCommand ToCommand(this CreateRoomRequest request) =>
         new(request.Name,
-            request.BudgetAmount,
-            request.BudgetCurrency,
+            new Money(
+                request.BudgetAmount,
+                Enum.Parse<Currency>(request.BudgetCurrency)
+            ),
             request.BudgetLowerBound,
+            request.MoneyRoundingRequired,
             request.UserIds, request.OwnedShopItems.Select(item =>
                 new OwnedShopItemCommand(
                     item.ShopItemId, 
@@ -31,6 +34,7 @@ public static class Mapper
             room.Budget.Amount,
             room.Budget.Currency.ToString(),
             room.BudgetLowerBound,
+            room.MoneyRoundingRequired,
             room.UserIds.Select(id =>
                 id.Value.ToString()
             ),

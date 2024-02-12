@@ -5,6 +5,7 @@ public record CreateRoomRequest(
     decimal BudgetAmount,
     string BudgetCurrency,
     decimal BudgetLowerBound,
+    bool MoneyRoundingRequired,
     IEnumerable<string> UserIds,
     IEnumerable<OwnedShopItemRequest> OwnedShopItems
 );

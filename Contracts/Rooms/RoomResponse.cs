@@ -7,6 +7,7 @@ public record RoomResponse(
     decimal BudgetAmount,
     string BudgetCurrency,
     decimal BudgetLowerBound,
+    bool MoneyRoundingRequired,
     IEnumerable<string> UserIds,
     IEnumerable<OwnedShopItemResponse> OwnedShopItems
 );
