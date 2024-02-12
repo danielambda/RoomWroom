@@ -13,9 +13,12 @@ public class FileShopItemRepository : IShopItemRepository
     
     private static readonly ConcurrentDictionary<ShopItemId, ShopItem> ShopItems = InitShopItems();
     
-    public Task<ShopItem?> GetAsync(ShopItemId id, CancellationToken cancellationToken = default)=> 
+    public Task<ShopItem?> GetAsync(ShopItemId id, CancellationToken cancellationToken = default) => 
         Task.FromResult(ShopItems.GetValueOrDefault(id));
 
+    public Task<IQueryable<ShopItem>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        Task.FromResult(ShopItems.Values.AsQueryable());
+    
     public Task AddAsync(ShopItem shopItem, CancellationToken cancellationToken = default)
     {
         ShopItems.TryAdd(shopItem.Id, shopItem);

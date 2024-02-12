@@ -32,6 +32,18 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
             shopItem => Ok(shopItem.ToResponse()),
             errors => Problem(errors));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        GetAllShopItemsQuery query = new();
+
+        IQueryable<ShopItem> result = await Mediator.Send(query);
+
+        return Ok(result.Select(item =>
+            item.ToResponse()
+        ));
+    }
     
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
