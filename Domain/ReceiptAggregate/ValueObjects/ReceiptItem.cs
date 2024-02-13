@@ -4,11 +4,11 @@ namespace Domain.ReceiptAggregate.ValueObjects;
 
 public sealed class ReceiptItem : ValueObjectBase
 {
-    public string Name { get; private set; } = default!;
-    public Money Price { get; private set; } = default!;
-    public decimal Quantity { get; private set; } = default!;
-    public Money Sum { get; private set; } = default!;
-    public ShopItemId? AssociatedShopItemId { get; private set; } = default!;
+    public string Name { get; }
+    public Money Price { get; }
+    public decimal Quantity { get; }
+    public Money Sum { get; }
+    public ShopItemId? AssociatedShopItemId { get; private set; } = default;
 
     public ReceiptItem(string name, Money price, decimal quantity, ShopItemId? associatedShopItemId = null)
     {
@@ -18,10 +18,6 @@ public sealed class ReceiptItem : ValueObjectBase
         AssociatedShopItemId = associatedShopItemId;
 
         Sum = Price * Quantity;
-    }
-
-    private ReceiptItem()
-    {
     }
 
     internal void AssociateWith(ShopItemId shopItemId) => AssociatedShopItemId = shopItemId;
