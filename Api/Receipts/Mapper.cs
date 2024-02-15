@@ -22,13 +22,10 @@ public static class Mapper
     public static CreateReceiptFromQrCommand ToCommand(this CreateReceiptFromQrRequest request, string userId) =>
         new(request.Qr, userId!);
 
-    /*
-     This feature does not work due to ФНС
     public static CreateReceiptFromFiscalCommand ToCommand(
         this CreateReceiptFromFiscalRequest request, string userId) =>
-        new(request.FiscalDriveNumber, request.FiscalDocumentNumber, request.FiscalSign, userId!);
-    */
-
+        new(request.DateTime, request.Sum, request.FiscalDrive, request.FiscalDocument, request.FiscalSign, userId!);
+    
     public static ReceiptResponse ToResponse(this Receipt receipt) =>
         new(receipt.Id!,
             receipt.Items.Select(item =>

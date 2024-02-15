@@ -15,8 +15,8 @@ public class FileRoomRepository : IRoomRepository
     
     private static readonly ConcurrentDictionary<RoomId, Room> Rooms = InitRooms();
     
-    public Task<Room?> GetAsync(RoomId id, CancellationToken cancellationToken = default)=> 
-        Task.FromResult(Rooms.GetValueOrDefault(id));
+    public Task<Room?> GetAsync(RoomId id, CancellationToken cancellationToken = default)
+        => Task.FromResult(Rooms.GetValueOrDefault(id));
     
     public Task AddAsync(Room room, CancellationToken cancellationToken = default)
     {
@@ -100,7 +100,9 @@ file static class SerializationExtensions
                     pair.Value.Budget.Currency.ToString(),
                     pair.Value.BudgetLowerBound,
                     pair.Value.MoneyRoundingRequired,
-                    pair.Value.UserIds.Select(id => id.Value.ToString()),
+                    pair.Value.UserIds.Select(id =>
+                        id.Value.ToString()
+                    ),
                     pair.Value.OwnedShopItems.Select(item =>
                         new OwnedShopItemDto(
                             item.ShopItemId!,
@@ -110,8 +112,8 @@ file static class SerializationExtensions
                         )
                     )
                 )
-            )).ToDictionary()
-        );
+            )
+        ).ToDictionary());
 
     private record RoomDto(
         string Id,

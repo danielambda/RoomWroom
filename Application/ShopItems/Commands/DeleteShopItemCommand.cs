@@ -2,4 +2,4 @@
 
 namespace Application.ShopItems.Commands;
 
-public record DeleteShopItemCommand(ShopItemId ShopItemId) : IRequest<ErrorOr<Success>>;
+public record DeleteShopItemCommand(ShopItemId ShopItemId) : IRequest<ErrorOr<Deleted>>;

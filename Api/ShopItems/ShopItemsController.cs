@@ -50,7 +50,7 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
     {
         DeleteShopItemCommand command = new(id!);
         
-        ErrorOr<Success> result = await Mediator.Send(command);
+        ErrorOr<Deleted> result = await Mediator.Send(command);
 
         return result.Match(
             _ => Ok(),
