@@ -32,7 +32,7 @@ public class AssociateShopItemIdsByIndicesHandler(
         if (saveAssociations)
             await _associationsRepository.AddOrUpdateAsync(associations, cancellationToken);
         
-        return new Success();
+        return Result.Success;
     }
 
     private static IEnumerable<ShopItemAssociation> GenerateAssociations(

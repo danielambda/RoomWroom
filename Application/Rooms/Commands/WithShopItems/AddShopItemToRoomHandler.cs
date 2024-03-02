@@ -26,6 +26,6 @@ public class AddShopItemToRoomHandler(
         room.AddOwnedShopItem(ownedShopItem);
         await _repository.SaveChangesAsync();
         
-        return new Success();
+        return Result.Success;
     }
 }

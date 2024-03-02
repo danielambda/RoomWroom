@@ -55,7 +55,7 @@ public static class Mapper
         );
 
     public static AddReceiptToRoomCommand ToCommand(this AddReceiptToRoomRequest request, string roomId) =>
-        new(request.ReceiptId!, request.ExcludedItemsIds, roomId!);
+        new(request.ReceiptId!, request.ExcludedItemsIndices, roomId!);
 
     public static AddUserToRoomCommand ToCommand(this AddUserToRoomRequest request, string roomId) =>
         new(request.UserId!, roomId!);

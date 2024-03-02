@@ -32,7 +32,7 @@ public class AddReceiptToRoomHandler(
         room.AddOwnedShopItems(shopItemsToAdd);
         await _repository.SaveChangesAsync();
 
-        return new Success();
+        return Result.Success;
     }
 
     private static IEnumerable<OwnedShopItem> GetItemsAfterExclusion(

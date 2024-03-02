@@ -1,29 +1,25 @@
 ﻿using Application.Common.Interfaces.Perception;
 using Domain.Common.Errors;
-using Domain.RoomAggregate;
-using Domain.UserAggregate;
 
-namespace Application.Rooms.Commands.WithUsers;
+namespace Application.Users.Commands;
 
-public class AddUserToRoomHandler(
+public class SetUsersRoomHandler(
     IUserRepository userRepository,
     IRoomRepository roomRepository
-) : IRequestHandler<AddUserToRoomCommand, ErrorOr<Success>>
+) : IRequestHandler<SetUsersRoomCommand, ErrorOr<Success>>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IRoomRepository _roomRepository = roomRepository;
     
-    public async Task<ErrorOr<Success>> Handle(AddUserToRoomCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Success>> Handle(SetUsersRoomCommand command, CancellationToken cancellationToken)
     {
         var (userId, roomId) = command;
-        
-        User? user = await _userRepository.GetAsync(userId, cancellationToken);
+
+        var user = await _userRepository.GetAsync(userId, cancellationToken);
         if (user is null)
             return Errors.User.NotFound(userId);
-        if (user.RoomId is { } userRoomId)
-            return Errors.User.RoomAlreadySet(userId, userRoomId);
-        
-        Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
+
+        var room = await _roomRepository.GetAsync(roomId, cancellationToken);
         if (room is null)
             return Errors.Room.NotFound(roomId);
         

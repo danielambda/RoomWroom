@@ -1,4 +1,5 @@
-﻿using Domain.UserAggregate.ValueObjects;
+﻿using Domain.RoomAggregate.ValueObjects;
+using Domain.UserAggregate.ValueObjects;
 using ErrorOr;
 
 namespace Domain.Common.Errors;
@@ -9,5 +10,8 @@ public static partial class Errors
     {
         public static Error NotFound(UserId id) =>
             Error.NotFound("User.NotFound", $"User with id '{id}' was not found");
+
+        public static Error RoomAlreadySet(UserId id, RoomId roomId) =>
+            Error.NotFound("User.RoomAlreadySet", $"User with id '{id}' already has room set to '{roomId}'");
     }
 }

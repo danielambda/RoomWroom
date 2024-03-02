@@ -30,6 +30,6 @@ public class AssociateShopItemIdByIndexHandler(
         if (saveAssociation) 
             await _associationsRepository.AddOrUpdateAsync(association, cancellationToken);
 
-        return new Success();
+        return Result.Success;
     }
 }

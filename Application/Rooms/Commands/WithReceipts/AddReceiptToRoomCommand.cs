@@ -5,6 +5,6 @@ namespace Application.Rooms.Commands.WithReceipts;
 
 public record AddReceiptToRoomCommand(
     ReceiptId ReceiptId,
-    List<int> ExcludedItemsId, 
+    List<int> ExcludedItemsIndices, 
     RoomId RoomId
 ) : IRequest<ErrorOr<Success>>; 

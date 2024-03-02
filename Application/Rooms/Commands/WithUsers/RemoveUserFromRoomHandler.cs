@@ -8,12 +8,12 @@ namespace Application.Rooms.Commands.WithUsers;
 public class RemoveUserFromRoomHandler(
     IRoomRepository roomRepository, 
     IUserRepository userRepository
-) : IRequestHandler<RemoveUserFromRoomCommand, ErrorOr<Success>>
+) : IRequestHandler<RemoveUserFromRoomCommand, ErrorOr<Deleted>>
 {
     private readonly IRoomRepository _roomRepository = roomRepository;
     private readonly IUserRepository _userRepository = userRepository;
     
-    public async Task<ErrorOr<Success>> Handle(RemoveUserFromRoomCommand command, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Deleted>> Handle(RemoveUserFromRoomCommand command, CancellationToken cancellationToken)
     {
         var (userId, roomId) = command;
 
@@ -28,6 +28,6 @@ public class RemoveUserFromRoomHandler(
         room.RemoveUser(userId);
         user.RemoveRoom();
         
-        return new Success();
+        return Result.Deleted;
     }
 }
