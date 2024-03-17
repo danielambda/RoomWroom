@@ -30,7 +30,6 @@ public class AddReceiptToRoomHandler(
             return Errors.Room.NotFound(roomId);
 
         room.AddOwnedShopItems(shopItemsToAdd);
-        await _repository.SaveChangesAsync();
 
         return Result.Success;
     }

@@ -45,4 +45,8 @@ public class Money : ValueObjectBase
     }
     
     public override string ToString() => $"{Amount} {Currency}";
+
+    private Money()
+    {
+    }
 }

@@ -24,10 +24,8 @@ public class SetUsersRoomHandler(
             return Errors.Room.NotFound(roomId);
         
         room.AddUser(userId);
-        await _roomRepository.SaveChangesAsync();
         
         user.SetRoom(roomId);
-        await _userRepository.SaveChangesAsync();
 
         return Result.Success;
     }

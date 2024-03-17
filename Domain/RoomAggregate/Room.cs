@@ -5,10 +5,10 @@ namespace Domain.RoomAggregate;
 
 public sealed class Room : AggregateRoot<RoomId>
 {
-    public string Name { get; }
+    public string Name { get; private set; }
     public Money Budget { get; private set; }
-    public decimal BudgetLowerBound { get; }
-    public bool MoneyRoundingRequired { get; }
+    public decimal BudgetLowerBound { get; private set; }
+    public bool MoneyRoundingRequired { get; private set; }
     public IReadOnlyList<UserId> UserIds => _userIds.AsReadOnly();
     public IReadOnlyList<OwnedShopItem> OwnedShopItems => _ownedShopItems.AsReadOnly();
 
@@ -82,5 +82,11 @@ public sealed class Room : AggregateRoot<RoomId>
         {
             //TODO may be domain event
         }
+    }
+
+#pragma warning disable CS8618
+    private Room()
+#pragma warning restore CS8618
+    {
     }
 }

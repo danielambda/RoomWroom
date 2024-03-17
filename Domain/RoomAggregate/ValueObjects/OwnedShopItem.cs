@@ -4,9 +4,9 @@ namespace Domain.RoomAggregate.ValueObjects;
 
 public class OwnedShopItem : ValueObjectBase
 {
-    public ShopItemId ShopItemId { get; }
+    public ShopItemId ShopItemId { get; } = default!;
     public decimal Quantity { get; }
-    public Money Price { get; }
+    public Money Price { get; } = default!;
     public Money Sum => Quantity * Price;
     
     public OwnedShopItem(ShopItemId shopItemId, decimal quantity, Money price)
@@ -21,5 +21,9 @@ public class OwnedShopItem : ValueObjectBase
         yield return ShopItemId;
         yield return Quantity;
         yield return Price;
+    }
+
+    private OwnedShopItem()
+    {
     }
 }

@@ -14,7 +14,7 @@ public class Recipe : AggregateRoot<RecipeId>
     private readonly List<MeasuredIngredient> _ingredients;
 
     private Recipe(RecipeId id, string title, string description, List<MeasuredIngredient> ingredients,
-        int servings, int readyInMinutes)
+        int servings, int readyInMinutes) : base(id)
     {
         Title = title;
         Description = description;
