@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 using Domain.RoomAggregate;
 using Domain.RoomAggregate.ValueObjects;
 
@@ -13,6 +14,9 @@ public class CreateRoomHandler(
     public async Task<ErrorOr<Room>> Handle(CreateRoomCommand command, CancellationToken cancellationToken)
     {
         var (name, budget, budgetLowerBound, moneyRoundingRequired, userIds, ownedShopItems) = command;
+
+        if (string.IsNullOrEmpty(name))
+            return Errors.Room.EmptyName;
         
         var room = Room.CreateNew(
             name,

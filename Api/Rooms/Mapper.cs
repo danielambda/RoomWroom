@@ -16,7 +16,9 @@ public static class Mapper
         new(request.Name,
             new Money(
                 request.BudgetAmount,
-                Enum.Parse<Currency>(request.BudgetCurrency)
+                Enum.TryParse(request.BudgetCurrency, out Currency currency) 
+                    ? currency 
+                    : Currency.None
             ),
             request.BudgetLowerBound,
             request.MoneyRoundingRequired,

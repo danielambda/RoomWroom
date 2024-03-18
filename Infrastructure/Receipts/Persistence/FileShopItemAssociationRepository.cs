@@ -3,7 +3,7 @@ using System.Text.Json;
 using Application.Common.Interfaces.Perception;
 using Domain.ReceiptAggregate.ValueObjects;
 
-namespace Infrastructure.Receipts.Perception;
+namespace Infrastructure.Receipts.Persistence;
 
 public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
 {

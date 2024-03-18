@@ -4,7 +4,7 @@ using Application.Receipts.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Common.Persistence;
 using Infrastructure.Receipts;
-using Infrastructure.Receipts.Perception;
+using Infrastructure.Receipts.Persistence;
 using Infrastructure.Rooms.Perception;
 using Infrastructure.ShopItems.Perception;
 using Infrastructure.Users.Perception;

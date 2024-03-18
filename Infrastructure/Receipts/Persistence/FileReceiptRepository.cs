@@ -6,7 +6,7 @@ using Domain.Common.ValueObjects;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
 
-namespace Infrastructure.Receipts.Perception;
+namespace Infrastructure.Receipts.Persistence;
 
 public class FileReceiptRepository : IReceiptRepository
 {

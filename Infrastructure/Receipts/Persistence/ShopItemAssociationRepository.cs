@@ -2,7 +2,7 @@
 using Domain.ReceiptAggregate.ValueObjects;
 using Infrastructure.Common.Persistence;
 
-namespace Infrastructure.Receipts.Perception;
+namespace Infrastructure.Receipts.Persistence;
 
 public class ShopItemAssociationRepository(
     RoomWroomDbContext dbContext    
