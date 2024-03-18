@@ -4,10 +4,10 @@ namespace Domain.ReceiptAggregate.ValueObjects;
 
 public sealed class ReceiptItem : ValueObjectBase
 {
-    public string Name { get; }
-    public Money Price { get; }
-    public decimal Quantity { get; }
-    public Money Sum { get; }
+    public string Name { get; private set; } = null!;
+    public Money Price { get; private set; } = null!;
+    public decimal Quantity { get; private set; }
+    public Money Sum { get; private set; } = null!;
     public ShopItemId? AssociatedShopItemId { get; private set; } = default;
 
     public ReceiptItem(string name, Money price, decimal quantity, ShopItemId? associatedShopItemId = null)
@@ -21,7 +21,7 @@ public sealed class ReceiptItem : ValueObjectBase
     }
 
     internal void AssociateWith(ShopItemId shopItemId) => AssociatedShopItemId = shopItemId;
-    
+
     public override string ToString() => $"{Name}.{Environment.NewLine} {Price} x {Quantity} = {Sum}";
 
     protected override IEnumerable<object?> GetEqualityComponents()
@@ -31,5 +31,10 @@ public sealed class ReceiptItem : ValueObjectBase
         yield return Price;
         yield return Sum;
         yield return AssociatedShopItemId;
+    }
+
+    private ReceiptItem()
+    {
+
     }
 }

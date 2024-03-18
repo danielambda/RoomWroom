@@ -9,4 +9,6 @@ public interface IShopItemAssociationsRepository
     Task AddOrUpdateAsync(ShopItemAssociation association, CancellationToken cancellationToken = default);
     
     Task AddOrUpdateAsync(IEnumerable<ShopItemAssociation> associations, CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

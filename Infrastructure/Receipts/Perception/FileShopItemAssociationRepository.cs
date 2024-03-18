@@ -21,7 +21,7 @@ public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
             (_, _) => association
         );
         
-        UpdateReceiptsFile();
+        UpdateAssociationsFile();
 
         return Task.CompletedTask;
     }
@@ -37,8 +37,14 @@ public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
             );
         }
 
-        UpdateReceiptsFile();
+        UpdateAssociationsFile();
 
+        return Task.CompletedTask;
+    }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        UpdateAssociationsFile();
         return Task.CompletedTask;
     }
 
@@ -59,7 +65,7 @@ public class FileShopItemAssociationRepository : IShopItemAssociationsRepository
         return associations ?? [];
     }
     
-    private static void UpdateReceiptsFile()
+    private static void UpdateAssociationsFile()
     {
         using FileStream stream = new(SHOP_ITEM_ASSOCIATIONS_FILE, FileMode.OpenOrCreate, FileAccess.Write);
         string json = Associations.Serialize();

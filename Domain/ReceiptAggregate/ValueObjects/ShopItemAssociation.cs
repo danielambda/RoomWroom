@@ -4,8 +4,8 @@ namespace Domain.ReceiptAggregate.ValueObjects;
 
 public class ShopItemAssociation : ValueObjectBase
 {
-    public string OriginalName { get; }
-    public ShopItemId ShopItemId { get; }
+    public string OriginalName { get; private set; } = default!;
+    public ShopItemId ShopItemId { get; private set; } = default!;
 
     public ShopItemAssociation(string originalName, ShopItemId shopItemId)
     {
@@ -17,5 +17,10 @@ public class ShopItemAssociation : ValueObjectBase
     {
         yield return OriginalName;
         yield return ShopItemId;
+    }
+
+    private ShopItemAssociation()
+    {
+        
     }
 }

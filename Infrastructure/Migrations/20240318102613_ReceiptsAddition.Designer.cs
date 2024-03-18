@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RoomWroomDbContext))]
-    partial class RoomWroomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240318102613_ReceiptsAddition")]
+    partial class ReceiptsAddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
@@ -32,19 +35,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Receipts", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.ReceiptAggregate.ValueObjects.ShopItemAssociation", b =>
-                {
-                    b.Property<string>("OriginalName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ShopItemId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("OriginalName");
-
-                    b.ToTable("ShopItemAssociation", (string)null);
                 });
 
             modelBuilder.Entity("Domain.RoomAggregate.Room", b =>
@@ -75,9 +65,6 @@ namespace Infrastructure.Migrations
                             b1.Property<int>("Id")
                                 .HasColumnType("INTEGER");
 
-                            b1.Property<Guid>("ReceiptId")
-                                .HasColumnType("TEXT");
-
                             b1.Property<Guid?>("AssociatedShopItemId")
                                 .HasColumnType("TEXT");
 
@@ -89,7 +76,10 @@ namespace Infrastructure.Migrations
                             b1.Property<decimal>("Quantity")
                                 .HasColumnType("TEXT");
 
-                            b1.HasKey("Id", "ReceiptId");
+                            b1.Property<Guid>("ReceiptId")
+                                .HasColumnType("TEXT");
+
+                            b1.HasKey("Id");
 
                             b1.HasIndex("ReceiptId");
 
@@ -103,15 +93,12 @@ namespace Infrastructure.Migrations
                                     b2.Property<int>("ReceiptItemId")
                                         .HasColumnType("INTEGER");
 
-                                    b2.Property<Guid>("ReceiptItemReceiptId")
-                                        .HasColumnType("TEXT");
-
-                                    b2.HasKey("ReceiptItemId", "ReceiptItemReceiptId");
+                                    b2.HasKey("ReceiptItemId");
 
                                     b2.ToTable("ReceiptItems");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("ReceiptItemId", "ReceiptItemReceiptId");
+                                        .HasForeignKey("ReceiptItemId");
                                 });
 
                             b1.OwnsOne("Domain.Common.ValueObjects.Money", "Sum", b2 =>
@@ -119,15 +106,12 @@ namespace Infrastructure.Migrations
                                     b2.Property<int>("ReceiptItemId")
                                         .HasColumnType("INTEGER");
 
-                                    b2.Property<Guid>("ReceiptItemReceiptId")
-                                        .HasColumnType("TEXT");
-
-                                    b2.HasKey("ReceiptItemId", "ReceiptItemReceiptId");
+                                    b2.HasKey("ReceiptItemId");
 
                                     b2.ToTable("ReceiptItems");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("ReceiptItemId", "ReceiptItemReceiptId");
+                                        .HasForeignKey("ReceiptItemId");
                                 });
 
                             b1.Navigation("Price")

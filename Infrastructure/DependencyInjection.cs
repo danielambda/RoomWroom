@@ -17,8 +17,10 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddPersistence();
-        
-        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
+        services
+            .AddScoped<IReceiptItemsFromQrCreator, InnReceiptItemsFromQrCreator>()
+            .AddTransient<IDateTimeProvider, DateTimeProvider>();
 
         return services;
     }
@@ -29,10 +31,9 @@ public static class DependencyInjection
             options.UseSqlite("DataSource=app.db"));
         
         services
-            .AddScoped<IReceiptItemsFromQrCreator, InnReceiptItemsFromQrCreator>()
             .AddScoped<IReceiptRepository, FileReceiptRepository>()
             .AddScoped<IShopItemRepository, FileShopItemRepository>()
-            .AddScoped<IRoomRepository, RoomRepository>()
+            .AddScoped<IRoomRepository, FileRoomRepository>()
             .AddScoped<IShopItemAssociationsRepository, FileShopItemAssociationRepository>()
             .AddScoped<IUserRepository, FileUserRepository>();
 

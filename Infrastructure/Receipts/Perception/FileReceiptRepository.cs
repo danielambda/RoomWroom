@@ -28,7 +28,7 @@ public class FileReceiptRepository : IReceiptRepository
         return Task.CompletedTask;
     }
 
-    public Task SaveChangesAsync()
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         UpdateReceiptsFile();
         

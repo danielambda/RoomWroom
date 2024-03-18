@@ -1,4 +1,6 @@
-﻿using Domain.RoomAggregate;
+﻿using Domain.ReceiptAggregate;
+using Domain.ReceiptAggregate.ValueObjects;
+using Domain.RoomAggregate;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Infrastructure.Common.Persistence;
@@ -6,6 +8,8 @@ namespace Infrastructure.Common.Persistence;
 public class RoomWroomDbContext : DbContext
 {
     public DbSet<Room> Rooms { get; init; } = default!;
+    public DbSet<Receipt> Receipts { get; init; } = default!;
+    public DbSet<ShopItemAssociation> ShopItemAssociations { get; init; } = default!;
 
     public RoomWroomDbContext(DbContextOptions<RoomWroomDbContext> options) : base(options)
     {

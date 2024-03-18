@@ -6,14 +6,16 @@ namespace Domain.ReceiptAggregate;
 
 public sealed class Receipt : AggregateRoot<ReceiptId>
 {
-    private readonly List<ReceiptItem> _items;
+    private readonly List<ReceiptItem> _items = null!;
 
     public IReadOnlyList<ReceiptItem> Items => _items.AsReadOnly();
-    
-    public string? Qr { get; }
-    public UserId CreatorId { get; }
 
-    public Money Sum => _items.Select(item => item.Sum).Aggregate((s1, s2) => s1 + s2);
+    public string? Qr { get; private set; } = null!;
+    public UserId CreatorId { get; private set; } = null!;
+
+    public Money Sum => _items
+        .Select(item => item.Sum)
+        .Aggregate((s1, s2) => s1 + s2);
 
     private Receipt(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) : base(id)
     {
@@ -59,6 +61,10 @@ public sealed class Receipt : AggregateRoot<ReceiptId>
             if (association is not null)
                 receiptItem.AssociateWith(association.ShopItemId);
         }
+    }
+
+    private Receipt()
+    {
     }
 }
 
