@@ -1,4 +1,5 @@
-﻿using Domain.RoomAggregate.ValueObjects;
+﻿using Domain.Common.Exceptions;
+using Domain.RoomAggregate.ValueObjects;
 using Domain.UserAggregate.ValueObjects;
 
 namespace Domain.RoomAggregate;
@@ -41,6 +42,9 @@ public sealed class Room : AggregateRoot<RoomId>
 
     public void AddOwnedShopItem(OwnedShopItem shopItem)
     {
+        if (shopItem.Price.Currency != Budget.Currency)
+            throw new MismatchedСurrenciesExceptions();
+        
         _ownedShopItems.Add(shopItem);
 
         Money sum = shopItem.Sum;
@@ -54,10 +58,19 @@ public sealed class Room : AggregateRoot<RoomId>
     public void AddOwnedShopItems(IEnumerable<OwnedShopItem> shopItems)
     {
         var ownedShopItems = shopItems as OwnedShopItem[] ?? shopItems.ToArray();
+        
+        if (ownedShopItems.Length == 0)
+            return;
+        
         _ownedShopItems.AddRange(ownedShopItems);
 
-        Money sum = ownedShopItems.Select(item => item.Sum).Aggregate((s1, s2) => s1 + s2);
+        Money sum = ownedShopItems
+            .Select(item => item.Sum)
+            .Aggregate((s1, s2) => s1 + s2);
 
+        if (sum.Currency != Budget.Currency)
+            throw new MismatchedСurrenciesExceptions();
+        
         if (MoneyRoundingRequired)
             sum = sum.ToRounded();
         
@@ -76,6 +89,9 @@ public sealed class Room : AggregateRoot<RoomId>
 
     private void SpendMoney(Money money)
     {
+        if (money.Currency != Budget.Currency)
+            throw new MismatchedСurrenciesExceptions();
+        
         Budget -= money;
 
         if (Budget < BudgetLowerBound)

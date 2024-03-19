@@ -11,7 +11,4 @@ public interface IId<TSelf, TSource>
     
     public static abstract implicit operator string?(TSelf? id);
     public static abstract implicit operator TSelf?(string? str);
-
-    public int GetHashCode() => Value.GetHashCode();
-    public string? ToString() => Value.ToString();
 }

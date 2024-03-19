@@ -23,6 +23,9 @@ public class AddShopItemToRoomHandler(
         if (room is null)
             return Errors.Room.NotFound(roomId);
 
+        if (room.Budget.Currency != ownedShopItem.Price.Currency)
+            return Errors.Money.MismatchedCurrency;
+        
         room.AddOwnedShopItem(ownedShopItem);
         
         return Result.Success;

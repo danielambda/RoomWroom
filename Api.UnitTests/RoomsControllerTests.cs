@@ -1,16 +1,13 @@
 using Api.Rooms;
-using Application.Rooms.Commands;
 using Contracts.Rooms;
 using Domain.Common.Enums;
 using Domain.Common.Errors;
 using Domain.Common.ValueObjects;
-using Domain.ReceiptAggregate;
 using Domain.RoomAggregate;
 using FakeItEasy;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Patterns;
 
 namespace Api.UnitTests;
 

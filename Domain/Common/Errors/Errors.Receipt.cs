@@ -8,7 +8,7 @@ public static partial class Errors
     public static class Receipt
     {
         public static Error NotFound(ReceiptId id) =>
-            Error.NotFound($"Receipt.{nameof(NotFound)}", $"Receipt with id '{id}' was not found");
+            Error.NotFound($"Receipt.{nameof(NotFound)}", $"Receipt with id '{id.Value}' was not found");
 
         public static Error QrDuplicate(string qr) =>
             Error.Conflict($"Receipt.{nameof(QrDuplicate)}", $"Receipt with qr {qr} already exists");
