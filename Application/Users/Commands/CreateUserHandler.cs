@@ -23,7 +23,7 @@ public class CreateUserHandler (
         {
             Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
             if (room is null)
-                return Errors.Room.NotFound(roomId);
+                return Errors.Room.NotFound;
             
             room.AddUser(user.Id);
         }

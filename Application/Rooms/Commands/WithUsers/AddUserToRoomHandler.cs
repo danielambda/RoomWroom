@@ -19,13 +19,13 @@ public class AddUserToRoomHandler(
         
         User? user = await _userRepository.GetAsync(userId, cancellationToken);
         if (user is null)
-            return Errors.User.NotFound(userId);
+            return Errors.User.NotFound;
         if (user.RoomId is { } userRoomId)
             return Errors.User.RoomAlreadySet(userId, userRoomId);
         
         Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
         if (room is null)
-            return Errors.Room.NotFound(roomId);
+            return Errors.Room.NotFound;
         
         room.AddUser(userId);
         

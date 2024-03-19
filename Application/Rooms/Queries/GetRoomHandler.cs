@@ -15,7 +15,7 @@ public class GetRoomHandler(IRoomRepository repository) : IRequestHandler<GetRoo
         Room? room = await _repository.GetAsync(roomId!, cancellationToken);
 
         if (room is null)
-            return Errors.Room.NotFound(roomId);
+            return Errors.Room.NotFound;
 
         return room;
     }

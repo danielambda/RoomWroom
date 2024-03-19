@@ -25,7 +25,7 @@ public class AddReceiptToRoomHandler(
 
         Room? room = await _repository.GetAsync(roomId, cancellationToken);
         if (room is null)
-            return Errors.Room.NotFound(roomId);
+            return Errors.Room.NotFound;
         
         OwnedShopItem[] shopItemsToAdd = GetItemsAfterExclusion(receipt.Items, excludedItemsId).ToArray();
         if (shopItemsToAdd.Length == 0)

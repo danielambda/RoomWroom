@@ -16,7 +16,7 @@ public class GetUserHandler(
 
         User? user = await _repository.GetAsync(userId, cancellationToken);
         if (user is null)
-            return Errors.User.NotFound(userId);
+            return Errors.User.NotFound;
 
         return user;
     }

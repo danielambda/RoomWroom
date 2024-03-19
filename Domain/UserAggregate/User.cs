@@ -23,7 +23,7 @@ public sealed class User : AggregateRoot<UserId>
         _scannedReceiptsIds = scannedReceiptIds;
     }
     
-    public static User CreateNew(string name, UserRole role, RoomId? roomId) =>
+    public static User CreateNew(string name, UserRole role, RoomId? roomId = null) =>
         new(UserId.CreateUnique(), name, role, roomId, []);
     
     public static User Create(UserId userId, string name, UserRole role, RoomId? roomId, List<ReceiptId> receiptIds) =>

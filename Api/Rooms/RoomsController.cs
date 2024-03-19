@@ -19,9 +19,11 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
 
         ErrorOr<Room> result = await Mediator.Send(command);
 
-        return result.Match(
+        return result.Match
+        (
             room => OkCreated(room.ToResponse()),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 
     [HttpGet("{id}")]
@@ -31,9 +33,11 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
 
         ErrorOr<Room> result = await Mediator.Send(command);
         
-        return result.Match(
+        return result.Match
+        (
             room => Ok(room.ToResponse()),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
     
     [HttpPost("{roomId}/shop-item")]
@@ -43,9 +47,11 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
 
         ErrorOr<Success> result = await Mediator.Send(command);
 
-        return result.Match(
+        return result.Match
+        (
             _ => Ok(),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 
     [HttpPost("{roomId}/receipt")]
@@ -55,9 +61,11 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
 
         ErrorOr<Success> result = await Mediator.Send(command);
 
-        return result.Match(
+        return result.Match
+        (
             _ => Ok(),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 
     [HttpPost("{roomId}/user")]
@@ -67,8 +75,10 @@ public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
 
         ErrorOr<Success> result = await Mediator.Send(command);
         
-        return result.Match(
+        return result.Match
+        (
             _ => Ok(),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Api.IntegrationTests;
 
@@ -18,6 +19,11 @@ internal class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         builder.ConfigureTestServices(services =>
         {
+            services
+                .RemoveAll<IRoomRepository>()
+                .RemoveAll<IReceiptRepository>()
+                .RemoveAll<IUserRepository>();
+            
             services
                 .AddSingleton(RoomRepository.Object)
                 .AddSingleton(ReceiptRepository.Object)

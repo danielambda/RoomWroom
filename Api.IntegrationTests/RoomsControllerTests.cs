@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Contracts.Rooms;
 using Domain.Common.Enums;
+using Domain.Common.Errors;
 using Domain.Common.ValueObjects;
 using Domain.ReceiptAggregate;
 using Domain.ReceiptAggregate.ValueObjects;
@@ -113,11 +114,7 @@ public class RoomsControllerTests : IDisposable
             mockCurrency.ToString()
         );
 
-        var response = await _client.PostAsync
-        (
-            $"rooms/{mockRoomId.Value}/shop-item",
-            JsonContent.Create(request)
-        );
+        var response = await _client.PostAsJsonAsync($"rooms/{mockRoomId.Value}/shop-item", request);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -144,11 +141,7 @@ public class RoomsControllerTests : IDisposable
             Currency.Eur.ToString()
         );
 
-        var response = await _client.PostAsync
-        (
-            $"rooms/{RoomId.CreateUnique().Value}/shop-item",
-            JsonContent.Create(request)
-        );
+        var response = await _client.PostAsJsonAsync($"rooms/{RoomId.CreateUnique().Value}/shop-item",request);
         
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -263,11 +256,7 @@ public class RoomsControllerTests : IDisposable
 
         AddReceiptToRoomRequest request = new(ReceiptId.CreateUnique()!, []);
 
-        var response = await _client.PostAsync
-        (
-            $"rooms/{RoomId.CreateUnique().Value}/receipt",
-            JsonContent.Create(request)
-        );
+        var response = await _client.PostAsJsonAsync($"rooms/{RoomId.CreateUnique().Value}/receipt", request);
         
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -321,51 +310,100 @@ public class RoomsControllerTests : IDisposable
     [Fact]
     private async Task AddUserToRoom_UserShouldBeAdded()
     {
-        var mockRoomId = RoomId.CreateUnique();
-        var mockUserId = UserId.CreateUnique();
+        //Arrange
+        var mockRoom = Room.CreateNew("801", Money.Zero, 0, false, [], []);
 
-        var mockRoom = Room.Create
-        (
-            mockRoomId,
-            "TestName",
-            new Money(1234, Currency.Usd),
-            123,
-            false,
-            [], []
-        );
-
-        var mockUser = User.Create
-        (
-            mockUserId,
-            "Daniel",
-            UserRole.Admin,
-            null,
-            []
-        );
+        var mockUser = User.CreateNew("Daniel", UserRole.Admin);
 
         _factory.RoomRepository
             .Setup(repo => repo.GetAsync(It.IsAny<RoomId>(), default))
             .Returns((RoomId id, CancellationToken _) =>
-                Task.FromResult(id == mockRoomId ? mockRoom : null)
+                Task.FromResult(id == mockRoom.Id ? mockRoom : null)
             );
 
         _factory.UserRepository
             .Setup(repo => repo.GetAsync(It.IsAny<UserId>(), default))
             .Returns((UserId id, CancellationToken _) => 
-                Task.FromResult(id == mockUserId ? mockUser : null)
+                Task.FromResult(id == mockUser.Id ? mockUser : null)
             );
-        
-        AddUserToRoomRequest request = new(mockUserId!);
+         
+        AddUserToRoomRequest request = new(mockUser.Id!);
 
-        var response = await _client.PostAsync($"rooms/{mockRoomId.Value}/user", JsonContent.Create(request));
+        //Act
+        var response = await _client.PostAsJsonAsync($"rooms/{mockRoom.Id.Value}/user", request);
         
+        //Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         
-        Assert.Equal(mockRoomId, mockUser.RoomId);
-        Assert.Contains(mockRoom.UserIds, userId => userId == mockUserId);
+        Assert.Equal(mockRoom.Id, mockUser.RoomId);
+        Assert.Contains(mockRoom.UserIds, userId => userId == mockUser.Id);
+    }
+
+    [Fact]
+    private async Task AddUserToRoom_RoomDoesNotExist_Returns404NotFount()
+    {
+        //Arrange
+        var mockUser = User.CreateNew
+        (
+            "TestUser",
+            UserRole.Admin
+        );
+        
+        _factory.RoomRepository
+            .Setup(repo => repo.GetAsync(It.IsAny<RoomId>(), default))
+            .Returns((RoomId _, CancellationToken _) => Task.FromResult<Room?>(null));
+
+        _factory.UserRepository
+            .Setup(repo => repo.GetAsync(It.IsAny<UserId>(), default))
+            .Returns((UserId id, CancellationToken _) =>
+                Task.FromResult(id == mockUser.Id ? mockUser : null)
+            );
+        
+        var request = new AddUserToRoomRequest(mockUser.Id!);
+        
+        //Act
+        var response = await _client.PostAsJsonAsync($"rooms/{RoomId.CreateUnique().Value}/user", request);
+        
+        //Assert
+        var responseDescription =
+            JsonDocument.Parse(await response.Content.ReadAsStringAsync())
+                .RootElement
+                .GetProperty("title")
+                .GetString();
+        
+        Assert.Equal(Errors.Room.NotFound.Description, responseDescription);
     }
     
-    //TODO finish all integration tests for receipts controller
+    [Fact]
+    private async Task AddUserToRoom_UserDoesNotExist_Returns404NotFount()
+    {
+        //Arrange
+        var mockRoom = Room.CreateNew("801", Money.Zero, 0, false, [], []);
+        
+        _factory.RoomRepository
+            .Setup(repo => repo.GetAsync(It.IsAny<RoomId>(), default))
+            .Returns((RoomId id, CancellationToken _) => 
+                Task.FromResult(id == mockRoom.Id ? mockRoom : null)
+            );
+
+        _factory.UserRepository
+            .Setup(repo => repo.GetAsync(It.IsAny<UserId>(), default))
+            .Returns((UserId _, CancellationToken _) => Task.FromResult<User?>(null));
+        
+        var request = new AddUserToRoomRequest(UserId.CreateUnique()!);
+        
+        //Act
+        var response = await _client.PostAsJsonAsync($"rooms/{mockRoom.Id.Value}/user", request);
+        
+        //Assert
+        var responseDescription =
+            JsonDocument.Parse(await response.Content.ReadAsStringAsync())
+                .RootElement
+                .GetProperty("title")
+                .GetString();
+        
+        Assert.Equal(Errors.User.NotFound.Description, responseDescription);
+    }
     
     public void Dispose()
     {
