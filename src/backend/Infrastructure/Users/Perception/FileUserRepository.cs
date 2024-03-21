@@ -22,15 +22,12 @@ public class FileUserRepository : IUserRepository
         return Task.CompletedTask;
     }
 
-    public Task<User?> GetAsync(UserId id, CancellationToken cancellationToken = default) =>
+    public Task<User?> GetAsync(UserId id, CancellationToken cancellationToken) =>
         Task.FromResult(Users.GetValueOrDefault(id));
 
-    public Task SaveChangesAsync()
-    {
-        UpdateUsersFile();
 
-        return Task.CompletedTask;
-    }
+    public Task<bool> CheckExistenceAsync(UserId id, CancellationToken cancellationToken) =>
+        Task.FromResult(Users.ContainsKey(id));
     
     private static ConcurrentDictionary<UserId, User> InitUsers()
     {

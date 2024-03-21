@@ -25,7 +25,6 @@ public class RoomConfigurations : IEntityTypeConfiguration<Room>
         builder.ToTable(ROOMS_TABLE);
 
         builder.HasKey(room => room.Id);
-
         builder.Property(room => room.Id)
             .ValueGeneratedNever()
             .HasConversion

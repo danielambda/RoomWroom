@@ -46,9 +46,9 @@ public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id, string userId)
+    public async Task<IActionResult> Get(string userId, string id)
     {
-        GetReceiptQuery query = new(id!);
+        GetReceiptQuery query = new(userId!, id!);
         
         ErrorOr<Receipt> result = await Mediator.Send(query);
         

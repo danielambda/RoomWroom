@@ -22,10 +22,10 @@ public class AssociateShopItemIdsByIndicesHandler(
         
         Receipt? receipt = await _repository.GetAsync(receiptId, cancellationToken);
         if (receipt is null)
-            return Errors.Receipt.NotFound(receiptId);
+            return Errors.Receipt.NotFound;
 
         receipt.AssociateShopItemIdsByIndices(associatedShopItemIds);
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(cancellationToken);
 
         IEnumerable<ShopItemAssociation> associations = GenerateAssociations(receipt, associatedShopItemIds);
         

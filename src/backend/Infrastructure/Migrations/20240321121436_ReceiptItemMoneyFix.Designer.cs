@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RoomWroomDbContext))]
-    partial class RoomWroomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240321121436_ReceiptItemMoneyFix")]
+    partial class ReceiptItemMoneyFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,27 +74,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.UserAggregate.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("RoomId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.ReceiptAggregate.Receipt", b =>
@@ -282,33 +264,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("OwnedShopItems");
 
                     b.Navigation("UserIds");
-                });
-
-            modelBuilder.Entity("Domain.UserAggregate.User", b =>
-                {
-                    b.OwnsMany("Domain.ReceiptAggregate.ValueObjects.ReceiptId", "ScannedReceiptsIds", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("UserId", "Id");
-
-                            b1.ToTable("ReceiptId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
-                    b.Navigation("ScannedReceiptsIds");
                 });
 #pragma warning restore 612, 618
         }

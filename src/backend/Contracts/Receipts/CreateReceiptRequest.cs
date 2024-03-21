@@ -1,14 +1,14 @@
 ﻿namespace Contracts.Receipts;
 
 public record CreateReceiptRequest(
-    List<ReceiptItemRequest> Items,
+    IList<ReceiptItemRequest> Items,
     string? Qr
 );
 
 public record ReceiptItemRequest(
     string Name,
-    decimal MoneyAmount,
-    string MoneyCurrency,
+    decimal PriceAmount,
+    string PriceCurrency,
     decimal Quantity,
     string AssociatedShopItemId
 );

@@ -32,10 +32,10 @@ public static class DependencyInjection
             options.UseNpgsql(dbConnectionString));
         
         services
-            .AddScoped<IReceiptRepository, FileReceiptRepository>()
+            .AddScoped<IReceiptRepository, ReceiptRepository>()
             .AddScoped<IShopItemRepository, FileShopItemRepository>()
             .AddScoped<IRoomRepository, RoomRepository>()
             .AddScoped<IShopItemAssociationsRepository, FileShopItemAssociationRepository>()
-            .AddScoped<IUserRepository, FileUserRepository>();
+            .AddScoped<IUserRepository, UserRepository>();
     }
 }

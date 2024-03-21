@@ -7,13 +7,13 @@ namespace Domain.UserAggregate;
 
 public sealed class User : AggregateRoot<UserId>
 {
-    public string Name { get; }
-    public UserRole Role { get; }
+    public string Name { get; private set; }
+    public UserRole Role { get; private set; }
     public RoomId? RoomId { get; private set; }
     public IReadOnlyList<ReceiptId> ScannedReceiptsIds => _scannedReceiptsIds.AsReadOnly();
 
     private readonly List<ReceiptId> _scannedReceiptsIds;
-    
+
     private User(UserId id, string name, UserRole role, RoomId? roomId, List<ReceiptId> scannedReceiptIds) : base(id)
     {
         Name = name;
@@ -22,14 +22,18 @@ public sealed class User : AggregateRoot<UserId>
 
         _scannedReceiptsIds = scannedReceiptIds;
     }
-    
+
     public static User CreateNew(string name, UserRole role, RoomId? roomId = null) =>
         new(UserId.CreateNew(), name, role, roomId, []);
-    
+
     public static User Create(UserId userId, string name, UserRole role, RoomId? roomId, List<ReceiptId> receiptIds) =>
         new(userId, name, role, roomId, receiptIds);
 
     public void SetRoom(RoomId roomId) => RoomId = roomId;
 
     public void RemoveRoom() => RoomId = null;
+
+    private User()
+    {
+    }
 }

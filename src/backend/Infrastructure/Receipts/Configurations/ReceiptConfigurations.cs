@@ -23,7 +23,6 @@ public class ReceiptConfigurations : IEntityTypeConfiguration<Receipt>
         builder.ToTable(RECEIPTS_TABLE);
 
         builder.HasKey(receipt => receipt.Id);
-        
         builder.Property(receipt => receipt.Id)
             .ValueGeneratedNever()
             .HasConversion
@@ -58,9 +57,17 @@ public class ReceiptConfigurations : IEntityTypeConfiguration<Receipt>
             itemBuilder.Property(item => item.Name)
                 .HasMaxLength(100);
             
-            itemBuilder.OwnsOne(item => item.Price);
-            
-            itemBuilder.OwnsOne(item => item.Sum);
+            itemBuilder.OwnsOne(item => item.Price, priceBuilder =>
+            {
+                priceBuilder.Property(money => money.Currency).HasColumnName("Currency");
+                priceBuilder.Property(money => money.Amount).HasColumnName("PriceAmount");
+            });
+                
+            itemBuilder.OwnsOne(item => item.Sum, sumBuilder =>
+            {
+                sumBuilder.Property(money => money.Currency).HasColumnName("Currency");
+                sumBuilder.Property(money => money.Amount).HasColumnName("SumAmount");
+            });
 
             itemBuilder.Property(item => item.AssociatedShopItemId)
                 .HasConversion<Guid?>

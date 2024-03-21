@@ -11,13 +11,20 @@ namespace Api.Receipts;
 public static class Mapper
 {
     public static CreateReceiptCommand ToCommand(this CreateReceiptRequest request, string userId) =>
-        new(request.Items.ConvertAll(item =>
-            new ReceiptItemCommand(item.Name,
-                new Money(item.MoneyAmount, Enum.Parse<Currency>(item.MoneyCurrency)),
-                item.Quantity,
-                item.AssociatedShopItemId!)),
+        new
+        (
+            request.Items.Select(item =>
+                new ReceiptItemCommand
+                (
+                    item.Name,
+                    new Money(item.PriceAmount, Enum.Parse<Currency>(item.PriceCurrency)),
+                    item.Quantity,
+                    item.AssociatedShopItemId!
+                )
+            ).ToList(),
             request.Qr,
-            userId!); 
+            userId!
+        ); 
 
     public static CreateReceiptFromQrCommand ToCommand(this CreateReceiptFromQrRequest request, string userId) =>
         new(request.Qr, userId!);

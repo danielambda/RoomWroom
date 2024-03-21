@@ -21,7 +21,7 @@ public class AddReceiptToRoomHandler(
 
         Receipt? receipt = await _receiptRepository.GetAsync(receiptId, cancellationToken);
         if (receipt is null)
-            return Errors.Receipt.NotFound(receiptId);
+            return Errors.Receipt.NotFound;
 
         Room? room = await _repository.GetAsync(roomId, cancellationToken);
         if (room is null)

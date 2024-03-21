@@ -7,7 +7,6 @@ namespace Api.IntegrationTests.Common;
 public class IntegrationTestWebAppFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
-        .WithImage("postgres:latest")
         .WithDatabase("RoomWroom")
         .Build();
     

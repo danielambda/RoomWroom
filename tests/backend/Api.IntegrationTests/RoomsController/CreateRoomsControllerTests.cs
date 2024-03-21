@@ -1,48 +1,23 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Api.IntegrationTests.Common;
+using Api.IntegrationTests.Common.DataGeneration;
+using Api.IntegrationTests.Common.Extensions;
 using Api.IntegrationTests.Common.Models;
 using Contracts.Rooms;
-using Domain.Common.Enums;
 using Domain.Common.Errors;
-using Domain.ShopItemAggregate.ValueObjects;
-using Domain.UserAggregate.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.IntegrationTests.RoomsController;
 
 public class CreateRoomsControllerTests(IntegrationTestWebAppFactory factory)
     : IntegrationTestBase(factory)
-{
-    private readonly Faker<CreateRoomRequest> _createRoomRequestFaker =
-        new Faker<CreateRoomRequest>()
-            .CustomInstantiator(faker =>
-            {
-                string currency = faker.PickRandom<Currency>().ToString();
-                
-                return new CreateRoomRequest
-                (
-                    faker.Company.CompanyName(),
-                    faker.Random.Decimal(),
-                    currency,
-                    faker.Random.Decimal(),
-                    faker.Random.Bool(),
-                    faker.Make(faker.Random.Number(10), () => UserId.CreateNew().Value.ToString()),
-                    faker.Make(faker.Random.Number(10), () =>
-                        new OwnedShopItemRequest
-                        (
-                            ShopItemId.CreateNew()!, faker.Random.Decimal(),
-                            faker.Random.Decimal(), currency
-                        )
-                    )
-                );
-            });
-    
+{   
     [Fact]
     public async Task Create_ShouldAddRoom_ValidRoom()
     {
         //Arrange
-        CreateRoomRequest request = _createRoomRequestFaker.Generate();
+        var request = Fakers.CreateRoomRequestFaker.Generate();
         
         //Act
         var response = await Client.PostAsJsonAsync("rooms", request);
@@ -71,7 +46,7 @@ public class CreateRoomsControllerTests(IntegrationTestWebAppFactory factory)
     public async Task Create_ShouldReturn400BadRequest_EmptyRoomName()
     {
         //Arrange
-        CreateRoomRequest request = _createRoomRequestFaker.Generate() with { Name = "" };
+        CreateRoomRequest request = Fakers.CreateRoomRequestFaker.Generate() with { Name = "" };
         
         //Act
         var response = await Client.PostAsJsonAsync("rooms", request);
@@ -80,6 +55,8 @@ public class CreateRoomsControllerTests(IntegrationTestWebAppFactory factory)
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        problemDetails!.Type.Should().Be(Errors.Room.EmptyName.Code);
+
+        problemDetails.Should().NotBeNull();
+        problemDetails!.ErrorCodes().Should().Contain(Errors.Room.EmptyName.Code);
     }
 }
