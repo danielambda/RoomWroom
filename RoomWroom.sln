@@ -1,34 +1,32 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{38F7ED7D-73E7-4B41-B125-6C4E1397FADD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{38F7ED7D-73E7-4B41-B125-6C4E1397FADD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{5FD5E8FF-2145-4881-9F71-05F334B2D6D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\backend\Domain\Domain.csproj", "{5FD5E8FF-2145-4881-9F71-05F334B2D6D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{F7C816AE-F012-4128-A2E7-E8C8F3D5CEA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\backend\Application\Application.csproj", "{F7C816AE-F012-4128-A2E7-E8C8F3D5CEA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{AFC86651-9592-46A1-A869-C3B28DBF528B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\backend\Api\Api.csproj", "{AFC86651-9592-46A1-A869-C3B28DBF528B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{46E27C09-D71B-4BEC-A8E6-033489F5AE03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "src\backend\Contracts\Contracts.csproj", "{46E27C09-D71B-4BEC-A8E6-033489F5AE03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{C9336662-CF5A-43FE-9908-06A8C26276E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\backend\Infrastructure\Infrastructure.csproj", "{C9336662-CF5A-43FE-9908-06A8C26276E2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{A9126A6A-59D1-4B4A-A83F-192FFFB37C74}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "src\frontend", "{A9126A6A-59D1-4B4A-A83F-192FFFB37C74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot", "TelegramBot\TelegramBot.csproj", "{FF491E92-8BCB-4170-BCE8-07E8BE6062F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot", "src\frontend\TelegramBot\TelegramBot.csproj", "{FF491E92-8BCB-4170-BCE8-07E8BE6062F9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{1040B2D8-D4F8-4D32-9110-B2FEB2494774}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "src\backend", "{1040B2D8-D4F8-4D32-9110-B2FEB2494774}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{892A0C5A-D0E8-4F3B-B88D-523C61D1C562}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{3029E2FE-52DB-4270-AB47-6F2696679EE0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "tests\backend", "{3029E2FE-52DB-4270-AB47-6F2696679EE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "Application.UnitTests\Application.UnitTests.csproj", "{63856F82-BE04-4A4C-8EA6-0A727E3A1D36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "tests\backend\Application.UnitTests\Application.UnitTests.csproj", "{63856F82-BE04-4A4C-8EA6-0A727E3A1D36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.UnitTests", "Infrastructure.UnitTests\Infrastructure.UnitTests.csproj", "{71AB7366-747B-4EF7-B25C-129E02B40065}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.UnitTests", "tests\backend\Api.UnitTests\Api.UnitTests.csproj", "{02B01762-B355-4FC2-9746-94BC43EC8FC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.UnitTests", "Api.UnitTests\Api.UnitTests.csproj", "{02B01762-B355-4FC2-9746-94BC43EC8FC3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.IntegrationTests", "Api.IntegrationTests\Api.IntegrationTests.csproj", "{C7299832-6C3D-4068-BF06-3BBBCF41B526}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.IntegrationTests", "tests\backend\Api.IntegrationTests\Api.IntegrationTests.csproj", "{C7299832-6C3D-4068-BF06-3BBBCF41B526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +62,6 @@ Global
 		{63856F82-BE04-4A4C-8EA6-0A727E3A1D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63856F82-BE04-4A4C-8EA6-0A727E3A1D36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63856F82-BE04-4A4C-8EA6-0A727E3A1D36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71AB7366-747B-4EF7-B25C-129E02B40065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71AB7366-747B-4EF7-B25C-129E02B40065}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71AB7366-747B-4EF7-B25C-129E02B40065}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71AB7366-747B-4EF7-B25C-129E02B40065}.Release|Any CPU.Build.0 = Release|Any CPU
 		{02B01762-B355-4FC2-9746-94BC43EC8FC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{02B01762-B355-4FC2-9746-94BC43EC8FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02B01762-B355-4FC2-9746-94BC43EC8FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -88,7 +82,6 @@ Global
 		{C9336662-CF5A-43FE-9908-06A8C26276E2} = {1040B2D8-D4F8-4D32-9110-B2FEB2494774}
 		{3029E2FE-52DB-4270-AB47-6F2696679EE0} = {892A0C5A-D0E8-4F3B-B88D-523C61D1C562}
 		{63856F82-BE04-4A4C-8EA6-0A727E3A1D36} = {3029E2FE-52DB-4270-AB47-6F2696679EE0}
-		{71AB7366-747B-4EF7-B25C-129E02B40065} = {3029E2FE-52DB-4270-AB47-6F2696679EE0}
 		{02B01762-B355-4FC2-9746-94BC43EC8FC3} = {3029E2FE-52DB-4270-AB47-6F2696679EE0}
 		{C7299832-6C3D-4068-BF06-3BBBCF41B526} = {3029E2FE-52DB-4270-AB47-6F2696679EE0}
 	EndGlobalSection

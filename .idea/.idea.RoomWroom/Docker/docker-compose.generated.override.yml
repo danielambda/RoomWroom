@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  api:
+    build:
+      context: "C:\\Users\\Daniel\\source\\repos\\RoomWroom"
+      dockerfile: "Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Api.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "api:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\Daniel\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\Daniel\\source\\repos\\RoomWroom\\Api:/app:rw"
+    - "C:\\Users\\Daniel\\source\\repos\\RoomWroom:/src:rw"
+    working_dir: "/app"
