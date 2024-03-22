@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Rooms;
 
 [Route("rooms")]
-public class RoomsController(ISender mediator) : ApiControllerBase(mediator)
+public class RoomController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateRoomRequest request)

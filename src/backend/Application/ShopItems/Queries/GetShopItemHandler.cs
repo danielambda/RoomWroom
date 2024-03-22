@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Perception;
+using Domain.Common.Errors;
 using Domain.ShopItemAggregate;
 
 namespace Application.ShopItems.Queries;
@@ -15,7 +16,7 @@ public class GetShopItemHandler(
         
         ShopItem? shopItem = await _repository.GetAsync(shopItemId, cancellationToken);
         if (shopItem is null)
-            return Error.NotFound();
+            return Errors.ShopItem.NotFound;
 
         return shopItem;
     }

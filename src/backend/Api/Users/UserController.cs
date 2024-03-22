@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Users;
 
 [Route("users")]
-public class UsersController(ISender mediator) : ApiControllerBase(mediator)
+public class UserController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateUserRequest request)
@@ -16,9 +16,11 @@ public class UsersController(ISender mediator) : ApiControllerBase(mediator)
 
         ErrorOr<User> result = await Mediator.Send(command);
 
-        return result.Match(
+        return result.Match
+        (
             user => Ok(user.ToResponse()),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 
     [HttpGet("{id}")]
@@ -27,9 +29,11 @@ public class UsersController(ISender mediator) : ApiControllerBase(mediator)
         GetUserQuery query = new(id!);
 
         ErrorOr<User> result = await Mediator.Send(query);
-        
-        return result.Match(
+
+        return result.Match
+        (
             user => Ok(user.ToResponse()),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 }

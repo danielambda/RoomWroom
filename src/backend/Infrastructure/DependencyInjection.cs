@@ -33,9 +33,9 @@ public static class DependencyInjection
         
         services
             .AddScoped<IReceiptRepository, ReceiptRepository>()
-            .AddScoped<IShopItemRepository, FileShopItemRepository>()
+            .AddScoped<IShopItemRepository, ShopItemRepository>()
             .AddScoped<IRoomRepository, RoomRepository>()
-            .AddScoped<IShopItemAssociationsRepository, FileShopItemAssociationRepository>()
+            .AddScoped<IShopItemAssociationsRepository, ShopItemAssociationRepository>()
             .AddScoped<IUserRepository, UserRepository>();
     }
 }

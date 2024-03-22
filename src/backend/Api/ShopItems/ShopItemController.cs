@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.ShopItems;
 
 [Route("shop-items")]
-public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
+public class ShopItemController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateShopItemRequest request)
@@ -28,13 +28,15 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
 
         ErrorOr<ShopItem> result = await Mediator.Send(query);
 
-        return result.Match(
+        return result.Match
+        (
             shopItem => Ok(shopItem.ToResponse()),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetAll()
     {
         GetAllShopItemsQuery query = new();
 
@@ -52,8 +54,10 @@ public class ShopItemsController(ISender mediator) : ApiControllerBase(mediator)
         
         ErrorOr<Deleted> result = await Mediator.Send(command);
 
-        return result.Match(
+        return result.Match
+        (
             _ => Ok(),
-            errors => Problem(errors));
+            errors => Problem(errors)
+        );
     }
 }

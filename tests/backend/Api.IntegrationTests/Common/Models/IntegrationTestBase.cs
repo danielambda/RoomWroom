@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using Infrastructure.Common.Persistence;
-using Microsoft.AspNetCore.Mvc;
+﻿using Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +8,7 @@ public abstract class IntegrationTestBase : IClassFixture<IntegrationTestWebAppF
 {
     protected readonly RoomWroomDbContext DbContext;
     protected readonly HttpClient Client;
+    
     protected IntegrationTestBase(IntegrationTestWebAppFactory factory)
     {
         Client = factory.CreateClient();

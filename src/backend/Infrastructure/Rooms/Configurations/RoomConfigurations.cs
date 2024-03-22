@@ -36,11 +36,7 @@ public class RoomConfigurations : IEntityTypeConfiguration<Room>
         builder.Property(room => room.Name)
             .HasMaxLength(100);
 
-        builder.OwnsOne(room => room.Budget, budgetBuilder =>
-        {
-            budgetBuilder.Property(money => money.Currency).HasColumnName("BudgetCurrency");
-            budgetBuilder.Property(money => money.Amount).HasColumnName("BudgetAmount");
-        });
+        builder.OwnsOne(room => room.Budget);
     }
     
     private static void ConfigureOwnedShopItemsTable(EntityTypeBuilder<Room> builder)

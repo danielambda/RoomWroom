@@ -10,8 +10,8 @@ namespace Api.IntegrationTests.Common.DataGeneration;
 
 public static partial class Fakers
 {
-    public static Faker<Receipt> ReceiptFaker { get; } = 
-        new Faker<Receipt>().CustomInstantiator(faker =>
+    public static Faker<Receipt> ReceiptFaker { get; } = new Faker<Receipt>()
+        .CustomInstantiator(faker =>
         {
             var currency = faker.PickRandom<Currency>();
 

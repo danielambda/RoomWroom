@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Receipts;
 
 [Route("users/{userId}/receipts")]
-public class ReceiptsController(ISender mediator) : ApiControllerBase(mediator)
+public class ReceiptController(ISender mediator) : ApiControllerBase(mediator)
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateReceiptRequest request, string userId)

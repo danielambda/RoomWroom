@@ -6,8 +6,8 @@ public class Money : ValueObjectBase
 {
     public static Money Zero { get; } = new(0, Currency.None);
     
-    public decimal Amount { get; }
-    public Currency Currency { get; }
+    public decimal Amount { get; private set; }
+    public Currency Currency { get; private set; }
     
     public Money(decimal amount, Currency currency)
     {

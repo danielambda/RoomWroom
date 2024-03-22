@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RoomWroomDbContext))]
-    [Migration("20240321173812_UsersAdded")]
-    partial class UsersAdded
+    [Migration("20240322183812_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,30 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.ShopItemAggregate.ShopItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("IngredientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Units")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShopItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.UserAggregate.User", b =>
@@ -139,8 +163,7 @@ namespace Infrastructure.Migrations
                                         .HasColumnType("uuid");
 
                                     b2.Property<decimal>("Amount")
-                                        .HasColumnType("numeric")
-                                        .HasColumnName("PriceAmount");
+                                        .HasColumnType("numeric");
 
                                     b2.Property<int>("Currency")
                                         .ValueGeneratedOnUpdateSometimes()
@@ -164,8 +187,7 @@ namespace Infrastructure.Migrations
                                         .HasColumnType("uuid");
 
                                     b2.Property<decimal>("Amount")
-                                        .HasColumnType("numeric")
-                                        .HasColumnName("SumAmount");
+                                        .HasColumnType("numeric");
 
                                     b2.Property<int>("Currency")
                                         .ValueGeneratedOnUpdateSometimes()
@@ -198,12 +220,10 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("uuid");
 
                             b1.Property<decimal>("Amount")
-                                .HasColumnType("numeric")
-                                .HasColumnName("BudgetAmount");
+                                .HasColumnType("numeric");
 
                             b1.Property<int>("Currency")
-                                .HasColumnType("integer")
-                                .HasColumnName("BudgetCurrency");
+                                .HasColumnType("integer");
 
                             b1.HasKey("RoomId");
 
@@ -228,7 +248,7 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("uuid")
                                 .HasColumnName("ShopItemId");
 
-                            b1.HasKey("Id");
+                            b1.HasKey("Id", "RoomId");
 
                             b1.HasIndex("RoomId");
 
@@ -242,12 +262,21 @@ namespace Infrastructure.Migrations
                                     b2.Property<int>("OwnedShopItemId")
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("OwnedShopItemId");
+                                    b2.Property<Guid>("OwnedShopItemRoomId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<decimal>("Amount")
+                                        .HasColumnType("numeric");
+
+                                    b2.Property<int>("Currency")
+                                        .HasColumnType("integer");
+
+                                    b2.HasKey("OwnedShopItemId", "OwnedShopItemRoomId");
 
                                     b2.ToTable("RoomsOwnedShopItems");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("OwnedShopItemId");
+                                        .HasForeignKey("OwnedShopItemId", "OwnedShopItemRoomId");
                                 });
 
                             b1.Navigation("Price")

@@ -10,7 +10,7 @@ public class IngredientId : ValueObjectBase, IId<IngredientId, Guid>
 
     public static IngredientId CreateNew() => new(Guid.NewGuid());
 
-    public static implicit operator string?(IngredientId? id) => id?.ToString();
+    public static implicit operator string?(IngredientId? id) => id?.Value.ToString();
 
     public static implicit operator IngredientId?(string? str) => str is null ? null : new(Guid.Parse(str));
     

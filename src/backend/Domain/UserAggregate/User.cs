@@ -7,12 +7,12 @@ namespace Domain.UserAggregate;
 
 public sealed class User : AggregateRoot<UserId>
 {
-    public string Name { get; private set; }
+    public string Name { get; private set; } = default!;
     public UserRole Role { get; private set; }
     public RoomId? RoomId { get; private set; }
     public IReadOnlyList<ReceiptId> ScannedReceiptsIds => _scannedReceiptsIds.AsReadOnly();
 
-    private readonly List<ReceiptId> _scannedReceiptsIds;
+    private readonly List<ReceiptId> _scannedReceiptsIds = default!;
 
     private User(UserId id, string name, UserRole role, RoomId? roomId, List<ReceiptId> scannedReceiptIds) : base(id)
     {

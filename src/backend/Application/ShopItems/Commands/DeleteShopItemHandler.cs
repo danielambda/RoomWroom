@@ -15,6 +15,6 @@ public class DeleteShopItemHandler(
         
         bool deleted = await _repository.DeleteAsync(shopItemId, cancellationToken);
 
-        return deleted ? Result.Deleted : Errors.ShopItem.NotFound(shopItemId);
+        return deleted ? Result.Deleted : Errors.ShopItem.NotFound;
     }
 }

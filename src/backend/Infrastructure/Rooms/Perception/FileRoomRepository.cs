@@ -104,7 +104,8 @@ file static class SerializationExtensions
                         id.Value.ToString()
                     ),
                     pair.Value.OwnedShopItems.Select(item =>
-                        new OwnedShopItemDto(
+                        new OwnedShopItemDto
+                        (
                             item.ShopItemId!,
                             item.Quantity,
                             item.Price.Amount,

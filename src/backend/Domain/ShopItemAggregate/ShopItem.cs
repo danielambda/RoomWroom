@@ -5,10 +5,10 @@ namespace Domain.ShopItemAggregate;
 
 public sealed class ShopItem : AggregateRoot<ShopItemId>
 {
-    public string Name { get; }
-    public decimal Quantity { get; }
-    public Units Units { get; }
-    public IngredientId? IngredientId { get; }
+    public string Name { get; private set; } = null!;
+    public decimal Quantity { get; private set; }
+    public Units Units { get; private set; }
+    public IngredientId? IngredientId { get; private set; }
 
     private ShopItem(ShopItemId id, string name, decimal quantity, Units units, IngredientId? ingredientId) : base(id)
     {
@@ -24,4 +24,8 @@ public sealed class ShopItem : AggregateRoot<ShopItemId>
     public static ShopItem Create(ShopItemId id, string name, decimal quantity, Units units,
         IngredientId? ingredientId = null) =>
         new(id, name, quantity, units, ingredientId);
+
+    private ShopItem()
+    {
+    }
 }

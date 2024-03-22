@@ -10,35 +10,34 @@ namespace Api.IntegrationTests.Common.DataGeneration;
 
 public static partial class Fakers
 {
-    public static Faker<Room> RoomFaker { get; } =
-        new Faker<Room>()
-            .CustomInstantiator(faker =>
-            {
-                var currency = faker.PickRandom<Currency>();
+    public static Faker<Room> RoomFaker { get; } = new Faker<Room>()
+        .CustomInstantiator(faker =>
+        {
+            var currency = faker.PickRandom<Currency>();
 
-                return Room.CreateNew
+            return Room.CreateNew
+            (
+                faker.Company.CompanyName(),
+                new Money
                 (
-                    faker.Company.CompanyName(),
+                    faker.Random.Decimal(),
+                    currency
+                ),
+                faker.Random.Decimal(),
+                faker.Random.Bool(),
+                faker.Make(faker.Random.Number(10), () => UserId.CreateNew()),
+                faker.Make(faker.Random.Number(10), () => new OwnedShopItem
+                (
+                    ShopItemId.CreateNew(),
+                    faker.Random.Decimal(),
                     new Money
                     (
                         faker.Random.Decimal(),
                         currency
-                    ),
-                    faker.Random.Decimal(),
-                    faker.Random.Bool(),
-                    faker.Make(faker.Random.Number(10), () => UserId.CreateNew()),
-                    faker.Make(faker.Random.Number(10), () => new OwnedShopItem
-                    (
-                        ShopItemId.CreateNew(),
-                        faker.Random.Decimal(),
-                        new Money
-                        (
-                            faker.Random.Decimal(),
-                            currency
-                        )
-                    ))
-                );
-            });
+                    )
+                ))
+            );
+        });
     
     public static Faker<CreateRoomRequest> CreateRoomRequestFaker { get; } =
         new Faker<CreateRoomRequest>()

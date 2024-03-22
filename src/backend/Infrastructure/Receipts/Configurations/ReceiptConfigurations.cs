@@ -56,18 +56,12 @@ public class ReceiptConfigurations : IEntityTypeConfiguration<Receipt>
             
             itemBuilder.Property(item => item.Name)
                 .HasMaxLength(100);
-            
+
             itemBuilder.OwnsOne(item => item.Price, priceBuilder =>
-            {
-                priceBuilder.Property(money => money.Currency).HasColumnName("Currency");
-                priceBuilder.Property(money => money.Amount).HasColumnName("PriceAmount");
-            });
-                
+                priceBuilder.Property(money => money.Currency).HasColumnName("Currency"));
+   
             itemBuilder.OwnsOne(item => item.Sum, sumBuilder =>
-            {
-                sumBuilder.Property(money => money.Currency).HasColumnName("Currency");
-                sumBuilder.Property(money => money.Amount).HasColumnName("SumAmount");
-            });
+                sumBuilder.Property(money => money.Currency).HasColumnName("Currency"));
 
             itemBuilder.Property(item => item.AssociatedShopItemId)
                 .HasConversion<Guid?>

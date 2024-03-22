@@ -8,8 +8,8 @@ namespace Api.ShopItems;
 public static class Mapper
 {
     public static ShopItemResponse ToResponse(this ShopItem shopItem) => 
-        new(shopItem.Id!, shopItem.Name, shopItem.Quantity, shopItem.Units.ToString());
+        new(shopItem.Id!, shopItem.Name, shopItem.Quantity, shopItem.Units.ToString(), shopItem.IngredientId!);
 
     public static CreateShopItemCommand ToCommand(this CreateShopItemRequest request) =>
-        new(request.Name, request.Quantity, Enum.Parse<Units>(request.Units, ignoreCase: true));
+        new(request.Name, request.Quantity, Enum.Parse<Units>(request.Units, ignoreCase: true), request.IngredientId!);
 }
