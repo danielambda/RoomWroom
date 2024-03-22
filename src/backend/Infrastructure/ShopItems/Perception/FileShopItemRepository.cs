@@ -81,9 +81,11 @@ file static class SerializationExtensions
             return null;
         
         return new(shopDtos.Select(pair =>
-            new KeyValuePair<ShopItemId, ShopItem>(
+            new KeyValuePair<ShopItemId, ShopItem>
+            (
                 pair.Key!,
-                ShopItem.Create(
+                ShopItem.Create
+                (
                     pair.Value.Id!,
                     pair.Value.Name,
                     pair.Value.Quantity,
@@ -95,9 +97,11 @@ file static class SerializationExtensions
 
     public static string Serialize(this ConcurrentDictionary<ShopItemId, ShopItem> shopItems) =>
         JsonSerializer.Serialize(shopItems.Select(pair =>
-            new KeyValuePair<string, ShopItemDto>(
+            new KeyValuePair<string, ShopItemDto>
+            (
                 pair.Key!,
-                new ShopItemDto(
+                new ShopItemDto
+                (
                     pair.Value.Id!,
                     pair.Value.Name,
                     pair.Value.Quantity,

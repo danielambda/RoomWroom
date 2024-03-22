@@ -43,7 +43,7 @@ public class CreateRoomsControllerTests(IntegrationTestWebAppFactory factory)
     }
 
     [Fact]
-    public async Task Create_ShouldReturn400BadRequest_EmptyRoomName()
+    public async Task Create_ShouldReturnEmptyNameError_EmptyRoomName()
     {
         //Arrange
         CreateRoomRequest request = Fakers.CreateRoomRequestFaker.Generate() with { Name = "" };

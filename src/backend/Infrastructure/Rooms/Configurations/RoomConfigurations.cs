@@ -53,7 +53,7 @@ public class RoomConfigurations : IEntityTypeConfiguration<Room>
 
             itemBuilder.Property<int>("Id")
                 .ValueGeneratedOnAdd();
-            itemBuilder.HasKey("Id");
+            itemBuilder.HasKey("Id", "RoomId");
 
             itemBuilder.OwnsOne(item => item.Price);
 
@@ -78,10 +78,9 @@ public class RoomConfigurations : IEntityTypeConfiguration<Room>
 
             userIdBuilder.WithOwner().HasForeignKey("RoomId");
 
-            userIdBuilder.HasKey("Id", "RoomId");
-            
             userIdBuilder.Property<int>("Id")
                 .ValueGeneratedOnAdd();
+            userIdBuilder.HasKey("Id", "RoomId");
 
             userIdBuilder.Property(id => id.Value)
                 .HasColumnName("UserId");

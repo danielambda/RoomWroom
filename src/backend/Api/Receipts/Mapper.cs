@@ -11,7 +11,7 @@ namespace Api.Receipts;
 public static class Mapper
 {
     public static CreateReceiptCommand ToCommand(this CreateReceiptRequest request, string userId) =>
-        new
+        new 
         (
             request.Items.Select(item =>
                 new ReceiptItemCommand
@@ -41,11 +41,14 @@ public static class Mapper
             receipt.CreatorId!);
 
     private static ReceiptItemResponse ToResponse(this ReceiptItem receiptItem) =>
-        new(receiptItem.Name,
+        new
+        (
+            receiptItem.Name,
             receiptItem.Price.Amount,
             receiptItem.Price.Currency.ToString(),
             receiptItem.Quantity,
-            receiptItem.AssociatedShopItemId);
+            receiptItem.AssociatedShopItemId
+        );
 
     public static AssociateShopItemIdByIndexCommand ToCommand(
         this AssociateShopItemIdByIndexRequest request, string receiptId) =>
@@ -53,9 +56,12 @@ public static class Mapper
 
     public static AssociateShopItemIdsByIndicesCommand ToCommand(
         this AssociateShopItemIdsByIndicesRequest request, string receiptId) =>
-        new(request.AssociatedShopItemIds.Select(id =>
+        new
+        (
+            request.AssociatedShopItemIds.Select(id =>
                 id is null ? null : ShopItemId.Create(Guid.Parse(id))),
             request.SaveAssociations,
-            receiptId!);
+            receiptId!
+        );
 }
 

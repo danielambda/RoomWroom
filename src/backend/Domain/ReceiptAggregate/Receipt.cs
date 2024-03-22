@@ -6,12 +6,12 @@ namespace Domain.ReceiptAggregate;
 
 public sealed class Receipt : AggregateRoot<ReceiptId>
 {
-    private readonly List<ReceiptItem> _items = null!;
+    private readonly List<ReceiptItem> _items = default!;
 
     public IReadOnlyList<ReceiptItem> Items => _items.AsReadOnly();
 
-    public string? Qr { get; private set; } = null!;
-    public UserId CreatorId { get; private set; } = null!;
+    public string? Qr { get; private set; } = default!;
+    public UserId CreatorId { get; private set; } = default!;
 
     public Money Sum => _items
         .Select(item => item.Sum)
@@ -29,8 +29,8 @@ public sealed class Receipt : AggregateRoot<ReceiptId>
         CreatorId = creatorId;
     }
 
-    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) => 
-        new(ReceiptId.CreateNew(), items, qr, creatorId);
+    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) 
+        => new(ReceiptId.CreateNew(), items, qr, creatorId);
 
     public static Receipt Create(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) =>
         new(id, items, qr, creatorId);

@@ -66,7 +66,7 @@ public class GetReceiptsControllerTests(IntegrationTestWebAppFactory factory)
     }
     
     [Fact]
-    public async Task Get_Returns404NotFound_CreatorDoesNotExist()
+    public async Task Get_ReturnsUserNotFound_CreatorDoesNotExist()
     {
         //Arrange
         var receipt = Fakers.ReceiptFaker.Generate();

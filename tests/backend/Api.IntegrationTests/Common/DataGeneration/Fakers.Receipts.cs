@@ -10,12 +10,13 @@ namespace Api.IntegrationTests.Common.DataGeneration;
 
 public static partial class Fakers
 {
-    public static Faker<Receipt> ReceiptFaker { get; } = new Faker<Receipt>()
-        .CustomInstantiator(faker =>
+    public static Faker<Receipt> ReceiptFaker { get; } = 
+        new Faker<Receipt>().CustomInstantiator(faker =>
         {
             var currency = faker.PickRandom<Currency>();
 
-            return Receipt.CreateNew(
+            return Receipt.CreateNew
+            (
                 faker.Make(faker.Random.Number(10), () => new ReceiptItem
                 (
                     faker.Commerce.Product(),

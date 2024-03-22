@@ -2,9 +2,12 @@
 using System.Net.Http.Json;
 using Api.IntegrationTests.Common;
 using Api.IntegrationTests.Common.DataGeneration;
+using Api.IntegrationTests.Common.Extensions;
 using Api.IntegrationTests.Common.Models;
 using Contracts.Rooms;
+using Domain.Common.Errors;
 using Domain.RoomAggregate.ValueObjects;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.IntegrationTests.RoomsController;
 
@@ -36,12 +39,17 @@ public class GetRoomsControllerTests(IntegrationTestWebAppFactory factory)
     }
 
     [Fact]
-    private async Task Get_ReturnsNotFound_RoomDoesNotExists()
+    private async Task Get_ReturnsRoomNotFound_RoomDoesNotExists()
     {
         //Act
         var response = await Client.GetAsync($"rooms/{RoomId.CreateNew().Value}");
         
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        problemDetails.Should().NotBeNull();
+        problemDetails!.ErrorCodes().Should().Contain(Errors.Room.NotFound.Code);
     }
 }
