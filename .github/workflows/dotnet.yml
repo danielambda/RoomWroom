@@ -31,6 +31,5 @@ jobs:
       if: always()
       with:
        files: |
-          test-results/**/*.xml
-          test-results/**/*.trx
-          test-results/**/*.json
+          **/tests/backend/Api.IntegrationTests/**/test-results/**/xTests.trx
+      
