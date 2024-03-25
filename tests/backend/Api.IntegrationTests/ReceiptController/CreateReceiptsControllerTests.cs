@@ -16,7 +16,7 @@ public class CreateReceiptsControllerTests(IntegrationTestWebAppFactory factory)
     {
         //Arrange
         var creatorId = UserId.CreateNew();
-        var request = Fakers.createReceiptRequestFaker.Generate();
+        var request = Fakers.CreateReceiptRequestFaker.Generate();
 
         //Act
         var response = await Client.PostAsJsonAsync($"users/{creatorId.Value}/receipts", request);

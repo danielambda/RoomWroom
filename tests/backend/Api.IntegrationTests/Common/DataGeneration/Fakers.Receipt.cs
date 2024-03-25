@@ -17,7 +17,7 @@ public static partial class Fakers
 
             return Receipt.CreateNew
             (
-                faker.Make(faker.Random.Number(10), () => new ReceiptItem
+                faker.Make(faker.Random.Number(3, 10), () => new ReceiptItem
                 (
                     faker.Commerce.Product(),
                     new Money
@@ -28,13 +28,13 @@ public static partial class Fakers
                     faker.Random.Decimal(),
                     ShopItemId.CreateNew()
                 )),
-                faker.Random.String2(faker.Random.Number(10)),
+                faker.Random.String2(faker.Random.Number(5, 10)),
                 UserId.CreateNew()
             );
         });
     
-    public static Faker<CreateReceiptRequest> createReceiptRequestFaker { get; } =
-        new Faker<CreateReceiptRequest>().CustomInstantiator(faker =>
+    public static Faker<CreateReceiptRequest> CreateReceiptRequestFaker { get; } = new Faker<CreateReceiptRequest>()
+        .CustomInstantiator(faker =>
         {
             string currency = faker.PickRandom<Currency>().ToString();
 

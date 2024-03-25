@@ -19,4 +19,7 @@ public class RoomRepository(
         await _dbContext.Rooms.AddAsync(room, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken) 
+        => _dbContext.SaveChangesAsync(cancellationToken);
 }

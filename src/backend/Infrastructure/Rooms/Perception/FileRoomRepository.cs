@@ -26,13 +26,13 @@ public class FileRoomRepository : IRoomRepository
         return Task.CompletedTask;
     }
 
-    public Task SaveChangesAsync()
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         UpdateShopItemsFile();
         
         return Task.CompletedTask;
     }
-    
+
     private static ConcurrentDictionary<RoomId, Room> InitRooms()
     {
         using FileStream stream = new(SHOP_ITEMS_FILE, FileMode.OpenOrCreate, FileAccess.Read);

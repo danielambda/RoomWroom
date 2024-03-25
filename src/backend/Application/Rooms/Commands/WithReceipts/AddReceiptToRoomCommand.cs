@@ -3,7 +3,8 @@ using Domain.RoomAggregate.ValueObjects;
 
 namespace Application.Rooms.Commands.WithReceipts;
 
-public record AddReceiptToRoomCommand(
+public record AddReceiptToRoomCommand
+(
     ReceiptId ReceiptId,
     List<int> ExcludedItemsIndices, 
     RoomId RoomId

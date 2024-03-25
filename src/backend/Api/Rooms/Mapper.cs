@@ -12,8 +12,8 @@ namespace Api.Rooms;
 
 public static class Mapper
 {
-    public static CreateRoomCommand ToCommand(this CreateRoomRequest request) =>
-        new
+    public static CreateRoomCommand ToCommand(this CreateRoomRequest request)
+        => new
         (
             request.Name,
             new Money
@@ -40,8 +40,8 @@ public static class Mapper
             )
         );
 
-    public static RoomResponse ToResponse(this Room room) =>
-        new
+    public static RoomResponse ToResponse(this Room room)
+        => new
         (
             room.Id!,
             room.Name,
@@ -49,29 +49,34 @@ public static class Mapper
             room.Budget.Currency.ToString(),
             room.BudgetLowerBound,
             room.MoneyRoundingRequired,
-            room.UserIds.Select(id => id.Value.ToString()),
+            room.UserIds.Select(id => id.Value.ToString()).ToList(),
             room.OwnedShopItems.Select(item =>
-                new OwnedShopItemResponse(item.ShopItemId!, item.Quantity))
+                new OwnedShopItemResponse
+                (
+                    item.ShopItemId!, item.Quantity,
+                    item.Price.Amount, item.Price.Currency.ToString()
+                )
+            ).ToList()
         );
 
-    public static AddShopItemToRoomCommand ToCommand(this AddShopItemToRoomRequest request, string roomId) =>
-        new
+    public static AddShopItemToRoomCommand ToCommand(this AddShopItemToRoomRequest request, string roomId) 
+        => new
         (
             request.ShopItemId!,
             request.Quantity,
             request is { PriceAmount: not null, PriceCurrency: not null }
                 ? new Money
-                    (
-                        request.PriceAmount.Value,
-                        Enum.Parse<Currency>(request.PriceCurrency)
-                    )
+                (
+                    request.PriceAmount.Value,
+                    Enum.Parse<Currency>(request.PriceCurrency)
+                )
                 : null,
             roomId!
         );
 
-    public static AddReceiptToRoomCommand ToCommand(this AddReceiptToRoomRequest request, string roomId) =>
-        new(request.ReceiptId!, request.ExcludedItemsIndices, roomId!);
+    public static AddReceiptToRoomCommand ToCommand(this AddReceiptToRoomRequest request, string roomId) 
+        => new(request.ReceiptId!, request.ExcludedItemsIndices, roomId!);
 
-    public static AddUserToRoomCommand ToCommand(this AddUserToRoomRequest request, string roomId) =>
-        new(request.UserId!, roomId!);
+    public static AddUserToRoomCommand ToCommand(this AddUserToRoomRequest request, string roomId) 
+        => new(request.UserId!, roomId!);
 }

@@ -38,28 +38,36 @@ public static partial class Fakers
                 ))
             );
         });
-    
-    public static Faker<CreateRoomRequest> CreateRoomRequestFaker { get; } =
-        new Faker<CreateRoomRequest>()
-            .CustomInstantiator(faker =>
-            {
-                string currency = faker.PickRandom<Currency>().ToString();
 
-                return new CreateRoomRequest
-                (
-                    faker.Company.CompanyName(),
-                    faker.Random.Decimal(),
-                    currency,
-                    faker.Random.Decimal(),
-                    faker.Random.Bool(),
-                    faker.Make(faker.Random.Number(10), () => UserId.CreateNew().Value.ToString()),
-                    faker.Make(faker.Random.Number(10), () =>
-                        new OwnedShopItemRequest
-                        (
-                            ShopItemId.CreateNew()!, faker.Random.Decimal(),
-                            faker.Random.Decimal(), currency
-                        )
+    public static Faker<CreateRoomRequest> CreateRoomRequestFaker { get; } = new Faker<CreateRoomRequest>()
+        .CustomInstantiator(faker =>
+        {
+            string currency = faker.PickRandom<Currency>().ToString();
+
+            return new CreateRoomRequest
+            (
+                faker.Company.CompanyName(),
+                faker.Random.Decimal(),
+                currency,
+                faker.Random.Decimal(),
+                faker.Random.Bool(),
+                faker.Make(faker.Random.Number(10), () => UserId.CreateNew().Value.ToString()),
+                faker.Make(faker.Random.Number(10), () =>
+                    new OwnedShopItemRequest
+                    (
+                        ShopItemId.CreateNew()!, faker.Random.Decimal(),
+                        faker.Random.Decimal(), currency
                     )
-                );
-            });
+                )
+            );
+        });
+
+    public static Faker<AddShopItemToRoomRequest> AddShopItemToRoomRequestFaker { get; } =
+        new Faker<AddShopItemToRoomRequest>().CustomInstantiator(faker => new AddShopItemToRoomRequest
+        (
+            ShopItemId.CreateNew()!,
+            faker.Random.Decimal(),
+            faker.Random.Decimal(),
+            faker.PickRandom<Currency>().ToString()
+        ));
 }

@@ -17,9 +17,11 @@ public sealed class Room : AggregateRoot<RoomId>
     
     private readonly List<OwnedShopItem> _ownedShopItems;
 
-    private Room(RoomId id, string name, Money budget, decimal budgetLowerBound, bool moneyRoundingRequired,
-        IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems)
-        : base(id)
+    private Room
+    (
+        RoomId id, string name, Money budget, decimal budgetLowerBound, bool moneyRoundingRequired,
+        IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems
+    ) : base(id)
     {
         Name = name;
         Budget = budget;
@@ -30,15 +32,17 @@ public sealed class Room : AggregateRoot<RoomId>
         _ownedShopItems = ownedShopItems.ToList();
     }
 
-    public static Room Create(
+    public static Room Create
+    (
         RoomId id, string name, Money budget, decimal budgetLowerBound, bool moneyRoundingRequired,
-        IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems)
-        => new(id, name, budget, budgetLowerBound, moneyRoundingRequired, userIds, ownedShopItems);
+        IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems
+    ) => new(id, name, budget, budgetLowerBound, moneyRoundingRequired, userIds, ownedShopItems);
 
-    public static Room CreateNew(
+    public static Room CreateNew
+    (
         string name, Money budget, decimal budgetLoverBound, bool moneyRoundingRequired,
-        IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems) =>
-        new(RoomId.CreateNew(), name, budget, budgetLoverBound, moneyRoundingRequired, userIds, ownedShopItems);
+        IEnumerable<UserId> userIds, IEnumerable<OwnedShopItem> ownedShopItems
+    ) => new(RoomId.CreateNew(), name, budget, budgetLoverBound, moneyRoundingRequired, userIds, ownedShopItems);
 
     public void AddOwnedShopItem(OwnedShopItem shopItem)
     {

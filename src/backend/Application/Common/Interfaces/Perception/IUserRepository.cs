@@ -10,4 +10,6 @@ public interface IUserRepository
     Task<User?> GetAsync(UserId id, CancellationToken cancellationToken = default);
 
     Task<bool> CheckExistenceAsync(UserId id, CancellationToken cancellationToken = default);
+    
+    Task SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -28,7 +28,9 @@ public class FileUserRepository : IUserRepository
 
     public Task<bool> CheckExistenceAsync(UserId id, CancellationToken cancellationToken) =>
         Task.FromResult(Users.ContainsKey(id));
-    
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
     private static ConcurrentDictionary<UserId, User> InitUsers()
     {
         using FileStream stream = new(USERS_FILE, FileMode.OpenOrCreate, FileAccess.Read);

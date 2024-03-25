@@ -28,8 +28,10 @@ public class AddUserToRoomHandler(
             return Errors.Room.NotFound;
         
         room.AddUser(userId);
+        await _roomRepository.SaveChangesAsync(cancellationToken);
         
         user.SetRoom(roomId);
+        await _userRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success;
     }

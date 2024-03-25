@@ -7,12 +7,13 @@ using Domain.RoomAggregate.ValueObjects;
 
 namespace Application.Rooms.Commands.WithReceipts;
 
-public class AddReceiptToRoomHandler(
-    IRoomRepository repository,
+public class AddReceiptToRoomHandler
+(
+    IRoomRepository roomRepository,
     IReceiptRepository receiptRepository
 ) : IRequestHandler<AddReceiptToRoomCommand, ErrorOr<Success>>
 {
-    private readonly IRoomRepository _repository = repository;
+    private readonly IRoomRepository _roomRepository = roomRepository;
     private readonly IReceiptRepository _receiptRepository = receiptRepository;
 
     public async Task<ErrorOr<Success>> Handle(AddReceiptToRoomCommand command, CancellationToken cancellationToken)
@@ -23,7 +24,7 @@ public class AddReceiptToRoomHandler(
         if (receipt is null)
             return Errors.Receipt.NotFound;
 
-        Room? room = await _repository.GetAsync(roomId, cancellationToken);
+        Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
         if (room is null)
             return Errors.Room.NotFound;
         
@@ -35,13 +36,16 @@ public class AddReceiptToRoomHandler(
             return Errors.Money.MismatchedCurrency;
         
         room.AddOwnedShopItems(shopItemsToAdd);
+        await _roomRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success;
     }
 
-    private static IEnumerable<OwnedShopItem> GetItemsAfterExclusion(
+    private static IEnumerable<OwnedShopItem> GetItemsAfterExclusion
+    (
         IReadOnlyList<ReceiptItem> items,
-        IReadOnlyList<int> indexesToExclude)
+        IReadOnlyList<int> indexesToExclude
+    )
     {
         for (var i = 0; i < items.Count; i++)
         {

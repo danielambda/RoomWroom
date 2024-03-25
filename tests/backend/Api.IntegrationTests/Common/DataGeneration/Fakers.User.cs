@@ -1,4 +1,5 @@
-﻿using Domain.UserAggregate;
+﻿using Domain.RoomAggregate.ValueObjects;
+using Domain.UserAggregate;
 using Domain.UserAggregate.Enums;
 
 namespace Api.IntegrationTests.Common.DataGeneration;
@@ -9,6 +10,7 @@ public static partial class Fakers
         .CustomInstantiator(faker => User.CreateNew
         (
             faker.Name.FullName(),
-            faker.PickRandom<UserRole>()
+            faker.PickRandom<UserRole>(),
+            RoomId.CreateNew()
         ));
 }

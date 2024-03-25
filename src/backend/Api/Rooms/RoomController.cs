@@ -68,7 +68,7 @@ public class RoomController(ISender mediator) : ApiControllerBase(mediator)
         );
     }
 
-    [HttpPost("{roomId}/user")]
+    [HttpPost("{roomId}/users")]
     public async Task<IActionResult> AddUserToRoom(string roomId, AddUserToRoomRequest request)
     {
         AddUserToRoomCommand command = request.ToCommand(roomId);

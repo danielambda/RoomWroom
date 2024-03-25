@@ -7,7 +7,7 @@ namespace Api.IntegrationTests.Common.DataGeneration;
 
 public static partial class Fakers
 {
-    public static readonly Faker<ShopItem> ShopItemFaker = new Faker<ShopItem>()
+    public static Faker<ShopItem> ShopItemFaker { get; } = new Faker<ShopItem>()
         .CustomInstantiator(faker => ShopItem.CreateNew
         (
             faker.Commerce.Product(),
@@ -16,8 +16,8 @@ public static partial class Fakers
             IngredientId.CreateNew()
         ));
 
-    public static readonly Faker<CreateShopItemRequest> CreateShopItemRequestFaker =
-        new Faker<CreateShopItemRequest>().CustomInstantiator(faker => new
+    public static Faker<CreateShopItemRequest> CreateShopItemRequestFaker { get; } = new Faker<CreateShopItemRequest>()
+        .CustomInstantiator(faker => new
         (
             faker.Commerce.Product(),
             faker.Random.Decimal(),

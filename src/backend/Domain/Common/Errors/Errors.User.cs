@@ -12,6 +12,6 @@ public static partial class Errors
             Error.NotFound("User.NotFound", $"User was not found");
 
         public static Error RoomAlreadySet(UserId id, RoomId roomId) =>
-            Error.NotFound("User.RoomAlreadySet", $"User with id '{id.Value}' already has room set to '{roomId}'");
+            Error.Conflict("User.RoomAlreadySet", $"User with id '{id.Value}' already has room set to '{roomId}'");
     }
 }

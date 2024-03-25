@@ -32,4 +32,7 @@ public class ShopItemRepository(
     public async Task<bool> DeleteAsync(ShopItemId id, CancellationToken cancellationToken = default)
         => await _dbContext.ShopItems.Where(item => item.Id == id)
             .ExecuteDeleteAsync(cancellationToken: cancellationToken) > 0;
+
+    public async Task<bool> CheckExistenceAsync(ShopItemId id, CancellationToken cancellationToken) 
+        => await _dbContext.ShopItems.AnyAsync(item => item.Id == id, cancellationToken);
 }

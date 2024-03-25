@@ -20,4 +20,7 @@ public class UserRepository(RoomWroomDbContext dbContext) : IUserRepository
 
     public async Task<bool> CheckExistenceAsync(UserId id, CancellationToken cancellationToken = default) 
         => await _dbContext.Users.AnyAsync(user => user.Id == id, cancellationToken);
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken)
+        => _dbContext.SaveChangesAsync(cancellationToken);
 }

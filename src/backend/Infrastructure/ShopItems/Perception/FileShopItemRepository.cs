@@ -46,6 +46,9 @@ public class FileShopItemRepository : IShopItemRepository
         return Task.FromResult(removed);
     }
 
+    public async Task<bool> CheckExistenceAsync(ShopItemId shopItemId, CancellationToken cancellationToken) 
+        => await GetAsync(shopItemId, cancellationToken) is not null;
+
     private static ConcurrentDictionary<ShopItemId, ShopItem> InitShopItems()
     {
         using FileStream stream = new(SHOP_ITEMS_FILE, FileMode.OpenOrCreate, FileAccess.Read);

@@ -9,7 +9,7 @@ using Domain.Common.Errors;
 using Domain.ReceiptAggregate.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.IntegrationTests.ReceiptsController;
+namespace Api.IntegrationTests.ReceiptController;
 
 public class GetReceiptsControllerTests(IntegrationTestWebAppFactory factory)
     : IntegrationTestBase(factory)

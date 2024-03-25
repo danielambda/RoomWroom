@@ -241,6 +241,9 @@ namespace Infrastructure.Migrations
                             b1.Property<Guid>("RoomId")
                                 .HasColumnType("uuid");
 
+                            b1.Property<decimal>("Quantity")
+                                .HasColumnType("numeric");
+
                             b1.Property<Guid>("ShopItemId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("ShopItemId");

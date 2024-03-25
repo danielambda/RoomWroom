@@ -8,7 +8,7 @@ using Contracts.Rooms;
 using Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.IntegrationTests.RoomsController;
+namespace Api.IntegrationTests.RoomController;
 
 public class CreateRoomsControllerTests(IntegrationTestWebAppFactory factory)
     : IntegrationTestBase(factory)

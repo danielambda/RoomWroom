@@ -135,6 +135,7 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoomId = table.Column<Guid>(type: "uuid", nullable: false),
                     ShopItemId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Quantity = table.Column<decimal>(type: "numeric", nullable: false),
                     Price_Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Price_Currency = table.Column<int>(type: "integer", nullable: false)
                 },

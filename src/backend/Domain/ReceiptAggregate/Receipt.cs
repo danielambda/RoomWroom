@@ -17,23 +17,28 @@ public sealed class Receipt : AggregateRoot<ReceiptId>
         .Select(item => item.Sum)
         .Aggregate((s1, s2) => s1 + s2);
 
-    private Receipt(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) : base(id)
+    public Currency Currency => _items.First().Price.Currency;
+
+    private Receipt(ReceiptId id, List<ReceiptItem> items, string? qr, UserId creatorId) : base(id)
     {
-        _items = items
+        _items = items;
+        Qr = qr;
+        CreatorId = creatorId;
+    }
+
+    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr, UserId creatorId)
+    {
+        var itemsList = items
             .OrderBy(item => item.Name)
             .CombineSame()
             .Where(item => item is { Quantity: > 0, Price.Amount: > 0 })
             .ToList();
         
-        Qr = qr;
-        CreatorId = creatorId;
+        return new(ReceiptId.CreateNew(), itemsList, qr, creatorId);
     }
 
-    public static Receipt CreateNew(IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) 
-        => new(ReceiptId.CreateNew(), items, qr, creatorId);
-
     public static Receipt Create(ReceiptId id, IEnumerable<ReceiptItem> items, string? qr, UserId creatorId) =>
-        new(id, items, qr, creatorId);
+        new(id, items.ToList(), qr, creatorId);
 
     public void AssociateShopItemIdAtIndex(ShopItemId shopItemId, int index) =>
         _items[index].AssociateWith(shopItemId);
@@ -50,9 +55,12 @@ public sealed class Receipt : AggregateRoot<ReceiptId>
         }
     }
 
-    public async Task AssociateShopItemIdsAsync(
-        Func<string, CancellationToken, Task<ShopItemAssociation?>> associationFunc,
-        CancellationToken cancellationToken = default)
+    public async Task AssociateShopItemIdsAsync
+    (
+        Func<string, CancellationToken,
+        Task<ShopItemAssociation?>> associationFunc,
+        CancellationToken cancellationToken = default
+    )
     {
         foreach (ReceiptItem receiptItem in _items)
         {
