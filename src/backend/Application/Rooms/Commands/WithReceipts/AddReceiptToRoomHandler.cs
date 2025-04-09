@@ -27,14 +27,14 @@ public class AddReceiptToRoomHandler
         Room? room = await _roomRepository.GetAsync(roomId, cancellationToken);
         if (room is null)
             return Errors.Room.NotFound;
-        
+
         OwnedShopItem[] shopItemsToAdd = GetItemsAfterExclusion(receipt.Items, excludedItemsId).ToArray();
         if (shopItemsToAdd.Length == 0)
             return Result.Success;
-        
+
         if (room.Budget.Currency != shopItemsToAdd.First().Price.Currency)
             return Errors.Money.MismatchedCurrency;
-        
+
         room.AddOwnedShopItems(shopItemsToAdd);
         await _roomRepository.SaveChangesAsync(cancellationToken);
 
@@ -51,7 +51,7 @@ public class AddReceiptToRoomHandler
         {
             if (indexesToExclude.Contains(i))
                 continue;
-            
+
             if (items[i].AssociatedShopItemId is not { } associatedShopItemId)
                 continue;
 
